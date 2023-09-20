@@ -17,6 +17,8 @@ public interface ISoftBody
 
 internal class SoftBody : ISoftBody
 {
+    private readonly IPhysicsUnits _physicsUnits;
+
     #region ISoftBody
     IReadOnlyCollection<IMassPoint> ISoftBody.MassPoints => MassPoints;
     IReadOnlyCollection<ISpring> ISoftBody.Springs => Springs;
@@ -26,15 +28,21 @@ internal class SoftBody : ISoftBody
 
     public List<Spring> Springs { get; }
 
-    public SoftBody()
+    public SoftBody(IPhysicsUnits physicsUnits)
     {
+        _physicsUnits = physicsUnits;
         MassPoints = new List<MassPoint>();
         Springs = new List<Spring>();
     }
 
     public IMassPoint AddMassPoint(Vector2d position)
     {
-        var massPoint = new MassPoint { Position = position };
+        var massPoint = new MassPoint
+        {
+            Position = position,
+            Mass = _physicsUnits.Mass,
+            Radius = _physicsUnits.MassPointRadius
+        };
         MassPoints.Add(massPoint);
 
         return massPoint;
@@ -42,7 +50,10 @@ internal class SoftBody : ISoftBody
 
     public ISpring AddSpring(IMassPoint a, IMassPoint b)
     {
-        var spring = new Spring(MassPoints.First(x => x == a), MassPoints.First(x => x == b));
+        var spring = new Spring(MassPoints.First(x => x == a), MassPoints.First(x => x == b))
+        {
+            Stiffness = _physicsUnits.SpringStiffness
+        };
         Springs.Add(spring);
 
         return spring;

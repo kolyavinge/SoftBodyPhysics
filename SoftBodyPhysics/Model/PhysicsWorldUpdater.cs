@@ -13,17 +13,20 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
     private readonly IHardBodiesCollection _hardBodiesCollection;
     private readonly ISegmentIntersector _segmentIntersector;
     private readonly INormalDetector _normalDetector;
+    private readonly IPhysicsUnits _physicsUnits;
 
     public PhysicsWorldUpdater(
         ISoftBodiesCollection softBodiesCollection,
         IHardBodiesCollection hardBodiesCollection,
         ISegmentIntersector segmentIntersector,
-        INormalDetector normalDetector)
+        INormalDetector normalDetector,
+        IPhysicsUnits physicsUnits)
     {
         _softBodiesCollection = softBodiesCollection;
         _hardBodiesCollection = hardBodiesCollection;
         _segmentIntersector = segmentIntersector;
         _normalDetector = normalDetector;
+        _physicsUnits = physicsUnits;
     }
 
     public void Update()
@@ -40,7 +43,7 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
     {
         foreach (var massPoint in _softBodiesCollection.AllMassPoints)
         {
-            massPoint.Force += new Vector2d(0.0, -Constants.GravityAcceleration * massPoint.Mass);
+            massPoint.Force += new Vector2d(0.0, -_physicsUnits.GravityAcceleration * massPoint.Mass);
         }
     }
 
@@ -49,7 +52,7 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
         foreach (var spring in _softBodiesCollection.AllSprings)
         {
             var fs = spring.Stiffness * spring.DeformLength;
-            var fd = Constants.SpringDamper * ((spring.PointB.Position - spring.PointA.Position).Normalized * (spring.PointB.Velocity - spring.PointA.Velocity));
+            var fd = _physicsUnits.SpringDamper * ((spring.PointB.Position - spring.PointA.Position).Normalized * (spring.PointB.Velocity - spring.PointA.Velocity));
             var f = fs + fd;
             spring.PointA.Force += f * (spring.PointB.Position - spring.PointA.Position).Normalized;
             spring.PointB.Force += f * (spring.PointA.Position - spring.PointB.Position).Normalized;
@@ -60,9 +63,9 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
     {
         foreach (var massPoint in _softBodiesCollection.AllMassPoints)
         {
-            massPoint.Velocity += massPoint.Force * (Constants.TimeDelta / massPoint.Mass);
+            massPoint.Velocity += massPoint.Force * (_physicsUnits.TimeDelta / massPoint.Mass);
             massPoint.SavePosition();
-            massPoint.Position += massPoint.Velocity * Constants.TimeDelta;
+            massPoint.Position += massPoint.Velocity * _physicsUnits.TimeDelta;
         }
     }
 
@@ -76,16 +79,16 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
                 if (intersectPoint == null) continue;
                 var normal = _normalDetector.GetNormal(edge.From, edge.To);
                 massPoint.Position = intersectPoint.Value;
-                massPoint.Velocity = massPoint.Velocity - 2 * (massPoint.Velocity * normal) * normal;
-                massPoint.Velocity *= Constants.Friction;
-                massPoint.Position += massPoint.Velocity * Constants.TimeDelta;
+                massPoint.Velocity -= 2 * (massPoint.Velocity * normal) * normal;
+                massPoint.Velocity *= 1 - _physicsUnits.Friction;
+                massPoint.Position += massPoint.Velocity * _physicsUnits.TimeDelta;
             }
         }
     }
 
     private void ApplySoftBodyCollisions()
     {
-        foreach (var (body1, body2) in _softBodiesCollection.SoftBodies.GetCartesianProduct())
+        foreach (var (body1, body2) in _softBodiesCollection.SoftBodies.GetCrossProduct())
         {
             foreach (var spring in body1.Springs)
             {
@@ -99,9 +102,9 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
 
                     var normal = _normalDetector.GetNormal(spring.PointA.Position, spring.PointB.Position);
                     massPoint.Position = intersectPoint.Value;
-                    massPoint.Velocity = massPoint.Velocity - 2 * (massPoint.Velocity * normal) * normal;
-                    massPoint.Velocity *= Constants.Friction;
-                    massPoint.Position += massPoint.Velocity * Constants.TimeDelta;
+                    massPoint.Velocity -= 2 * (massPoint.Velocity * normal) * normal;
+                    massPoint.Velocity *= 1 - _physicsUnits.Friction;
+                    massPoint.Position += massPoint.Velocity * _physicsUnits.TimeDelta;
                 }
             }
         }

@@ -31,12 +31,6 @@ internal class MassPoint : IMassPoint
 
     public double Radius { get; set; }
 
-    public MassPoint()
-    {
-        Mass = Constants.Mass;
-        Radius = Constants.MassPointRadius;
-    }
-
     public void ResetForce()
     {
         Force = Vector2d.Zero;

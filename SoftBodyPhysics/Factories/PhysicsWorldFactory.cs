@@ -1,7 +1,8 @@
 ﻿using DependencyInjection;
+using SoftBodyPhysics.Model;
 using SoftBodyPhysics.Utils;
 
-namespace SoftBodyPhysics.Model;
+namespace SoftBodyPhysics.Factories;
 
 public static class PhysicsWorldFactory
 {

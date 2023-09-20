@@ -41,7 +41,6 @@ internal class Spring : ISpring
     {
         PointA = a;
         PointB = b;
-        Stiffness = Constants.SpringStiffness;
         RestLength = Math.Abs((a.Position - b.Position).Length);
     }
 }
