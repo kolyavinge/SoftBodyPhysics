@@ -21,7 +21,8 @@ public partial class MainWindow : Window
 
         //Examples.OneBody(_physicsWorld);
         //Examples.HardBodyCollisions(_physicsWorld);
-        Examples.SoftBodyCollisions(_physicsWorld);
+        //Examples.Error1(_physicsWorld);
+		Examples.SoftBodyCollisions(_physicsWorld);
 
         _renderLogic = new RenderLogic(_physicsWorld);
 
