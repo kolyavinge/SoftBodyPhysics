@@ -15,6 +15,8 @@ public interface IMassPoint
     double Mass { get; set; }
 
     double Radius { get; set; }
+
+    string? DebugInfo { get; set; }
 }
 
 internal class MassPoint : IMassPoint
@@ -30,6 +32,8 @@ internal class MassPoint : IMassPoint
     public double Mass { get; set; }
 
     public double Radius { get; set; }
+
+    public string? DebugInfo { get; set; }
 
     public void ResetForce()
     {

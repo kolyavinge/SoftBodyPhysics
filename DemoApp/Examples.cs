@@ -36,11 +36,12 @@ internal static class Examples
 
     public static void SoftBodyCollisions(IPhysicsWorld physicsWorld)
     {
-        physicsWorld.Units.TimeDelta = 0.12;
+        physicsWorld.Units.TimeDelta = 0.1;
 
         var softBody = physicsWorld.AddSoftBody();
         var p1 = softBody.AddMassPoint(new(500, 200));
         var p2 = softBody.AddMassPoint(new(500, 400));
+        p2.DebugInfo = "A";
         var p3 = softBody.AddMassPoint(new(700, 400));
         var p4 = softBody.AddMassPoint(new(700, 200));
         softBody.AddSpring(p1, p2);
@@ -58,7 +59,8 @@ internal static class Examples
         softBody.AddSpring(p1, p2);
         softBody.AddSpring(p2, p3);
         softBody.AddSpring(p3, p4);
-        softBody.AddSpring(p4, p1);
+        var s = softBody.AddSpring(p4, p1);
+        s.DebugInfo = "B";
         softBody.AddSpring(p1, p3);
         softBody.AddSpring(p2, p4);
 

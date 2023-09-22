@@ -1,5 +1,5 @@
-﻿using SoftBodyPhysics.Factories;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SoftBodyPhysics.Factories;
 
 namespace SoftBodyPhysics.Model;
 

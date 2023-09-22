@@ -36,5 +36,5 @@ public readonly struct Vector2d
 
     public static double operator *(Vector2d a, Vector2d b) => a.X * b.X + a.Y * b.Y;
 
-    public override string ToString() => $"{X}:{Y}";
+    public override string ToString() => $"{X:F2} : {Y:F2}";
 }

@@ -16,6 +16,8 @@ public interface ISpring
     double RestLength { get; }
 
     double DeformLength { get; }
+
+    string? DebugInfo { get; set; }
 }
 
 internal class Spring : ISpring
@@ -36,6 +38,8 @@ internal class Spring : ISpring
     public double RestLength { get; }
 
     public double DeformLength => (PointA.Position - PointB.Position).Length - RestLength;
+
+    public string? DebugInfo { get; set; }
 
     public Spring(MassPoint a, MassPoint b)
     {
