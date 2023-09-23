@@ -11,18 +11,11 @@ internal class RenderLogic
     private readonly Pen _prevSpringPen = new Pen(Brushes.Gray, 1.0);
     private readonly Pen _springPen = new Pen(Brushes.CornflowerBlue, 1.0);
 
-    private readonly IPhysicsWorld _physicsWorld;
-
-    public RenderLogic(IPhysicsWorld physicsWorld)
-    {
-        _physicsWorld = physicsWorld;
-    }
-
-    public void OnRender(DrawingContext dc, double actualHeight, bool showMassPointAddInfo, bool showPrevPositions)
+    public void OnRender(IPhysicsWorld physicsWorld, DrawingContext dc, double actualHeight, bool showMassPointAddInfo, bool showPrevPositions)
     {
         var yoffset = actualHeight;
 
-        foreach (var hardBody in _physicsWorld.HardBodies)
+        foreach (var hardBody in physicsWorld.HardBodies)
         {
             foreach (var edge in hardBody.Edges)
             {
@@ -30,7 +23,7 @@ internal class RenderLogic
             }
         }
 
-        foreach (var softBody in _physicsWorld.SoftBodies)
+        foreach (var softBody in physicsWorld.SoftBodies)
         {
             foreach (var spring in softBody.Springs)
             {

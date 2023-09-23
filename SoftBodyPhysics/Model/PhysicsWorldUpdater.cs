@@ -99,6 +99,8 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
 
                     spring.PointA.Velocity += massPoint.Velocity;
                     spring.PointB.Velocity += massPoint.Velocity;
+                    spring.PointA.Position += spring.PointA.Velocity * _physicsUnits.TimeDelta;
+                    spring.PointB.Position += spring.PointB.Velocity * _physicsUnits.TimeDelta;
 
                     var normal = _normalDetector.GetNormal(spring.PointA.Position, spring.PointB.Position);
                     massPoint.Position = intersectPoint.Value;

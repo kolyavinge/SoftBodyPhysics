@@ -8,11 +8,17 @@
         mc:Ignorable="d"
         Title="MainWindow"
         Height="800" Width="1000">
-    <StackPanel Orientation="Horizontal" Height="23" VerticalAlignment="Top" HorizontalAlignment="Right">
-        <CheckBox Name="ShowMassPointAddInfo" Content="Mass point add info" IsChecked="False" Foreground="LightGray" Margin="0,5,8,0" />
-        <CheckBox Name="ShowPrevPositions" Content="Prev positions" IsChecked="False" Foreground="LightGray" Margin="0,5,8,0" />
-        <Button Content="Play" Width="75" Click="OnPlayClick" />
-        <Button Content="Stop" Width="75" Click="OnStopClick" />
-        <Button Content="Next" Width="75" Click="OnNextClick" />
-    </StackPanel>
+    <Grid>
+        <StackPanel Orientation="Horizontal" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <TextBlock Name="FramesTextBox" Text="Frame: 0" Foreground="LightGray" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Height="23" VerticalAlignment="Top" HorizontalAlignment="Right">
+            <CheckBox Name="ShowMassPointAddInfo" Content="Mass point add info" IsChecked="False" Foreground="LightGray" Margin="0,5,8,0" />
+            <CheckBox Name="ShowPrevPositions" Content="Prev positions" IsChecked="False" Foreground="LightGray" Margin="0,5,8,0" />
+            <Button Content="Reset" Width="75" Click="OnResetClick" />
+            <Button Content="Play" Width="75" Click="OnPlayClick" />
+            <Button Content="Stop" Width="75" Click="OnStopClick" />
+            <Button Content="Next" Width="75" Click="OnNextClick" />
+        </StackPanel>
+    </Grid>
 </Window>
