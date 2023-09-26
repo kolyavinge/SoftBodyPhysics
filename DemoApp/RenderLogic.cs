@@ -9,6 +9,7 @@ internal class RenderLogic
 {
     private readonly Pen _hardBodyPen = new Pen(Brushes.BlueViolet, 2.0);
     private readonly Pen _prevSpringPen = new Pen(Brushes.Gray, 1.0);
+    private readonly Pen _springEdgePen = new Pen(Brushes.Blue, 1.0);
     private readonly Pen _springPen = new Pen(Brushes.CornflowerBlue, 1.0);
 
     public void OnRender(IPhysicsWorld physicsWorld, DrawingContext dc, double actualHeight, bool showMassPointAddInfo, bool showPrevPositions)
@@ -36,7 +37,15 @@ internal class RenderLogic
 
                 var posA = spring.PointA.Position;
                 var posB = spring.PointB.Position;
-                dc.DrawLine(_springPen, new(posA.X, yoffset - posA.Y), new(posB.X, yoffset - posB.Y));
+
+                if (spring.IsEdge)
+                {
+                    dc.DrawLine(_springEdgePen, new(posA.X, yoffset - posA.Y), new(posB.X, yoffset - posB.Y));
+                }
+                else
+                {
+                    dc.DrawLine(_springPen, new(posA.X, yoffset - posA.Y), new(posB.X, yoffset - posB.Y));
+                }
             }
 
             foreach (var massPoint in softBody.MassPoints)
@@ -48,7 +57,14 @@ internal class RenderLogic
                 }
 
                 var pos = massPoint.Position;
-                dc.DrawEllipse(Brushes.DarkRed, null, new(pos.X, yoffset - pos.Y), massPoint.Radius, massPoint.Radius);
+                if (massPoint.State == MassPointState.Normal)
+                {
+                    dc.DrawEllipse(Brushes.DarkRed, null, new(pos.X, yoffset - pos.Y), massPoint.Radius, massPoint.Radius);
+                }
+                else if (massPoint.State == MassPointState.Collision)
+                {
+                    dc.DrawEllipse(Brushes.OrangeRed, null, new(pos.X, yoffset - pos.Y), massPoint.Radius, massPoint.Radius);
+                }
 
                 if (showMassPointAddInfo)
                 {

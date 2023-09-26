@@ -5,11 +5,13 @@ namespace SoftBodyPhysics.Model;
 
 public interface ISpring
 {
+    bool IsEdge { get; set; }
+
     IMassPoint PointA { get; }
 
     IMassPoint PointB { get; }
 
-    Vector2d Force { get; }
+    Vector Force { get; }
 
     double Stiffness { get; set; }
 
@@ -27,11 +29,13 @@ internal class Spring : ISpring
     IMassPoint ISpring.PointB => PointB;
     #endregion
 
+    public bool IsEdge { get; set; }
+
     public MassPoint PointA { get; }
 
     public MassPoint PointB { get; }
 
-    public Vector2d Force { get; set; }
+    public Vector Force { get; set; }
 
     public double Stiffness { get; set; }
 

@@ -3,16 +3,16 @@ using SoftBodyPhysics.Utils;
 
 namespace SoftBodyPhysics.Model;
 
-internal interface INormalDetector
+internal interface INormalCalculator
 {
-    Vector2d GetNormal(Vector2d lineFrom, Vector2d lineTo);
+    Vector GetNormal(Vector lineFrom, Vector lineTo);
 }
 
-internal class NormalDetector : INormalDetector
+internal class NormalCalculator : INormalCalculator
 {
     private const double _halfPI = Math.PI / 2.0;
 
-    public Vector2d GetNormal(Vector2d lineFrom, Vector2d lineTo)
+    public Vector GetNormal(Vector lineFrom, Vector lineTo)
     {
         if (lineFrom.Y == lineTo.Y)
         {

@@ -12,38 +12,48 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
     private readonly ISoftBodiesCollection _softBodiesCollection;
     private readonly IHardBodiesCollection _hardBodiesCollection;
     private readonly ISegmentIntersector _segmentIntersector;
-    private readonly INormalDetector _normalDetector;
+    private readonly INormalCalculator _normalCalculator;
+    private readonly ISpringIntersector _springIntersector;
     private readonly IPhysicsUnits _physicsUnits;
 
     public PhysicsWorldUpdater(
         ISoftBodiesCollection softBodiesCollection,
         IHardBodiesCollection hardBodiesCollection,
         ISegmentIntersector segmentIntersector,
-        INormalDetector normalDetector,
+        INormalCalculator normalCalculator,
+        ISpringIntersector springIntersector,
         IPhysicsUnits physicsUnits)
     {
         _softBodiesCollection = softBodiesCollection;
         _hardBodiesCollection = hardBodiesCollection;
         _segmentIntersector = segmentIntersector;
-        _normalDetector = normalDetector;
+        _normalCalculator = normalCalculator;
+        _springIntersector = springIntersector;
         _physicsUnits = physicsUnits;
     }
 
     public void Update()
     {
-        _softBodiesCollection.AllMassPoints.Each(x => x.ResetForce());
+        InitMassPoints();
         ApplyGravityForce();
         ApplySpringForce();
-        ApplyVelocityAndPosition();
+        ApplyVelocity();
+        ApplyPositions();
         ApplyHardBodyCollisions();
         ApplySoftBodyCollisions();
+    }
+
+    private void InitMassPoints()
+    {
+        _softBodiesCollection.AllMassPoints.Each(x => x.ResetForce());
+        _softBodiesCollection.AllMassPoints.Each(x => x.ResetState());
     }
 
     private void ApplyGravityForce()
     {
         foreach (var massPoint in _softBodiesCollection.AllMassPoints)
         {
-            massPoint.Force += new Vector2d(0.0, -_physicsUnits.GravityAcceleration * massPoint.Mass);
+            massPoint.Force += new Vector(0.0, -_physicsUnits.GravityAcceleration * massPoint.Mass);
         }
     }
 
@@ -59,11 +69,18 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
         }
     }
 
-    private void ApplyVelocityAndPosition()
+    private void ApplyVelocity()
     {
         foreach (var massPoint in _softBodiesCollection.AllMassPoints)
         {
             massPoint.Velocity += massPoint.Force * (_physicsUnits.TimeDelta / massPoint.Mass);
+        }
+    }
+
+    private void ApplyPositions()
+    {
+        foreach (var massPoint in _softBodiesCollection.AllMassPoints)
+        {
             massPoint.SavePosition();
             massPoint.Position += massPoint.Velocity * _physicsUnits.TimeDelta;
         }
@@ -76,12 +93,13 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
             foreach (var massPoint in _softBodiesCollection.AllMassPoints)
             {
                 var intersectPoint = _segmentIntersector.GetIntersectPoint(edge.From, edge.To, massPoint.PrevPosition, massPoint.Position);
-                if (intersectPoint == null) continue;
-                var normal = _normalDetector.GetNormal(edge.From, edge.To);
+                if (intersectPoint is null) continue;
+                var normal = _normalCalculator.GetNormal(edge.From, edge.To);
+                massPoint.State = MassPointState.Collision;
                 massPoint.Position = intersectPoint.Value;
-                massPoint.Velocity -= 2 * (massPoint.Velocity * normal) * normal;
-                massPoint.Velocity *= 1 - _physicsUnits.Friction;
-                massPoint.Position += massPoint.Velocity * _physicsUnits.TimeDelta;
+                massPoint.Velocity -= 2.0 * (massPoint.Velocity * normal) * normal;
+                massPoint.Velocity *= 1.0 - _physicsUnits.Friction;
+                massPoint.Position += massPoint.Velocity.Normalized * 0.1;
             }
         }
     }
@@ -94,19 +112,35 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
             {
                 foreach (var massPoint in body2.MassPoints)
                 {
-                    var intersectPoint = _segmentIntersector.GetIntersectPoint(spring.PointA.Position, spring.PointB.Position, massPoint.PrevPosition, massPoint.Position);
-                    if (intersectPoint == null) continue;
+                    var intersectPoint = _segmentIntersector.GetIntersectPoint(
+                        spring.PointA.Position, spring.PointB.Position, massPoint.PrevPosition, massPoint.Position);
 
-                    spring.PointA.Velocity += massPoint.Velocity;
-                    spring.PointB.Velocity += massPoint.Velocity;
-                    spring.PointA.Position += spring.PointA.Velocity * _physicsUnits.TimeDelta;
-                    spring.PointB.Position += spring.PointB.Velocity * _physicsUnits.TimeDelta;
+                    if (intersectPoint is not null)
+                    {
+                        //spring.PointA.Velocity += 0.1 * massPoint.Velocity;
+                        //spring.PointB.Velocity += 0.1 * massPoint.Velocity;
+                        var normal = _normalCalculator.GetNormal(spring.PointA.Position, spring.PointB.Position);
+                        massPoint.State = MassPointState.Collision;
+                        massPoint.Position = intersectPoint.Value;
+                        massPoint.Velocity -= 2.0 * (massPoint.Velocity * normal) * normal;
+                        massPoint.Velocity *= 1.0 - _physicsUnits.Friction;
+                        massPoint.Position += massPoint.Velocity.Normalized * 0.1;
+                    }
 
-                    var normal = _normalDetector.GetNormal(spring.PointA.Position, spring.PointB.Position);
-                    massPoint.Position = intersectPoint.Value;
-                    massPoint.Velocity -= 2 * (massPoint.Velocity * normal) * normal;
-                    massPoint.Velocity *= 1 - _physicsUnits.Friction;
-                    massPoint.Position += massPoint.Velocity * _physicsUnits.TimeDelta;
+                    intersectPoint = _springIntersector.GetIntersectPoint(
+                        spring.PointA.Position,
+                        spring.PointB.Position,
+                        spring.PointA.PrevPosition,
+                        spring.PointB.PrevPosition,
+                        massPoint.Position);
+
+                    if (intersectPoint is not null)
+                    {
+                        massPoint.State = MassPointState.Collision;
+                        massPoint.Position = intersectPoint.Value;
+                        massPoint.Velocity += 0.5 * (spring.PointA.Velocity + spring.PointB.Velocity);
+                        massPoint.Position += (spring.PointA.Velocity + spring.PointB.Velocity).Normalized * 0.1;
+                    }
                 }
             }
         }

@@ -10,7 +10,7 @@ public interface ISoftBody
 
     IReadOnlyCollection<ISpring> Springs { get; }
 
-    IMassPoint AddMassPoint(Vector2d position);
+    IMassPoint AddMassPoint(Vector position);
 
     ISpring AddSpring(IMassPoint a, IMassPoint b);
 }
@@ -35,11 +35,10 @@ internal class SoftBody : ISoftBody
         Springs = new List<Spring>();
     }
 
-    public IMassPoint AddMassPoint(Vector2d position)
+    public IMassPoint AddMassPoint(Vector position)
     {
-        var massPoint = new MassPoint
+        var massPoint = new MassPoint(position)
         {
-            Position = position,
             Mass = _physicsUnits.Mass,
             Radius = _physicsUnits.MassPointRadius
         };

@@ -7,7 +7,7 @@ public interface IHardBody
 {
     IReadOnlyCollection<IEdge> Edges { get; }
 
-    void AddEdge(Vector2d from, Vector2d to);
+    void AddEdge(Vector from, Vector to);
 }
 
 internal class HardBody : IHardBody
@@ -23,7 +23,7 @@ internal class HardBody : IHardBody
         Edges = new List<Edge>();
     }
 
-    public void AddEdge(Vector2d from, Vector2d to)
+    public void AddEdge(Vector from, Vector to)
     {
         Edges.Add(new(from, to));
     }

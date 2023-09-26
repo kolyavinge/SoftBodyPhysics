@@ -4,24 +4,25 @@ namespace SoftBodyPhysics.Model;
 
 internal interface ISegmentIntersector
 {
-    Vector2d? GetIntersectPoint(Vector2d point1From, Vector2d point1To, Vector2d point2From, Vector2d point2To);
+    Vector? GetIntersectPoint(Vector point1From, Vector point1To, Vector point2From, Vector point2To);
 }
 
 internal class SegmentIntersector : ISegmentIntersector
 {
-    private const double _delta = 0.00001;
     private readonly ILineIntersector _lineIntersector;
+    private readonly ISegmentDetector _segmentDetector;
 
-    public SegmentIntersector(ILineIntersector lineIntersector)
+    public SegmentIntersector(ILineIntersector lineIntersector, ISegmentDetector segmentDetector)
     {
         _lineIntersector = lineIntersector;
+        _segmentDetector = segmentDetector;
     }
 
-    public Vector2d? GetIntersectPoint(Vector2d line1From, Vector2d line1To, Vector2d line2From, Vector2d line2To)
+    public Vector? GetIntersectPoint(Vector line1From, Vector line1To, Vector line2From, Vector line2To)
     {
         var point = _lineIntersector.GetIntersectPoint(line1From, line1To, line2From, line2To);
-        if (point == null) return null;
-        if (InSegment(line1From, line1To, point.Value) && InSegment(line2From, line2To, point.Value))
+        if (point is null) return null;
+        if (_segmentDetector.InSegment(line1From, line1To, point.Value) && _segmentDetector.InSegment(line2From, line2To, point.Value))
         {
             return point;
         }
@@ -29,18 +30,5 @@ internal class SegmentIntersector : ISegmentIntersector
         {
             return null;
         }
-    }
-
-    private bool InSegment(Vector2d lineFrom, Vector2d lineTo, Vector2d point)
-    {
-        var (minX, maxX) = lineFrom.X < lineTo.X ? (lineFrom.X, lineTo.X) : (lineTo.X, lineFrom.X);
-        var (minY, maxY) = lineFrom.Y < lineTo.Y ? (lineFrom.Y, lineTo.Y) : (lineTo.Y, lineFrom.Y);
-
-        minX -= _delta;
-        minY -= _delta;
-        maxX += _delta;
-        maxY += _delta;
-
-        return (minX <= point.X && point.X <= maxX) && (minY <= point.Y && point.Y <= maxY);
     }
 }

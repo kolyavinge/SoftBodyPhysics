@@ -4,12 +4,12 @@ namespace SoftBodyPhysics.Model;
 
 internal interface ILineIntersector
 {
-    Vector2d? GetIntersectPoint(Vector2d line1From, Vector2d line1To, Vector2d line2From, Vector2d line2To);
+    Vector? GetIntersectPoint(Vector line1From, Vector line1To, Vector line2From, Vector line2To);
 }
 
 internal class LineIntersector : ILineIntersector
 {
-    public Vector2d? GetIntersectPoint(Vector2d line1From, Vector2d line1To, Vector2d line2From, Vector2d line2To)
+    public Vector? GetIntersectPoint(Vector line1From, Vector line1To, Vector line2From, Vector line2To)
     {
         var a1 = line1From.Y - line1To.Y;
         var b1 = line1To.X - line1From.X;
