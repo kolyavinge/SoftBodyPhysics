@@ -1,4 +1,6 @@
-﻿using SoftBodyPhysics.Utils;
+﻿using SoftBodyPhysics.Geo;
+using SoftBodyPhysics.Intersections;
+using SoftBodyPhysics.Utils;
 
 namespace SoftBodyPhysics.Model;
 

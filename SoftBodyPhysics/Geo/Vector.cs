@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SoftBodyPhysics.Utils;
+namespace SoftBodyPhysics.Geo;
 
 public readonly struct Vector
 {

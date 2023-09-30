@@ -1,7 +1,6 @@
 ﻿using System;
-using SoftBodyPhysics.Utils;
 
-namespace SoftBodyPhysics.Model;
+namespace SoftBodyPhysics.Geo;
 
 internal interface INormalCalculator
 {

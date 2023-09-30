@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using SoftBodyPhysics.Utils;
+using SoftBodyPhysics.Geo;
+using SoftBodyPhysics.Model;
 
-namespace SoftBodyPhysics.Model;
+namespace SoftBodyPhysics.Intersections;
 
 internal interface ISoftBodyIntersector
 {
@@ -32,7 +33,7 @@ internal class SoftBodyIntersector : ISoftBodyIntersector
             }
         }
 
-        if ((intersectPoints.Count % 2) != 0)
+        if (intersectPoints.Count % 2 != 0)
         {
             var nearest = intersectPoints
                 .Select(x => new { Spring = x.Item1, Point = x.Item2, Distance = (point - x.Item2).Length })

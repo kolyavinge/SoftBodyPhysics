@@ -1,7 +1,7 @@
 ﻿using System;
-using SoftBodyPhysics.Utils;
+using SoftBodyPhysics.Geo;
 
-namespace SoftBodyPhysics.Model;
+namespace SoftBodyPhysics.Intersections;
 
 internal interface ISpringIntersector
 {
@@ -15,11 +15,14 @@ internal interface ISpringIntersector
 
 internal class SpringIntersector : ISpringIntersector
 {
+    private readonly IPolygonChecker _polygonChecker;
     private readonly ISegmentIntersector _segmentIntersector;
 
     public SpringIntersector(
+        IPolygonChecker polygonChecker,
         ISegmentIntersector segmentIntersector)
     {
+        _polygonChecker = polygonChecker;
         _segmentIntersector = segmentIntersector;
     }
 
@@ -30,24 +33,24 @@ internal class SpringIntersector : ISpringIntersector
         Vector springPrevPositionTo,
         Vector massPointPosition)
     {
-        var maxY = Math.Max(Math.Max(Math.Max(springPositionFrom.Y, springPositionTo.Y), Math.Max(springPrevPositionFrom.Y, springPrevPositionTo.Y)), massPointPosition.Y);
-        var massPointPositionTo = new Vector(massPointPosition.X, maxY);
+        var maxY = Vectors.GetMaxY(springPositionFrom, springPositionTo, springPrevPositionFrom, springPrevPositionTo, massPointPosition);
 
-        int intersections = 0;
+        var polygonPoints = new[]
+        {
+            (springPositionFrom, springPositionTo),
+            (springPrevPositionFrom, springPrevPositionTo),
+            (springPrevPositionFrom, springPositionFrom),
+            (springPrevPositionTo, springPositionTo),
+        };
 
-        if (_segmentIntersector.GetIntersectPoint(springPositionFrom, springPositionTo, massPointPosition, massPointPositionTo) is not null) intersections++;
-        if (_segmentIntersector.GetIntersectPoint(springPrevPositionFrom, springPrevPositionTo, massPointPosition, massPointPositionTo) is not null) intersections++;
-        if (_segmentIntersector.GetIntersectPoint(springPrevPositionFrom, springPositionFrom, massPointPosition, massPointPositionTo) is not null) intersections++;
-        if (_segmentIntersector.GetIntersectPoint(springPrevPositionTo, springPositionTo, massPointPosition, massPointPositionTo) is not null) intersections++;
-
-        if ((intersections % 2) != 0)
+        if (_polygonChecker.IsPointInPolygon(polygonPoints, massPointPosition, maxY))
         {
             var minY = Math.Min(Math.Min(springPositionFrom.Y, springPositionTo.Y), Math.Min(springPrevPositionFrom.Y, springPrevPositionTo.Y));
             var minX = Math.Min(Math.Min(springPositionFrom.X, springPositionTo.X), Math.Min(springPrevPositionFrom.X, springPrevPositionTo.X));
             var maxX = Math.Max(Math.Max(springPositionFrom.X, springPositionTo.X), Math.Max(springPrevPositionFrom.X, springPrevPositionTo.X));
 
             var intersectPoint =
-                _segmentIntersector.GetIntersectPoint(springPositionFrom, springPositionTo, massPointPosition, massPointPositionTo) ??
+                _segmentIntersector.GetIntersectPoint(springPositionFrom, springPositionTo, massPointPosition, new(massPointPosition.X, maxY)) ??
                 _segmentIntersector.GetIntersectPoint(springPositionFrom, springPositionTo, massPointPosition, new(massPointPosition.X, minY)) ??
                 _segmentIntersector.GetIntersectPoint(springPositionFrom, springPositionTo, massPointPosition, new(minX, massPointPosition.Y)) ??
                 _segmentIntersector.GetIntersectPoint(springPositionFrom, springPositionTo, massPointPosition, new(maxX, massPointPosition.Y));

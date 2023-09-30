@@ -1,5 +1,7 @@
 ﻿using DependencyInjection;
 using SoftBodyPhysics.Factories;
+using SoftBodyPhysics.Geo;
+using SoftBodyPhysics.Intersections;
 using SoftBodyPhysics.Model;
 
 namespace SoftBodyPhysics.Utils;
@@ -11,9 +13,10 @@ internal class MainInjectModule : InjectModule
         bindingProvider.Bind<IPhysicsUnits, PhysicsUnits>().ToSingleton();
         bindingProvider.Bind<INormalCalculator, NormalCalculator>().ToSingleton();
         bindingProvider.Bind<ILineIntersector, LineIntersector>().ToSingleton();
-        bindingProvider.Bind<ISegmentDetector, SegmentDetector>().ToSingleton();
+        bindingProvider.Bind<ISegmentChecker, SegmentChecker>().ToSingleton();
         bindingProvider.Bind<ISegmentIntersector, SegmentIntersector>().ToSingleton();
         bindingProvider.Bind<ISpringIntersector, SpringIntersector>().ToSingleton();
+        bindingProvider.Bind<IPolygonChecker, PolygonChecker>().ToSingleton();
         bindingProvider.Bind<ISoftBodyIntersector, SoftBodyIntersector>().ToSingleton();
         bindingProvider.Bind<ISoftBodiesCollection, SoftBodiesCollection>().ToSingleton();
         bindingProvider.Bind<IHardBodiesCollection, HardBodiesCollection>().ToSingleton();

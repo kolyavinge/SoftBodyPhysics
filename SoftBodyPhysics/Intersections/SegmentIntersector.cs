@@ -1,6 +1,6 @@
-﻿using SoftBodyPhysics.Utils;
+﻿using SoftBodyPhysics.Geo;
 
-namespace SoftBodyPhysics.Model;
+namespace SoftBodyPhysics.Intersections;
 
 internal interface ISegmentIntersector
 {
@@ -10,19 +10,19 @@ internal interface ISegmentIntersector
 internal class SegmentIntersector : ISegmentIntersector
 {
     private readonly ILineIntersector _lineIntersector;
-    private readonly ISegmentDetector _segmentDetector;
+    private readonly ISegmentChecker _segmentChecker;
 
-    public SegmentIntersector(ILineIntersector lineIntersector, ISegmentDetector segmentDetector)
+    public SegmentIntersector(ILineIntersector lineIntersector, ISegmentChecker segmentChecker)
     {
         _lineIntersector = lineIntersector;
-        _segmentDetector = segmentDetector;
+        _segmentChecker = segmentChecker;
     }
 
     public Vector? GetIntersectPoint(Vector line1From, Vector line1To, Vector line2From, Vector line2To)
     {
         var point = _lineIntersector.GetIntersectPoint(line1From, line1To, line2From, line2To);
         if (point is null) return null;
-        if (_segmentDetector.InSegment(line1From, line1To, point.Value) && _segmentDetector.InSegment(line2From, line2To, point.Value))
+        if (_segmentChecker.IsPointInSegment(line1From, line1To, point.Value) && _segmentChecker.IsPointInSegment(line2From, line2To, point.Value))
         {
             return point;
         }
