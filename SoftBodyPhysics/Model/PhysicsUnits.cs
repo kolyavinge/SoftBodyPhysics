@@ -6,7 +6,7 @@ public interface IPhysicsUnits
 
     double MassPointRadius { get; set; }
 
-    double TimeDelta { get; set; }
+    double TimeDelta { get; }
 
     double SpringStiffness { get; set; }
 
@@ -23,7 +23,7 @@ internal class PhysicsUnits : IPhysicsUnits
 
     public double MassPointRadius { get; set; }
 
-    public double TimeDelta { get; set; }
+    public double TimeDelta { get; }
 
     public double SpringStiffness { get; set; }
 

@@ -122,17 +122,16 @@ internal static class Examples
         var softBody = physicsWorld.AddSoftBody();
         var p1 = softBody.AddMassPoint(new(500, 200));
         var p2 = softBody.AddMassPoint(new(500, 400));
-        p2.DebugInfo = "A";
         var p3 = softBody.AddMassPoint(new(700, 400));
         var p4 = softBody.AddMassPoint(new(700, 200));
         var s = softBody.AddSpring(p1, p2);
-        //s.IsEdge = true;
+        s.IsEdge = true;
         s = softBody.AddSpring(p2, p3);
-        //s.IsEdge = true;
+        s.IsEdge = true;
         s = softBody.AddSpring(p3, p4);
-        //s.IsEdge = true;
+        s.IsEdge = true;
         s = softBody.AddSpring(p4, p1);
-        //s.IsEdge = true;
+        s.IsEdge = true;
         softBody.AddSpring(p1, p3);
         softBody.AddSpring(p2, p4);
 
@@ -142,29 +141,24 @@ internal static class Examples
         p3 = softBody.AddMassPoint(new(600, 1200));
         p4 = softBody.AddMassPoint(new(600, 1000));
         s = softBody.AddSpring(p1, p2);
-        //s.IsEdge = true;
+        s.IsEdge = true;
         s = softBody.AddSpring(p2, p3);
-        //s.IsEdge = true;
+        s.IsEdge = true;
         s = softBody.AddSpring(p3, p4);
-        //s.IsEdge = true;
+        s.IsEdge = true;
         s = softBody.AddSpring(p4, p1);
-        s.DebugInfo = "B";
-        //p4.Radius = 5;
-        //p1.Radius = 5;
-        //s.IsEdge = true;
-        s.DebugInfo = "B";
+        s.IsEdge = true;
         softBody.AddSpring(p1, p3);
         softBody.AddSpring(p2, p4);
 
         var hardBody = physicsWorld.AddHardBody();
         hardBody.AddEdge(new(0, 100), new(0, 1000));
-        hardBody.AddEdge(new(900, 100), new(900, 1000));
-        hardBody.AddEdge(new(0, 100), new(10000, 100));
+        hardBody.AddEdge(new(950, 100), new(950, 1000));
+        hardBody.AddEdge(new(0, 100), new(950, 100));
     }
 
     public static void SoftBodyCollisionsManyMassPoints(IPhysicsWorld physicsWorld)
     {
-        physicsWorld.Units.TimeDelta = 0.1;
         physicsWorld.Units.SpringStiffness = 10;
 
         // one
@@ -181,7 +175,6 @@ internal static class Examples
         var p23 = softBody.AddMassPoint(new(450, 350));
 
         var p30 = softBody.AddMassPoint(new(500, 350));
-        p30.DebugInfo = "A";
         var p31 = softBody.AddMassPoint(new(500, 300));
         var p32 = softBody.AddMassPoint(new(500, 250));
         var p33 = softBody.AddMassPoint(new(500, 200));
@@ -190,23 +183,37 @@ internal static class Examples
         var p41 = softBody.AddMassPoint(new(400, 200));
         var p42 = softBody.AddMassPoint(new(350, 200));
 
-        softBody.AddSpring(p10, p11);
-        softBody.AddSpring(p11, p12);
+        var s = softBody.AddSpring(p10, p11);
+        s.IsEdge = true;
+        s = softBody.AddSpring(p11, p12);
+        s.IsEdge = true;
 
-        softBody.AddSpring(p12, p20);
-        softBody.AddSpring(p20, p21);
-        softBody.AddSpring(p21, p22);
-        softBody.AddSpring(p22, p23);
+        s = softBody.AddSpring(p12, p20);
+        s.IsEdge = true;
+        s = softBody.AddSpring(p20, p21);
+        s.IsEdge = true;
+        s = softBody.AddSpring(p21, p22);
+        s.IsEdge = true;
+        s = softBody.AddSpring(p22, p23);
+        s.IsEdge = true;
 
-        softBody.AddSpring(p23, p30);
-        softBody.AddSpring(p30, p31);
-        softBody.AddSpring(p31, p32);
-        softBody.AddSpring(p32, p33);
+        s = softBody.AddSpring(p23, p30);
+        s.IsEdge = true;
+        s = softBody.AddSpring(p30, p31);
+        s.IsEdge = true;
+        s = softBody.AddSpring(p31, p32);
+        s.IsEdge = true;
+        s = softBody.AddSpring(p32, p33);
+        s.IsEdge = true;
 
-        softBody.AddSpring(p33, p40);
-        softBody.AddSpring(p40, p41);
-        softBody.AddSpring(p41, p42);
-        softBody.AddSpring(p42, p10);
+        s = softBody.AddSpring(p33, p40);
+        s.IsEdge = true;
+        s = softBody.AddSpring(p40, p41);
+        s.IsEdge = true;
+        s = softBody.AddSpring(p41, p42);
+        s.IsEdge = true;
+        s = softBody.AddSpring(p42, p10);
+        s.IsEdge = true;
 
         softBody.AddSpring(p10, p30);
         softBody.AddSpring(p20, p33);
@@ -240,26 +247,37 @@ internal static class Examples
         p41 = softBody.AddMassPoint(new(400 + 120, 1200));
         p42 = softBody.AddMassPoint(new(350 + 120, 1200));
 
-        softBody.AddSpring(p10, p11);
-        softBody.AddSpring(p11, p12);
+        s = softBody.AddSpring(p10, p11);
+        s.IsEdge = true;
+        s = softBody.AddSpring(p11, p12);
+        s.IsEdge = true;
 
-        softBody.AddSpring(p12, p20);
-        softBody.AddSpring(p20, p21);
-        softBody.AddSpring(p21, p22);
-        softBody.AddSpring(p22, p23);
+        s = softBody.AddSpring(p12, p20);
+        s.IsEdge = true;
+        s = softBody.AddSpring(p20, p21);
+        s.IsEdge = true;
+        s = softBody.AddSpring(p21, p22);
+        s.IsEdge = true;
+        s = softBody.AddSpring(p22, p23);
+        s.IsEdge = true;
 
-        softBody.AddSpring(p23, p30);
-        softBody.AddSpring(p30, p31);
-        softBody.AddSpring(p31, p32);
-        softBody.AddSpring(p32, p33);
+        s = softBody.AddSpring(p23, p30);
+        s.IsEdge = true;
+        s = softBody.AddSpring(p30, p31);
+        s.IsEdge = true;
+        s = softBody.AddSpring(p31, p32);
+        s.IsEdge = true;
+        s = softBody.AddSpring(p32, p33);
+        s.IsEdge = true;
 
-        softBody.AddSpring(p33, p40);
-        softBody.AddSpring(p40, p41);
-        var s = softBody.AddSpring(p41, p42);
-        p41.Radius = 5;
-        p42.Radius = 5;
-        s.DebugInfo = "B";
-        softBody.AddSpring(p42, p10);
+        s = softBody.AddSpring(p33, p40);
+        s.IsEdge = true;
+        s = softBody.AddSpring(p40, p41);
+        s.IsEdge = true;
+        s = softBody.AddSpring(p41, p42);
+        s.IsEdge = true;
+        s = softBody.AddSpring(p42, p10);
+        s.IsEdge = true;
 
         softBody.AddSpring(p10, p30);
         softBody.AddSpring(p20, p33);
@@ -272,6 +290,8 @@ internal static class Examples
         softBody.AddSpring(p12, p31);
 
         var hardBody = physicsWorld.AddHardBody();
-        hardBody.AddEdge(new(0, 100), new(10000, 100));
+        hardBody.AddEdge(new(0, 100), new(0, 1000));
+        hardBody.AddEdge(new(1000, 100), new(1000, 1000));
+        hardBody.AddEdge(new(0, 100), new(1000, 100));
     }
 }

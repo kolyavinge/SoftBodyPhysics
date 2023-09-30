@@ -31,6 +31,7 @@ public partial class MainWindow : Window
         _physicsWorld = PhysicsWorldFactory.Make();
         _physicsWorld.Units.MassPointRadius = 3;
         Examples.SoftBodyCollisions(_physicsWorld);
+        //Examples.SoftBodyCollisionsManyMassPoints(_physicsWorld);
     }
 
     private void UpdateWorld()
