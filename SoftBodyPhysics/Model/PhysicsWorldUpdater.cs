@@ -14,6 +14,7 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
     private readonly ISoftBodiesCollection _softBodiesCollection;
     private readonly IHardBodiesCollection _hardBodiesCollection;
     private readonly ISegmentIntersector _segmentIntersector;
+    private readonly ISoftBodyBordersUpdater _softBodyBordersUpdater;
     private readonly INormalCalculator _normalCalculator;
     private readonly ISoftBodyIntersector _softBodyIntersector;
     private readonly IPhysicsUnits _physicsUnits;
@@ -24,11 +25,13 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
         INormalCalculator normalCalculator,
         ISoftBodyIntersector softBodyIntersector,
         ISegmentIntersector segmentIntersector,
+        ISoftBodyBordersUpdater softBodyBordersUpdater,
         IPhysicsUnits physicsUnits)
     {
         _softBodiesCollection = softBodiesCollection;
         _hardBodiesCollection = hardBodiesCollection;
         _segmentIntersector = segmentIntersector;
+        _softBodyBordersUpdater = softBodyBordersUpdater;
         _normalCalculator = normalCalculator;
         _softBodyIntersector = softBodyIntersector;
         _physicsUnits = physicsUnits;
@@ -37,25 +40,28 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
     public void Update()
     {
         InitMassPoints();
-        ApplyGravityForce();
+        InitGravityForce();
         ApplySpringForce();
         ApplyVelocity();
         ApplyPositions();
         ApplySoftBodyCollisions();
         ApplyHardBodyCollisions();
+        _softBodyBordersUpdater.Update();
     }
 
     private void InitMassPoints()
     {
-        _softBodiesCollection.AllMassPoints.Each(x => x.ResetForce());
-        _softBodiesCollection.AllMassPoints.Each(x => x.ResetState());
+        foreach (var massPoint in _softBodiesCollection.AllMassPoints)
+        {
+            massPoint.ResetState();
+        }
     }
 
-    private void ApplyGravityForce()
+    private void InitGravityForce()
     {
         foreach (var massPoint in _softBodiesCollection.AllMassPoints)
         {
-            massPoint.Force += new Vector(0.0, -_physicsUnits.GravityAcceleration * massPoint.Mass);
+            massPoint.Force = new Vector(0.0, -_physicsUnits.GravityAcceleration * massPoint.Mass);
         }
     }
 
@@ -63,11 +69,14 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
     {
         foreach (var spring in _softBodiesCollection.AllSprings)
         {
+            var a = spring.PointA;
+            var b = spring.PointB;
             var fs = spring.Stiffness * spring.DeformLength;
-            var fd = _physicsUnits.SpringDamper * ((spring.PointB.Position - spring.PointA.Position).Normalized * (spring.PointB.Velocity - spring.PointA.Velocity));
+            var diffBA = (b.Position - a.Position).Normalized;
+            var fd = _physicsUnits.SpringDamper * (diffBA * (b.Velocity - a.Velocity)); // (B.Position - A.Position).Normalized * (B.Velocity - A.Velocity)
             var f = fs + fd;
-            spring.PointA.Force += f * (spring.PointB.Position - spring.PointA.Position).Normalized;
-            spring.PointB.Force += f * (spring.PointA.Position - spring.PointB.Position).Normalized;
+            a.Force += f * diffBA; // (B.Position - A.Position).Normalized
+            b.Force -= f * diffBA; // (A.Position - B.Position).Normalized
         }
     }
 

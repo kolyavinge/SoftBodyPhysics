@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using SoftBodyPhysics.Geo;
+using SoftBodyPhysics.Model;
 
 namespace SoftBodyPhysics.Intersections;
 
 internal interface IPolygonChecker
 {
-    bool IsPointInPolygon(IEnumerable<(Vector from, Vector to)> polygonPoints, Vector point, double maxY);
+    bool IsPointInPolygon(IEnumerable<ISegment> polygonPoints, Borders borders, Vector point);
 }
 
 internal class PolygonChecker : IPolygonChecker
@@ -17,13 +18,14 @@ internal class PolygonChecker : IPolygonChecker
         _segmentIntersector = segmentIntersector;
     }
 
-    public bool IsPointInPolygon(IEnumerable<(Vector from, Vector to)> polygonPoints, Vector point, double maxY)
+    public bool IsPointInPolygon(IEnumerable<ISegment> polygonPoints, Borders borders, Vector point)
     {
-        var pointTo = new Vector(point.X, maxY);
+        if (!borders.IsPointIn(point)) return false;
+        var pointTo = new Vector(point.X, borders.MaxY);
         int intersections = 0;
-        foreach (var (from, to) in polygonPoints)
+        foreach (var polygonPoint in polygonPoints)
         {
-            if (_segmentIntersector.GetIntersectPoint(from, to, point, pointTo) is not null)
+            if (_segmentIntersector.GetIntersectPoint(polygonPoint.PointA.Position, polygonPoint.PointB.Position, point, pointTo) is not null)
             {
                 intersections++;
             }

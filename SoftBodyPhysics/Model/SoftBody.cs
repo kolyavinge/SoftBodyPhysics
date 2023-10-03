@@ -24,9 +24,13 @@ internal class SoftBody : ISoftBody
     IReadOnlyCollection<ISpring> ISoftBody.Springs => Springs;
     #endregion
 
-    public List<MassPoint> MassPoints { get; }
+    public readonly List<MassPoint> MassPoints;
 
-    public List<Spring> Springs { get; }
+    public readonly List<Spring> Springs;
+
+    public List<Spring> Edges => Springs.Where(x => x.IsEdge).ToList();
+
+    public Borders Borders;
 
     public SoftBody(IPhysicsUnits physicsUnits)
     {

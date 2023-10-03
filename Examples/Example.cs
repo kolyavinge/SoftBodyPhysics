@@ -1,8 +1,8 @@
 ﻿using SoftBodyPhysics.Model;
 
-namespace DemoApp;
+namespace Examples;
 
-internal static class Examples
+public static class Example
 {
     public static void OneMassPoint(IPhysicsWorld physicsWorld)
     {

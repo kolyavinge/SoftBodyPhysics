@@ -1,16 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using SoftBodyPhysics.Geo;
+﻿using SoftBodyPhysics.Geo;
 using SoftBodyPhysics.Model;
 
 namespace SoftBodyPhysics.Intersections;
 
-internal class IntersectPoint
+internal class IntersectResult
 {
     public readonly Spring Spring;
     public readonly Vector Point;
 
-    public IntersectPoint(Spring spring, Vector point)
+    public IntersectResult(Spring spring, Vector point)
     {
         Spring = spring;
         Point = point;
@@ -19,7 +17,7 @@ internal class IntersectPoint
 
 internal interface ISoftBodyIntersector
 {
-    IntersectPoint? GetIntersectPoint(SoftBody softBody, Vector point);
+    IntersectResult? GetIntersectPoint(SoftBody softBody, Vector point);
 }
 
 internal class SoftBodyIntersector : ISoftBodyIntersector
@@ -35,44 +33,36 @@ internal class SoftBodyIntersector : ISoftBodyIntersector
         _segmentIntersector = segmentIntersector;
     }
 
-    public IntersectPoint? GetIntersectPoint(SoftBody softBody, Vector point)
+    public IntersectResult? GetIntersectPoint(SoftBody softBody, Vector point)
     {
-        var edges = softBody.Springs.Where(x => x.IsEdge).ToList();
-        var polygonPoints = edges.Select(x => (x.PointA.Position, x.PointB.Position)).ToList();
-        var vectors = polygonPoints.Select(x => x.Item1).Union(polygonPoints.Select(x => x.Item2)).Union(new[] { point }).ToArray();
-        var maxY = Vectors.GetMaxY(vectors);
+        if (!_polygonChecker.IsPointInPolygon(softBody.Edges, softBody.Borders, point)) return null;
 
-        if (!_polygonChecker.IsPointInPolygon(polygonPoints, point, maxY)) return null;
-
-        var minX = Vectors.GetMinX(vectors);
-        var maxX = Vectors.GetMaxX(vectors);
-        var minY = Vectors.GetMinY(vectors);
-
-        var intersectPoints = new List<IntersectPoint>();
-        foreach (var edge in edges)
+        var pointToList = new Vector[]
         {
-            var p = _segmentIntersector.GetIntersectPoint(edge.PointA.Position, edge.PointB.Position, point, new(minX, point.Y));
-            if (p is not null) intersectPoints.Add(new(edge, p.Value));
+            new(softBody.Borders.MinX, point.Y),
+            new(softBody.Borders.MaxX, point.Y),
+            new(point.X, softBody.Borders.MinY),
+            new(point.X, softBody.Borders.MaxY)
+        };
 
-            p = _segmentIntersector.GetIntersectPoint(edge.PointA.Position, edge.PointB.Position, point, new(maxX, point.Y));
-            if (p is not null) intersectPoints.Add(new(edge, p.Value));
+        IntersectResult? result = null;
 
-            p = _segmentIntersector.GetIntersectPoint(edge.PointA.Position, edge.PointB.Position, point, new(point.X, minY));
-            if (p is not null) intersectPoints.Add(new(edge, p.Value));
+        var minDistance = double.MaxValue;
 
-            p = _segmentIntersector.GetIntersectPoint(edge.PointA.Position, edge.PointB.Position, point, new(point.X, maxY));
-            if (p is not null) intersectPoints.Add(new(edge, p.Value));
-        }
-
-        var result = intersectPoints.First();
-        var distance = (result.Point - point).Length;
-        foreach (var intersectPoint in intersectPoints.Skip(1))
+        foreach (var edge in softBody.Edges)
         {
-            var currentDistance = (intersectPoint.Point - point).Length;
-            if (currentDistance < distance)
+            foreach (var pointTo in pointToList)
             {
-                result = intersectPoint;
-                distance = currentDistance;
+                var intersectPoint = _segmentIntersector.GetIntersectPoint(edge.PointA.Position, edge.PointB.Position, point, pointTo);
+                if (intersectPoint is not null)
+                {
+                    var distance = (intersectPoint.Value - point).Length;
+                    if (distance < minDistance)
+                    {
+                        minDistance = distance;
+                        result = new(edge, intersectPoint.Value);
+                    }
+                }
             }
         }
 

@@ -3,13 +3,16 @@ using SoftBodyPhysics.Geo;
 
 namespace SoftBodyPhysics.Model;
 
-public interface ISpring
+public interface ISegment
 {
-    bool IsEdge { get; set; }
-
     IMassPoint PointA { get; }
 
     IMassPoint PointB { get; }
+}
+
+public interface ISpring : ISegment
+{
+    bool IsEdge { get; set; }
 
     Vector Force { get; }
 
@@ -24,9 +27,9 @@ public interface ISpring
 
 internal class Spring : ISpring
 {
-    #region ISpring
-    IMassPoint ISpring.PointA => PointA;
-    IMassPoint ISpring.PointB => PointB;
+    #region ISegment
+    IMassPoint ISegment.PointA => PointA;
+    IMassPoint ISegment.PointB => PointB;
     #endregion
 
     public bool IsEdge { get; set; }

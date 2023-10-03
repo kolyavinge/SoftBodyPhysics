@@ -15,13 +15,13 @@ internal class MainInjectModule : InjectModule
         bindingProvider.Bind<ILineIntersector, LineIntersector>().ToSingleton();
         bindingProvider.Bind<ISegmentChecker, SegmentChecker>().ToSingleton();
         bindingProvider.Bind<ISegmentIntersector, SegmentIntersector>().ToSingleton();
-        bindingProvider.Bind<ISpringIntersector, SpringIntersector>().ToSingleton();
         bindingProvider.Bind<IPolygonChecker, PolygonChecker>().ToSingleton();
         bindingProvider.Bind<ISoftBodyIntersector, SoftBodyIntersector>().ToSingleton();
         bindingProvider.Bind<ISoftBodiesCollection, SoftBodiesCollection>().ToSingleton();
         bindingProvider.Bind<IHardBodiesCollection, HardBodiesCollection>().ToSingleton();
         bindingProvider.Bind<ISoftBodyFactory, SoftBodyFactory>().ToSingleton();
         bindingProvider.Bind<IHardBodyFactory, HardBodyFactory>().ToSingleton();
+        bindingProvider.Bind<ISoftBodyBordersUpdater, SoftBodyBordersUpdater>().ToSingleton();
         bindingProvider.Bind<IPhysicsWorldUpdater, PhysicsWorldUpdater>().ToSingleton();
         bindingProvider.Bind<IPhysicsWorld, PhysicsWorld>().ToSingleton();
     }
