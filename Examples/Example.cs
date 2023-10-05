@@ -176,6 +176,42 @@ public static class Example
         editor.Complete();
     }
 
+    public static void SoftBodyVerticalCollisions(IPhysicsWorld physicsWorld)
+    {
+        var editor = physicsWorld.MakEditor();
+
+        var softBody = editor.MakeSoftBody();
+        var p1 = editor.AddMassPoint(softBody, new(400, 200));
+        var p2 = editor.AddMassPoint(softBody, new(400, 400));
+        var p3 = editor.AddMassPoint(softBody, new(600, 400));
+        var p4 = editor.AddMassPoint(softBody, new(600, 200));
+        editor.AddSpring(softBody, p1, p2);
+        editor.AddSpring(softBody, p2, p3);
+        editor.AddSpring(softBody, p3, p4);
+        editor.AddSpring(softBody, p4, p1);
+        editor.AddSpring(softBody, p1, p3);
+        editor.AddSpring(softBody, p2, p4);
+
+        softBody = editor.MakeSoftBody();
+        p1 = editor.AddMassPoint(softBody, new(400, 800));
+        p2 = editor.AddMassPoint(softBody, new(400, 1000));
+        p3 = editor.AddMassPoint(softBody, new(600, 1000));
+        p4 = editor.AddMassPoint(softBody, new(600, 800));
+        editor.AddSpring(softBody, p1, p2);
+        editor.AddSpring(softBody, p2, p3);
+        editor.AddSpring(softBody, p3, p4);
+        editor.AddSpring(softBody, p4, p1);
+        editor.AddSpring(softBody, p1, p3);
+        editor.AddSpring(softBody, p2, p4);
+
+        var hardBody = editor.AddHardBody();
+        editor.AddEdge(hardBody, new(0, 100), new(0, 1000));
+        editor.AddEdge(hardBody, new(950, 100), new(950, 1000));
+        editor.AddEdge(hardBody, new(0, 100), new(950, 100));
+
+        editor.Complete();
+    }
+
     public static void SoftBodyCollisionsManyMassPoints(IPhysicsWorld physicsWorld)
     {
         physicsWorld.Units.SpringStiffness = 10;
@@ -297,7 +333,7 @@ public static class Example
         var editor = physicsWorld.MakEditor();
 
         var size = 40;
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < 5; i++)
         {
             var x = 100;
             var y = 500 + 200 * i;

@@ -31,7 +31,7 @@ public partial class MainWindow : Window
         FramesTextBox.Text = "Frame: 0";
         _physicsWorld = PhysicsWorldFactory.Make();
         _physicsWorld.Units.MassPointRadius = 3;
-        Example.ManySoftBodyCollisions(_physicsWorld);
+        Example.SoftBodyVerticalCollisions(_physicsWorld);
     }
 
     private void UpdateWorld()
@@ -43,7 +43,10 @@ public partial class MainWindow : Window
 
     private void OnTimer(object? sender, EventArgs e)
     {
-        UpdateWorld();
+        for (int i = 0; i < 1; i++)
+        {
+            UpdateWorld();
+        }
     }
 
     protected override void OnRender(DrawingContext dc)

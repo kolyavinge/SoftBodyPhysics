@@ -21,7 +21,7 @@ internal class PolygonChecker : IPolygonChecker
     public bool IsPointInPolygon(IEnumerable<ISegment> polygonPoints, Borders borders, Vector point)
     {
         if (!borders.IsPointIn(point)) return false;
-        var pointTo = new Vector(point.X, borders.MaxY);
+        var pointTo = new Vector(point.X, borders.MaxY + 1.0);
         int intersections = 0;
         foreach (var polygonPoint in polygonPoints)
         {
