@@ -16,6 +16,8 @@ internal class BodyEditorFactory : IBodyEditorFactory
     private readonly IEdgeFactory _edgeFactory;
     private readonly ISoftBodiesCollection _softBodiesCollection;
     private readonly IHardBodiesCollection _hardBodiesCollection;
+    private readonly ISoftBodyBordersUpdater _softBodyBordersUpdater;
+    private readonly ISoftBodySpringEdgeDetector _softBodySpringEdgeDetector;
 
     public BodyEditorFactory(
         ISoftBodyFactory softBodyFactory,
@@ -24,7 +26,9 @@ internal class BodyEditorFactory : IBodyEditorFactory
         ISpringFactory springFactory,
         IEdgeFactory edgeFactory,
         ISoftBodiesCollection softBodiesCollection,
-        IHardBodiesCollection hardBodiesCollection)
+        IHardBodiesCollection hardBodiesCollection,
+        ISoftBodyBordersUpdater softBodyBordersUpdater,
+        ISoftBodySpringEdgeDetector softBodySpringEdgeDetector)
     {
         _softBodyFactory = softBodyFactory;
         _hardBodyFactory = hardBodyFactory;
@@ -33,6 +37,8 @@ internal class BodyEditorFactory : IBodyEditorFactory
         _edgeFactory = edgeFactory;
         _softBodiesCollection = softBodiesCollection;
         _hardBodiesCollection = hardBodiesCollection;
+        _softBodyBordersUpdater = softBodyBordersUpdater;
+        _softBodySpringEdgeDetector = softBodySpringEdgeDetector;
     }
 
     public IBodyEditor Make()
@@ -44,6 +50,8 @@ internal class BodyEditorFactory : IBodyEditorFactory
             _springFactory,
             _edgeFactory,
             _softBodiesCollection,
-            _hardBodiesCollection);
+            _hardBodiesCollection,
+            _softBodyBordersUpdater,
+            _softBodySpringEdgeDetector);
     }
 }

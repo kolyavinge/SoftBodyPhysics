@@ -23,6 +23,8 @@ internal class SoftBodiesCollection : ISoftBodiesCollection
     public SoftBodiesCollection()
     {
         _softBodies = new List<SoftBody>();
+        AllMassPoints = new List<MassPoint>();
+        AllSprings = new List<Spring>();
     }
 
     public IReadOnlyCollection<MassPoint> AllMassPoints { get; private set; }

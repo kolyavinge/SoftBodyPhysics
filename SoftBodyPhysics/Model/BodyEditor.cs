@@ -31,6 +31,8 @@ internal class BodyEditor : IBodyEditor
     private readonly IEdgeFactory _edgeFactory;
     private readonly ISoftBodiesCollection _softBodiesCollection;
     private readonly IHardBodiesCollection _hardBodiesCollection;
+    private readonly ISoftBodyBordersUpdater _softBodyBordersUpdater;
+    private readonly ISoftBodySpringEdgeDetector _softBodySpringEdgeDetector;
     private readonly Dictionary<ISoftBody, SoftBody> _newSoftBodies;
     private readonly Dictionary<IMassPoint, MassPoint> _newMassPoints;
     private readonly Dictionary<IHardBody, HardBody> _newHardBodies;
@@ -42,7 +44,9 @@ internal class BodyEditor : IBodyEditor
         ISpringFactory springFactory,
         IEdgeFactory edgeFactory,
         ISoftBodiesCollection softBodiesCollection,
-        IHardBodiesCollection hardBodiesCollection)
+        IHardBodiesCollection hardBodiesCollection,
+        ISoftBodyBordersUpdater softBodyBordersUpdater,
+        ISoftBodySpringEdgeDetector softBodySpringEdgeDetector)
     {
         _completeActions = new List<Action>();
         _softBodyFactory = softBodyFactory;
@@ -52,6 +56,8 @@ internal class BodyEditor : IBodyEditor
         _edgeFactory = edgeFactory;
         _softBodiesCollection = softBodiesCollection;
         _hardBodiesCollection = hardBodiesCollection;
+        _softBodyBordersUpdater = softBodyBordersUpdater;
+        _softBodySpringEdgeDetector = softBodySpringEdgeDetector;
         _newSoftBodies = new Dictionary<ISoftBody, SoftBody>();
         _newMassPoints = new Dictionary<IMassPoint, MassPoint>();
         _newHardBodies = new Dictionary<IHardBody, HardBody>();
@@ -125,6 +131,7 @@ internal class BodyEditor : IBodyEditor
         _completeActions.Each(x => x.Invoke());
         _softBodiesCollection.AddSoftBodies(_newSoftBodies.Values);
         _hardBodiesCollection.AddHardBodies(_newHardBodies.Values);
-        _newSoftBodies.Values.Each(x => x.UpdateEdges());
+        _softBodySpringEdgeDetector.DetectEdges(_newSoftBodies.Values);
+        _softBodyBordersUpdater.UpdateBorders(_newSoftBodies.Values);
     }
 }

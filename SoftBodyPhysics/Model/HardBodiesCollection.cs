@@ -21,6 +21,7 @@ internal class HardBodiesCollection : IHardBodiesCollection
     public HardBodiesCollection()
     {
         _hardBodies = new List<HardBody>();
+        AllEdges = new List<Edge>();
     }
 
     public IReadOnlyCollection<Edge> AllEdges { get; private set; }

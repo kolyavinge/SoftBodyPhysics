@@ -46,7 +46,7 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
         ApplyPositions();
         ApplySoftBodyCollisions();
         ApplyHardBodyCollisions();
-        _softBodyBordersUpdater.Update();
+        _softBodyBordersUpdater.UpdateBorders(_softBodiesCollection.SoftBodies);
     }
 
     private void InitMassPoints()

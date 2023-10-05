@@ -1,56 +1,27 @@
-﻿using System.Linq;
-using SoftBodyPhysics.Geo;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace SoftBodyPhysics.Model;
 
 internal interface ISoftBodyBordersUpdater
 {
-    void Update();
+    void UpdateBorders(IEnumerable<SoftBody> softBodies);
 }
 
 internal class SoftBodyBordersUpdater : ISoftBodyBordersUpdater
 {
-    private readonly ISoftBodiesCollection _softBodiesCollection;
+    private readonly IBordersCalculator _bordersCalculator;
 
-    public SoftBodyBordersUpdater(ISoftBodiesCollection softBodiesCollection)
+    public SoftBodyBordersUpdater(IBordersCalculator bordersCalculator)
     {
-        _softBodiesCollection = softBodiesCollection;
+        _bordersCalculator = bordersCalculator;
     }
 
-    public void Update()
+    public void UpdateBorders(IEnumerable<SoftBody> softBodies)
     {
-        foreach (var softBody in _softBodiesCollection.SoftBodies)
+        foreach (var softBody in softBodies.Where(x => x.Edges.Length > 0))
         {
-            var firstEdge = softBody.Edges.FirstOrDefault();
-            if (firstEdge is null) continue;
-
-            Vector positionA = firstEdge.PointA.Position;
-            Vector positionB;
-
-            double minX = positionA.X;
-            double maxX = positionA.X;
-            double minY = positionA.Y;
-            double maxY = positionA.Y;
-
-            foreach (var edge in softBody.Edges.Skip(1))
-            {
-                positionA = edge.PointA.Position;
-                positionB = edge.PointB.Position;
-
-                if (positionA.X < minX) minX = positionA.X;
-                if (positionB.X < minX) minX = positionB.X;
-
-                if (positionA.X > maxX) maxX = positionA.X;
-                if (positionB.X > maxX) maxX = positionB.X;
-
-                if (positionA.Y < minY) minY = positionA.Y;
-                if (positionB.Y < minY) minY = positionB.Y;
-
-                if (positionA.Y > maxY) maxY = positionA.Y;
-                if (positionB.Y > maxY) maxY = positionB.Y;
-            }
-
-            softBody.Borders = new(minX, maxX, minY, maxY);
+            softBody.Borders = _bordersCalculator.GetBorders(softBody.Edges);
         }
     }
 }

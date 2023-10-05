@@ -12,7 +12,7 @@ public interface ISegment
 
 public interface ISpring : ISegment
 {
-    bool IsEdge { get; set; }
+    bool IsEdge { get; }
 
     Vector Force { get; }
 

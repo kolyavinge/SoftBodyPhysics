@@ -149,14 +149,10 @@ public static class Example
         var p2 = editor.AddMassPoint(softBody, new(500, 400));
         var p3 = editor.AddMassPoint(softBody, new(700, 400));
         var p4 = editor.AddMassPoint(softBody, new(700, 200));
-        var s = editor.AddSpring(softBody, p1, p2);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p2, p3);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p3, p4);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p4, p1);
-        s.IsEdge = true;
+        editor.AddSpring(softBody, p1, p2);
+        editor.AddSpring(softBody, p2, p3);
+        editor.AddSpring(softBody, p3, p4);
+        editor.AddSpring(softBody, p4, p1);
         editor.AddSpring(softBody, p1, p3);
         editor.AddSpring(softBody, p2, p4);
 
@@ -165,14 +161,10 @@ public static class Example
         p2 = editor.AddMassPoint(softBody, new(400, 1200));
         p3 = editor.AddMassPoint(softBody, new(600, 1200));
         p4 = editor.AddMassPoint(softBody, new(600, 1000));
-        s = editor.AddSpring(softBody, p1, p2);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p2, p3);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p3, p4);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p4, p1);
-        s.IsEdge = true;
+        editor.AddSpring(softBody, p1, p2);
+        editor.AddSpring(softBody, p2, p3);
+        editor.AddSpring(softBody, p3, p4);
+        editor.AddSpring(softBody, p4, p1);
         editor.AddSpring(softBody, p1, p3);
         editor.AddSpring(softBody, p2, p4);
 
@@ -212,37 +204,23 @@ public static class Example
         var p41 = editor.AddMassPoint(softBody, new(400, 200));
         var p42 = editor.AddMassPoint(softBody, new(350, 200));
 
-        var s = editor.AddSpring(softBody, p10, p11);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p11, p12);
-        s.IsEdge = true;
+        editor.AddSpring(softBody, p10, p11);
+        editor.AddSpring(softBody, p11, p12);
 
-        s = editor.AddSpring(softBody, p12, p20);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p20, p21);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p21, p22);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p22, p23);
-        s.IsEdge = true;
+        editor.AddSpring(softBody, p12, p20);
+        editor.AddSpring(softBody, p20, p21);
+        editor.AddSpring(softBody, p21, p22);
+        editor.AddSpring(softBody, p22, p23);
 
-        s = editor.AddSpring(softBody, p23, p30);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p30, p31);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p31, p32);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p32, p33);
-        s.IsEdge = true;
+        editor.AddSpring(softBody, p23, p30);
+        editor.AddSpring(softBody, p30, p31);
+        editor.AddSpring(softBody, p31, p32);
+        editor.AddSpring(softBody, p32, p33);
 
-        s = editor.AddSpring(softBody, p33, p40);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p40, p41);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p41, p42);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p42, p10);
-        s.IsEdge = true;
+        editor.AddSpring(softBody, p33, p40);
+        editor.AddSpring(softBody, p40, p41);
+        editor.AddSpring(softBody, p41, p42);
+        editor.AddSpring(softBody, p42, p10);
 
         editor.AddSpring(softBody, p10, p30);
         editor.AddSpring(softBody, p20, p33);
@@ -258,55 +236,41 @@ public static class Example
 
         softBody = editor.MakeSoftBody();
 
-        p10 = editor.AddMassPoint(softBody, new(300 + 120, 200));
-        p11 = editor.AddMassPoint(softBody, new(300 + 120, 250));
-        p12 = editor.AddMassPoint(softBody, new(300 + 120, 300));
+        p10 = editor.AddMassPoint(softBody, new(300 + 120, 200 + 500));
+        p11 = editor.AddMassPoint(softBody, new(300 + 120, 250 + 500));
+        p12 = editor.AddMassPoint(softBody, new(300 + 120, 300 + 500));
 
-        p20 = editor.AddMassPoint(softBody, new(300 + 120, 350));
-        p21 = editor.AddMassPoint(softBody, new(350 + 120, 350));
-        p22 = editor.AddMassPoint(softBody, new(400 + 120, 350));
-        p23 = editor.AddMassPoint(softBody, new(450 + 120, 350));
+        p20 = editor.AddMassPoint(softBody, new(300 + 120, 350 + 500));
+        p21 = editor.AddMassPoint(softBody, new(350 + 120, 350 + 500));
+        p22 = editor.AddMassPoint(softBody, new(400 + 120, 350 + 500));
+        p23 = editor.AddMassPoint(softBody, new(450 + 120, 350 + 500));
 
-        p30 = editor.AddMassPoint(softBody, new(500 + 120, 350));
-        p31 = editor.AddMassPoint(softBody, new(500 + 120, 300));
-        p32 = editor.AddMassPoint(softBody, new(500 + 120, 250));
-        p33 = editor.AddMassPoint(softBody, new(500 + 120, 200));
+        p30 = editor.AddMassPoint(softBody, new(500 + 120, 350 + 500));
+        p31 = editor.AddMassPoint(softBody, new(500 + 120, 300 + 500));
+        p32 = editor.AddMassPoint(softBody, new(500 + 120, 250 + 500));
+        p33 = editor.AddMassPoint(softBody, new(500 + 120, 200 + 500));
 
-        p40 = editor.AddMassPoint(softBody, new(450 + 120, 200));
-        p41 = editor.AddMassPoint(softBody, new(400 + 120, 200));
-        p42 = editor.AddMassPoint(softBody, new(350 + 120, 200));
+        p40 = editor.AddMassPoint(softBody, new(450 + 120, 200 + 500));
+        p41 = editor.AddMassPoint(softBody, new(400 + 120, 200 + 500));
+        p42 = editor.AddMassPoint(softBody, new(350 + 120, 200 + 500));
 
-        s = editor.AddSpring(softBody, p10, p11);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p11, p12);
-        s.IsEdge = true;
+        editor.AddSpring(softBody, p10, p11);
+        editor.AddSpring(softBody, p11, p12);
 
-        s = editor.AddSpring(softBody, p12, p20);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p20, p21);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p21, p22);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p22, p23);
-        s.IsEdge = true;
+        editor.AddSpring(softBody, p12, p20);
+        editor.AddSpring(softBody, p20, p21);
+        editor.AddSpring(softBody, p21, p22);
+        editor.AddSpring(softBody, p22, p23);
 
-        s = editor.AddSpring(softBody, p23, p30);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p30, p31);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p31, p32);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p32, p33);
-        s.IsEdge = true;
+        editor.AddSpring(softBody, p23, p30);
+        editor.AddSpring(softBody, p30, p31);
+        editor.AddSpring(softBody, p31, p32);
+        editor.AddSpring(softBody, p32, p33);
 
-        s = editor.AddSpring(softBody, p33, p40);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p40, p41);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p41, p42);
-        s.IsEdge = true;
-        s = editor.AddSpring(softBody, p42, p10);
-        s.IsEdge = true;
+        editor.AddSpring(softBody, p33, p40);
+        editor.AddSpring(softBody, p40, p41);
+        editor.AddSpring(softBody, p41, p42);
+        editor.AddSpring(softBody, p42, p10);
 
         editor.AddSpring(softBody, p10, p30);
         editor.AddSpring(softBody, p20, p33);
@@ -322,6 +286,38 @@ public static class Example
         editor.AddEdge(hardBody, new(0, 100), new(0, 1000));
         editor.AddEdge(hardBody, new(1000, 100), new(1000, 1000));
         editor.AddEdge(hardBody, new(0, 100), new(1000, 100));
+
+        editor.Complete();
+    }
+
+    public static void ManySoftBodyCollisions(IPhysicsWorld physicsWorld)
+    {
+        physicsWorld.Units.SpringStiffness = 10;
+
+        var editor = physicsWorld.MakEditor();
+
+        var size = 40;
+        for (int i = 0; i < 2; i++)
+        {
+            var x = 100;
+            var y = 500 + 200 * i;
+            var softBody = editor.MakeSoftBody();
+            var p1 = editor.AddMassPoint(softBody, new(x + 10 * i + size, y));
+            var p2 = editor.AddMassPoint(softBody, new(x + 10 * i + size, y + size));
+            var p3 = editor.AddMassPoint(softBody, new(x + 10 * i + size + size, y + size));
+            var p4 = editor.AddMassPoint(softBody, new(x + 10 * i + size + size, y));
+            editor.AddSpring(softBody, p1, p2);
+            editor.AddSpring(softBody, p2, p3);
+            editor.AddSpring(softBody, p3, p4);
+            editor.AddSpring(softBody, p4, p1);
+            editor.AddSpring(softBody, p1, p3);
+            editor.AddSpring(softBody, p2, p4);
+        }
+
+        var hardBody = editor.AddHardBody();
+        editor.AddEdge(hardBody, new(100, 100), new(500, 100));
+        editor.AddEdge(hardBody, new(100, 100), new(100, 800));
+        editor.AddEdge(hardBody, new(500, 100), new(500, 800));
 
         editor.Complete();
     }

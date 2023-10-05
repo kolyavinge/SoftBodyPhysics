@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SoftBodyPhysics.Model;
@@ -21,7 +22,7 @@ internal class SoftBody : ISoftBody
 
     public readonly List<Spring> Springs;
 
-    public List<Spring> Edges;
+    public Spring[] Edges;
 
     public Borders Borders;
 
@@ -29,10 +30,11 @@ internal class SoftBody : ISoftBody
     {
         MassPoints = new List<MassPoint>();
         Springs = new List<Spring>();
+        Edges = Array.Empty<Spring>();
     }
 
     public void UpdateEdges()
     {
-        Edges = Springs.Where(x => x.IsEdge).ToList();
+        Edges = Springs.Where(x => x.IsEdge).ToArray();
     }
 }
