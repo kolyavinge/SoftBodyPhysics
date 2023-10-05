@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace SoftBodyPhysics.Model;
 
@@ -6,11 +7,11 @@ internal interface ISoftBodiesCollection
 {
     IReadOnlyList<SoftBody> SoftBodies { get; }
 
-    IEnumerable<MassPoint> AllMassPoints { get; }
+    IReadOnlyCollection<MassPoint> AllMassPoints { get; }
 
-    IEnumerable<Spring> AllSprings { get; }
+    IReadOnlyCollection<Spring> AllSprings { get; }
 
-    void AddSoftBody(SoftBody softBody);
+    void AddSoftBodies(IEnumerable<SoftBody> softBodies);
 }
 
 internal class SoftBodiesCollection : ISoftBodiesCollection
@@ -24,36 +25,14 @@ internal class SoftBodiesCollection : ISoftBodiesCollection
         _softBodies = new List<SoftBody>();
     }
 
-    public IEnumerable<MassPoint> AllMassPoints
-    {
-        get
-        {
-            foreach (var body in _softBodies)
-            {
-                foreach (var mp in body.MassPoints)
-                {
-                    yield return mp;
-                }
-            }
-        }
-    }
+    public IReadOnlyCollection<MassPoint> AllMassPoints { get; private set; }
 
-    public IEnumerable<Spring> AllSprings
-    {
-        get
-        {
-            foreach (var body in _softBodies)
-            {
-                foreach (var spring in body.Springs)
-                {
-                    yield return spring;
-                }
-            }
-        }
-    }
+    public IReadOnlyCollection<Spring> AllSprings { get; private set; }
 
-    public void AddSoftBody(SoftBody softBody)
+    public void AddSoftBodies(IEnumerable<SoftBody> softBodies)
     {
-        _softBodies.Add(softBody);
+        _softBodies.AddRange(softBodies);
+        AllMassPoints = _softBodies.SelectMany(x => x.MassPoints).ToList();
+        AllSprings = _softBodies.SelectMany(x => x.Springs).ToList();
     }
 }

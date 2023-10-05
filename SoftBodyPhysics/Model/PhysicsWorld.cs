@@ -11,9 +11,7 @@ public interface IPhysicsWorld
 
     IPhysicsUnits Units { get; }
 
-    ISoftBody AddSoftBody();
-
-    IHardBody AddHardBody();
+    IBodyEditor MakEditor();
 
     void Update();
 }
@@ -22,8 +20,7 @@ internal class PhysicsWorld : IPhysicsWorld
 {
     private readonly ISoftBodiesCollection _softBodiesCollection;
     private readonly IHardBodiesCollection _hardBodiesCollection;
-    private readonly ISoftBodyFactory _softBodyFactory;
-    private readonly IHardBodyFactory _hardBodyFactory;
+    private readonly IBodyEditorFactory _bodyEditorFactory;
     private readonly IPhysicsWorldUpdater _updater;
 
     public IReadOnlyCollection<ISoftBody> SoftBodies => _softBodiesCollection.SoftBodies;
@@ -35,33 +32,20 @@ internal class PhysicsWorld : IPhysicsWorld
     public PhysicsWorld(
         ISoftBodiesCollection softBodiesCollection,
         IHardBodiesCollection hardBodiesCollection,
-        ISoftBodyFactory softBodyFactory,
-        IHardBodyFactory hardBodyFactory,
+        IBodyEditorFactory bodyEditorFactory,
         IPhysicsWorldUpdater updater,
         IPhysicsUnits physicsUnits)
     {
         _softBodiesCollection = softBodiesCollection;
         _hardBodiesCollection = hardBodiesCollection;
-        _softBodyFactory = softBodyFactory;
-        _hardBodyFactory = hardBodyFactory;
+        _bodyEditorFactory = bodyEditorFactory;
         _updater = updater;
         Units = physicsUnits;
     }
 
-    public ISoftBody AddSoftBody()
+    public IBodyEditor MakEditor()
     {
-        var softBody = _softBodyFactory.Make();
-        _softBodiesCollection.AddSoftBody(softBody);
-
-        return softBody;
-    }
-
-    public IHardBody AddHardBody()
-    {
-        var hardBody = _hardBodyFactory.Make();
-        _hardBodiesCollection.AddHardBody(hardBody);
-
-        return hardBody;
+        return _bodyEditorFactory.Make();
     }
 
     public void Update()

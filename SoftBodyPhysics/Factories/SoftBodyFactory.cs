@@ -9,15 +9,8 @@ internal interface ISoftBodyFactory
 
 internal class SoftBodyFactory : ISoftBodyFactory
 {
-    private readonly IPhysicsUnits _physicsUnits;
-
-    public SoftBodyFactory(IPhysicsUnits physicsUnits)
-    {
-        _physicsUnits = physicsUnits;
-    }
-
     public SoftBody Make()
     {
-        return new SoftBody(_physicsUnits);
+        return new SoftBody();
     }
 }

@@ -22,6 +22,8 @@ public readonly struct Vector
         get
         {
             var length = Length;
+            if (length == 0) return Vector.Zero;
+
             return new(X / length, Y / length);
         }
     }

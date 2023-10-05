@@ -19,8 +19,12 @@ internal class MainInjectModule : InjectModule
         bindingProvider.Bind<ISoftBodyIntersector, SoftBodyIntersector>().ToSingleton();
         bindingProvider.Bind<ISoftBodiesCollection, SoftBodiesCollection>().ToSingleton();
         bindingProvider.Bind<IHardBodiesCollection, HardBodiesCollection>().ToSingleton();
+        bindingProvider.Bind<IMassPointFactory, MassPointFactory>().ToSingleton();
+        bindingProvider.Bind<ISpringFactory, SpringFactory>().ToSingleton();
+        bindingProvider.Bind<IEdgeFactory, EdgeFactory>().ToSingleton();
         bindingProvider.Bind<ISoftBodyFactory, SoftBodyFactory>().ToSingleton();
         bindingProvider.Bind<IHardBodyFactory, HardBodyFactory>().ToSingleton();
+        bindingProvider.Bind<IBodyEditorFactory, BodyEditorFactory>().ToSingleton();
         bindingProvider.Bind<ISoftBodyBordersUpdater, SoftBodyBordersUpdater>().ToSingleton();
         bindingProvider.Bind<IPhysicsWorldUpdater, PhysicsWorldUpdater>().ToSingleton();
         bindingProvider.Bind<IPhysicsWorld, PhysicsWorld>().ToSingleton();

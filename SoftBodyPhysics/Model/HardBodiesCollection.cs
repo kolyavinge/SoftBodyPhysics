@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace SoftBodyPhysics.Model;
 
@@ -6,9 +7,9 @@ internal interface IHardBodiesCollection
 {
     IReadOnlyList<HardBody> HardBodies { get; }
 
-    IEnumerable<Edge> AllEdges { get; }
+    IReadOnlyCollection<Edge> AllEdges { get; }
 
-    void AddHardBody(HardBody hardBody);
+    void AddHardBodies(IEnumerable<HardBody> hardBodies);
 }
 
 internal class HardBodiesCollection : IHardBodiesCollection
@@ -22,22 +23,11 @@ internal class HardBodiesCollection : IHardBodiesCollection
         _hardBodies = new List<HardBody>();
     }
 
-    public IEnumerable<Edge> AllEdges
-    {
-        get
-        {
-            foreach (var body in _hardBodies)
-            {
-                foreach (var edge in body.Edges)
-                {
-                    yield return edge;
-                }
-            }
-        }
-    }
+    public IReadOnlyCollection<Edge> AllEdges { get; private set; }
 
-    public void AddHardBody(HardBody hardBody)
+    public void AddHardBodies(IEnumerable<HardBody> hardBodies)
     {
-        _hardBodies.Add(hardBody);
+        _hardBodies.AddRange(hardBodies);
+        AllEdges = _hardBodies.SelectMany(x => x.Edges).ToList();
     }
 }

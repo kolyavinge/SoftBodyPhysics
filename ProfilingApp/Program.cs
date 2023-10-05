@@ -5,7 +5,7 @@ var physicsWorld = PhysicsWorldFactory.Make();
 
 Example.SoftBodyCollisions(physicsWorld);
 
-int frames = 200_000;
+int frames = 500_000;
 
 for (int i = 0; i < frames; i++)
 {
