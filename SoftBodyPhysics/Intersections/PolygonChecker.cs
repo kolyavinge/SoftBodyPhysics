@@ -20,8 +20,8 @@ internal class PolygonChecker : IPolygonChecker
 
     public bool IsPointInPolygon(IEnumerable<ISegment> polygonPoints, Borders borders, Vector point)
     {
-        if (!borders.IsPointIn(point)) return false;
-        var pointTo = new Vector(point.X, borders.MaxY + 1.0);
+        if (!borders.IsPointIn(point, 10.0)) return false;
+        var pointTo = new Vector(point.X, borders.MaxY + 1000.0);
         int intersections = 0;
         foreach (var polygonPoint in polygonPoints)
         {

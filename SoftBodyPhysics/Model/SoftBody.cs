@@ -18,9 +18,11 @@ internal class SoftBody : ISoftBody
     IReadOnlyCollection<ISpring> ISoftBody.Springs => Springs;
     #endregion
 
-    public readonly List<MassPoint> MassPoints;
+    // массивы а не списки для оптимизации
 
-    public readonly List<Spring> Springs;
+    public MassPoint[] MassPoints;
+
+    public Spring[] Springs;
 
     public Spring[] Edges;
 
@@ -28,9 +30,10 @@ internal class SoftBody : ISoftBody
 
     public SoftBody()
     {
-        MassPoints = new List<MassPoint>();
-        Springs = new List<Spring>();
+        MassPoints = Array.Empty<MassPoint>();
+        Springs = Array.Empty<Spring>();
         Edges = Array.Empty<Spring>();
+        Borders = Borders.Default;
     }
 
     public void UpdateEdges()

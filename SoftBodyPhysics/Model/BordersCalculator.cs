@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using SoftBodyPhysics.Geo;
 
 namespace SoftBodyPhysics.Model;
@@ -12,10 +13,11 @@ internal class BordersCalculator : IBordersCalculator
 {
     public Borders GetBorders(IReadOnlyList<Spring> springs)
     {
+        if (!springs.Any()) return Borders.Default;
+
         var firstSpring = springs[0];
 
         Vector positionA = firstSpring.PointA.Position;
-        Vector positionB;
 
         double minX = positionA.X;
         double maxX = positionA.X;
@@ -27,7 +29,7 @@ internal class BordersCalculator : IBordersCalculator
             var edge = springs[i];
 
             positionA = edge.PointA.Position;
-            positionB = edge.PointB.Position;
+            var positionB = edge.PointB.Position;
 
             if (positionA.X < minX) minX = positionA.X;
             if (positionB.X < minX) minX = positionB.X;

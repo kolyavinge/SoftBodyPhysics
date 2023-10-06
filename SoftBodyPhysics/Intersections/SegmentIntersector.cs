@@ -22,7 +22,7 @@ internal class SegmentIntersector : ISegmentIntersector
     {
         var point = _lineIntersector.GetIntersectPoint(line1From, line1To, line2From, line2To);
         if (point is null) return null;
-        if (_segmentChecker.IsPointInSegment(line1From, line1To, point.Value) && _segmentChecker.IsPointInSegment(line2From, line2To, point.Value))
+        if (_segmentChecker.IsPointInSegment(line1From, line1To, point) && _segmentChecker.IsPointInSegment(line2From, line2To, point))
         {
             return point;
         }

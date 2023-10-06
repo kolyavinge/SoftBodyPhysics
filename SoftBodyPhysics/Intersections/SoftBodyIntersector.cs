@@ -35,6 +35,7 @@ internal class SoftBodyIntersector : ISoftBodyIntersector
 
     public IntersectResult? GetIntersectPoint(SoftBody softBody, Vector point)
     {
+        if (softBody.Borders is null) return null;
         if (!_polygonChecker.IsPointInPolygon(softBody.Edges, softBody.Borders, point)) return null;
 
         var pointToList = new Vector[]
@@ -56,11 +57,11 @@ internal class SoftBodyIntersector : ISoftBodyIntersector
                 var intersectPoint = _segmentIntersector.GetIntersectPoint(edge.PointA.Position, edge.PointB.Position, point, pointTo);
                 if (intersectPoint is not null)
                 {
-                    var distance = (intersectPoint.Value - point).Length;
+                    var distance = (intersectPoint - point).Length;
                     if (distance < minDistance)
                     {
                         minDistance = distance;
-                        result = new(edge, intersectPoint.Value);
+                        result = new(edge, intersectPoint);
                     }
                 }
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SoftBodyPhysics.Factories;
 using SoftBodyPhysics.Geo;
 using SoftBodyPhysics.Utils;
+using System.Linq;
 
 namespace SoftBodyPhysics.Model;
 
@@ -79,7 +80,7 @@ internal class BodyEditor : IBodyEditor
         Action action = () =>
         {
             var s = _newSoftBodies[softBody];
-            s.MassPoints.Add(massPoint);
+            s.MassPoints = s.MassPoints.Union(new[] { massPoint }).ToArray();
         };
 
         _completeActions.Add(action);
@@ -96,7 +97,7 @@ internal class BodyEditor : IBodyEditor
         Action action = () =>
         {
             var s = _newSoftBodies[softBody];
-            s.Springs.Add(spring);
+            s.Springs = s.Springs.Union(new[] { spring }).ToArray();
         };
 
         _completeActions.Add(action);

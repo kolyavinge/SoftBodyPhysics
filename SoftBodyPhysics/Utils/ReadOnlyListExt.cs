@@ -17,13 +17,13 @@ internal static class ReadOnlyListExt
 
     public static IEnumerable<(T, T)> GetCrossProduct<T>(this IReadOnlyList<T> list)
     {
-        for (int i = 0; i < list.Count; i++)
+        foreach (var item1 in list)
         {
-            for (int j = 0; j < list.Count; j++)
+            foreach (var item2 in list)
             {
-                if (!object.ReferenceEquals(list[i], list[j]))
+                if (!object.ReferenceEquals(item1, item2))
                 {
-                    yield return (list[i], list[j]);
+                    yield return (item1, item2);
                 }
             }
         }

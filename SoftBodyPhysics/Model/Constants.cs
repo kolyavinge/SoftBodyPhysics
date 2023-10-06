@@ -2,7 +2,9 @@
 
 internal static class Constants
 {
-    public const double TimeDelta = 0.1;
+    public const double Time = 0.1;
+
+    public const double TimeStep = 0.01;
 
     public const double Mass = 1.0;
 

@@ -2,7 +2,7 @@
 
 namespace SoftBodyPhysics.Model;
 
-public enum MassPointState { Normal, Collision }
+public enum CollisionState { Normal, Collision }
 
 public interface IMassPoint
 {
@@ -16,9 +16,7 @@ public interface IMassPoint
 
     double Mass { get; set; }
 
-    double Radius { get; set; }
-
-    MassPointState State { get; }
+    CollisionState State { get; }
 
     string? DebugInfo { get; set; }
 }
@@ -35,9 +33,7 @@ internal class MassPoint : IMassPoint
 
     public double Mass { get; set; }
 
-    public double Radius { get; set; }
-
-    public MassPointState State { get; set; }
+    public CollisionState State { get; set; }
 
     public string? DebugInfo { get; set; }
 
@@ -45,6 +41,8 @@ internal class MassPoint : IMassPoint
     {
         Position = position;
         PrevPosition = position;
+        Velocity = Vector.Zero;
+        Force = Vector.Zero;
     }
 
     public void ResetForce()
@@ -54,7 +52,7 @@ internal class MassPoint : IMassPoint
 
     public void ResetState()
     {
-        State = MassPointState.Normal;
+        State = CollisionState.Normal;
     }
 
     public void SavePosition()

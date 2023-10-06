@@ -4,9 +4,9 @@ public interface IPhysicsUnits
 {
     double Mass { get; set; }
 
-    double MassPointRadius { get; set; }
+    double MassPointRadius { get; }
 
-    double TimeDelta { get; }
+    double Time { get; set; }
 
     double SpringStiffness { get; set; }
 
@@ -21,9 +21,9 @@ internal class PhysicsUnits : IPhysicsUnits
 {
     public double Mass { get; set; }
 
-    public double MassPointRadius { get; set; }
+    public double MassPointRadius { get; }
 
-    public double TimeDelta { get; }
+    public double Time { get; set; }
 
     public double SpringStiffness { get; set; }
 
@@ -37,7 +37,7 @@ internal class PhysicsUnits : IPhysicsUnits
     {
         Mass = Constants.Mass;
         MassPointRadius = Constants.MassPointRadius;
-        TimeDelta = Constants.TimeDelta;
+        Time = Constants.Time;
         SpringStiffness = Constants.SpringStiffness;
         SpringDamper = Constants.SpringDamper;
         Friction = Constants.Friction;

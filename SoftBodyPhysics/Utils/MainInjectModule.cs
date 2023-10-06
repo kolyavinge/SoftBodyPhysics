@@ -15,6 +15,7 @@ internal class MainInjectModule : InjectModule
         bindingProvider.Bind<ILineIntersector, LineIntersector>().ToSingleton();
         bindingProvider.Bind<ISegmentChecker, SegmentChecker>().ToSingleton();
         bindingProvider.Bind<ISegmentIntersector, SegmentIntersector>().ToSingleton();
+        bindingProvider.Bind<ISegmentIntersectDetector, SegmentIntersectDetector>().ToSingleton();
         bindingProvider.Bind<IPolygonChecker, PolygonChecker>().ToSingleton();
         bindingProvider.Bind<ISoftBodyIntersector, SoftBodyIntersector>().ToSingleton();
         bindingProvider.Bind<ISoftBodiesCollection, SoftBodiesCollection>().ToSingleton();

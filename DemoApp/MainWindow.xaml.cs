@@ -13,7 +13,7 @@ public partial class MainWindow : Window
     private IPhysicsWorld? _physicsWorld;
     private readonly RenderLogic _renderLogic;
     private readonly DispatcherTimer _timer;
-    private int _frames;
+    private uint _frames;
 
     public MainWindow()
     {
@@ -21,7 +21,7 @@ public partial class MainWindow : Window
         InitWorld();
         _renderLogic = new RenderLogic();
         _timer = new DispatcherTimer();
-        _timer.Interval = TimeSpan.FromMilliseconds(20);
+        _timer.Interval = TimeSpan.FromMilliseconds(10);
         _timer.Tick += OnTimer;
     }
 
@@ -30,8 +30,8 @@ public partial class MainWindow : Window
         _frames = 0;
         FramesTextBox.Text = "Frame: 0";
         _physicsWorld = PhysicsWorldFactory.Make();
-        _physicsWorld.Units.MassPointRadius = 3;
-        Example.SoftBodyVerticalCollisions(_physicsWorld);
+        _physicsWorld.Units.Time = 0.1;
+        Example.ManySoftBodyCollisions(_physicsWorld);
     }
 
     private void UpdateWorld()
@@ -43,15 +43,12 @@ public partial class MainWindow : Window
 
     private void OnTimer(object? sender, EventArgs e)
     {
-        for (int i = 0; i < 1; i++)
-        {
-            UpdateWorld();
-        }
+        UpdateWorld();
     }
 
     protected override void OnRender(DrawingContext dc)
     {
-        _renderLogic.OnRender(_physicsWorld!, dc, ActualHeight, ShowMassPointAddInfo.IsChecked ?? false, ShowPrevPositions.IsChecked ?? false);
+        _renderLogic.OnRender(_physicsWorld!, dc, ActualWidth, ActualHeight, ShowMassPointAddInfo.IsChecked ?? false, ShowPrevPositions.IsChecked ?? false);
     }
 
     private void OnResetClick(object sender, RoutedEventArgs e)
@@ -74,5 +71,15 @@ public partial class MainWindow : Window
     {
         _timer.Stop();
         UpdateWorld();
+    }
+
+    private void OnShowMassPointAddInfoChecked(object sender, RoutedEventArgs e)
+    {
+        InvalidateVisual();
+    }
+
+    private void OnShowPrevPositionsChecked(object sender, RoutedEventArgs e)
+    {
+        InvalidateVisual();
     }
 }

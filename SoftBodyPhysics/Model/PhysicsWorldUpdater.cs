@@ -1,6 +1,7 @@
 ﻿using SoftBodyPhysics.Geo;
 using SoftBodyPhysics.Intersections;
 using SoftBodyPhysics.Utils;
+using System.Runtime.InteropServices;
 
 namespace SoftBodyPhysics.Model;
 
@@ -14,6 +15,7 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
     private readonly ISoftBodiesCollection _softBodiesCollection;
     private readonly IHardBodiesCollection _hardBodiesCollection;
     private readonly ISegmentIntersector _segmentIntersector;
+    private readonly ISegmentIntersectDetector _segmentIntersectDetector;
     private readonly ISoftBodyBordersUpdater _softBodyBordersUpdater;
     private readonly INormalCalculator _normalCalculator;
     private readonly ISoftBodyIntersector _softBodyIntersector;
@@ -25,12 +27,14 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
         INormalCalculator normalCalculator,
         ISoftBodyIntersector softBodyIntersector,
         ISegmentIntersector segmentIntersector,
+        ISegmentIntersectDetector segmentIntersectDetector,
         ISoftBodyBordersUpdater softBodyBordersUpdater,
         IPhysicsUnits physicsUnits)
     {
         _softBodiesCollection = softBodiesCollection;
         _hardBodiesCollection = hardBodiesCollection;
         _segmentIntersector = segmentIntersector;
+        _segmentIntersectDetector = segmentIntersectDetector;
         _softBodyBordersUpdater = softBodyBordersUpdater;
         _normalCalculator = normalCalculator;
         _softBodyIntersector = softBodyIntersector;
@@ -39,21 +43,26 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
 
     public void Update()
     {
-        InitMassPoints();
-        InitGravityForce();
-        ApplySpringForce();
-        ApplyVelocity();
-        ApplyPositions();
-        ApplySoftBodyCollisions();
-        ApplyHardBodyCollisions();
-        _softBodyBordersUpdater.UpdateBorders(_softBodiesCollection.SoftBodies);
+        Init();
+        for (var time = 0.0; time < _physicsUnits.Time; time += Constants.TimeStep)
+        {
+            InitGravityForce();
+            ApplySpringForce();
+            ApplyVelocity();
+            ApplyPositions();
+            _softBodyBordersUpdater.UpdateBorders(_softBodiesCollection.SoftBodies);
+        }
     }
 
-    private void InitMassPoints()
+    private void Init()
     {
         foreach (var massPoint in _softBodiesCollection.AllMassPoints)
         {
             massPoint.ResetState();
+        }
+        foreach (var spring in _hardBodiesCollection.AllEdges)
+        {
+            spring.ResetState();
         }
     }
 
@@ -84,7 +93,7 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
     {
         foreach (var massPoint in _softBodiesCollection.AllMassPoints)
         {
-            massPoint.Velocity += massPoint.Force * (_physicsUnits.TimeDelta / massPoint.Mass);
+            massPoint.Velocity += massPoint.Force * (Constants.TimeStep / massPoint.Mass);
         }
     }
 
@@ -92,43 +101,60 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
     {
         foreach (var massPoint in _softBodiesCollection.AllMassPoints)
         {
+            massPoint.Position += massPoint.Velocity * Constants.TimeStep;
+            CheckSoftBodyCollisions();
+            CheckHardBodyCollisions();
             massPoint.SavePosition();
-            massPoint.Position += massPoint.Velocity * _physicsUnits.TimeDelta;
         }
     }
 
-    private void ApplySoftBodyCollisions()
+    private void CheckSoftBodyCollisions()
     {
-        foreach (var (body1, body2) in _softBodiesCollection.SoftBodies.GetCrossProduct())
+        foreach (var (body1, body2) in _softBodiesCollection.SoftBodiesCrossProduct)
         {
-            foreach (var massPoint in body2.MassPoints)
+            foreach (var massPoint in body1.MassPoints)
             {
-                var intersectPoint = _softBodyIntersector.GetIntersectPoint(body1, massPoint.Position);
-                if (intersectPoint is null) continue;
-                var normal = _normalCalculator.GetNormal(intersectPoint.Spring.PointA.Position, intersectPoint.Spring.PointB.Position);
-                massPoint.State = MassPointState.Collision;
-                massPoint.Position = intersectPoint.Point;
-                massPoint.Velocity -= 2.0 * (massPoint.Velocity * normal) * normal;
-                massPoint.Velocity *= 1.0 - _physicsUnits.Friction;
-                massPoint.Position += massPoint.Velocity.Normalized * 0.1;
+                if (!body2.Borders.IsPointIn(massPoint.Position, 10.0)) continue;
+                foreach (var edge in body2.Edges)
+                {
+                    var edgePointA = edge.PointA;
+                    var edgePointB = edge.PointB;
+
+                    if (!_segmentIntersectDetector.Check(edgePointA.Position, edgePointB.Position, massPoint.Position)) continue;
+                    var normal = _normalCalculator.GetNormal(edgePointA.Position, edgePointB.Position);
+
+                    edgePointA.Position = edgePointA.PrevPosition;
+                    edgePointB.Position = edgePointB.PrevPosition;
+
+                    edgePointA.Velocity -= 2.0 * (edgePointA.Velocity * normal) * normal;
+                    edgePointB.Velocity -= 2.0 * (edgePointB.Velocity * normal) * normal;
+                    edgePointA.Velocity *= 1.0 - _physicsUnits.Friction;
+                    edgePointB.Velocity *= 1.0 - _physicsUnits.Friction;
+
+                    massPoint.State = CollisionState.Collision;
+                    massPoint.Position = massPoint.PrevPosition;
+                    massPoint.Velocity -= 2.0 * (massPoint.Velocity * normal) * normal;
+                    massPoint.Velocity *= 1.0 - _physicsUnits.Friction;
+
+                    break;
+                }
             }
         }
     }
 
-    private void ApplyHardBodyCollisions()
+    private void CheckHardBodyCollisions()
     {
         foreach (var edge in _hardBodiesCollection.AllEdges)
         {
             foreach (var massPoint in _softBodiesCollection.AllMassPoints)
             {
-                var intersectPoint = _segmentIntersector.GetIntersectPoint(edge.From, edge.To, massPoint.PrevPosition, massPoint.Position);
-                if (intersectPoint is null) continue;
+                if (!_segmentIntersectDetector.Check(edge.From, edge.To, massPoint.Position)) continue;
                 var normal = _normalCalculator.GetNormal(edge.From, edge.To);
-                massPoint.State = MassPointState.Collision;
-                massPoint.Position = intersectPoint.Value;
+                edge.State = CollisionState.Collision;
+                massPoint.State = CollisionState.Collision;
+                massPoint.Position = massPoint.PrevPosition;
                 massPoint.Velocity -= 2.0 * (massPoint.Velocity * normal) * normal;
                 massPoint.Velocity *= 1.0 - _physicsUnits.Friction;
-                massPoint.Position += massPoint.Velocity.Normalized * 0.1;
             }
         }
     }

@@ -32,8 +32,9 @@ internal class SoftBodySpringEdgeDetector : ISoftBodySpringEdgeDetector
 
     public void DetectEdges(SoftBody softBody)
     {
-        softBody.Springs.Each(s => s.IsEdge = false);
         var borders = _bordersCalculator.GetBorders(softBody.Springs);
+        if (borders is null) return;
+        softBody.Springs.Each(s => s.IsEdge = false);
         DetectByVertical(softBody.Springs, borders);
         DetectByHorizontal(softBody.Springs, borders);
         softBody.UpdateEdges();
@@ -53,14 +54,14 @@ internal class SoftBodySpringEdgeDetector : ISoftBodySpringEdgeDetector
                 var p = _segmentIntersector.GetIntersectPoint(spring.PointA.Position, spring.PointB.Position, lineFrom, lineTo);
                 if (p is not null)
                 {
-                    if (p.Value.Y < minY)
+                    if (p.Y < minY)
                     {
-                        minY = p.Value.Y;
+                        minY = p.Y;
                         minSpring = spring;
                     }
-                    else if (p.Value.Y > maxY)
+                    else if (p.Y > maxY)
                     {
-                        maxY = p.Value.Y;
+                        maxY = p.Y;
                         maxSpring = spring;
                     }
                 }
@@ -87,14 +88,14 @@ internal class SoftBodySpringEdgeDetector : ISoftBodySpringEdgeDetector
                 var p = _segmentIntersector.GetIntersectPoint(spring.PointA.Position, spring.PointB.Position, lineFrom, lineTo);
                 if (p is not null)
                 {
-                    if (p.Value.X < minX)
+                    if (p.X < minX)
                     {
-                        minX = p.Value.X;
+                        minX = p.X;
                         minSpring = spring;
                     }
-                    else if (p.Value.X > maxX)
+                    else if (p.X > maxX)
                     {
-                        maxX = p.Value.X;
+                        maxX = p.X;
                         maxSpring = spring;
                     }
                 }

@@ -22,7 +22,6 @@ internal class MassPointFactory : IMassPointFactory
         var massPoint = new MassPoint(position)
         {
             Mass = _physicsUnits.Mass,
-            Radius = _physicsUnits.MassPointRadius
         };
 
         return massPoint;

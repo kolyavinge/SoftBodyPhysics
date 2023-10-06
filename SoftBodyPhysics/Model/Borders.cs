@@ -2,8 +2,10 @@
 
 namespace SoftBodyPhysics.Model;
 
-internal readonly struct Borders
+internal class Borders
 {
+    public static readonly Borders Default = new(0, 0, 0, 0);
+
     public readonly double MinX;
     public readonly double MaxX;
     public readonly double MinY;
@@ -17,10 +19,10 @@ internal readonly struct Borders
         MaxY = maxY;
     }
 
-    public bool IsPointIn(Vector point)
+    public bool IsPointIn(Vector point, double delta)
     {
         return
-            MinX <= point.X && point.X <= MaxX &&
-            MinY <= point.Y && point.Y <= MaxY;
+            MinX - delta <= point.X && point.X <= MaxX + delta &&
+            MinY - delta <= point.Y && point.Y <= MaxY + delta;
     }
 }

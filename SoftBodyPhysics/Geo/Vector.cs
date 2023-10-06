@@ -2,7 +2,7 @@
 
 namespace SoftBodyPhysics.Geo;
 
-public readonly struct Vector
+public class Vector
 {
     public static readonly Vector Zero = new(0, 0);
 

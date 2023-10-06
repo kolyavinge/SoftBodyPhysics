@@ -53,5 +53,6 @@ internal class Spring : ISpring
         PointA = a;
         PointB = b;
         RestLength = Math.Abs((a.Position - b.Position).Length);
+        Force = Vector.Zero;
     }
 }

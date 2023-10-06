@@ -7,6 +7,8 @@ public interface IEdge
     Vector From { get; }
 
     Vector To { get; }
+
+    CollisionState State { get; }
 }
 
 internal class Edge : IEdge
@@ -15,9 +17,16 @@ internal class Edge : IEdge
 
     public Vector To { get; }
 
+    public CollisionState State { get; set; }
+
     public Edge(Vector from, Vector to)
     {
         From = from;
         To = to;
+    }
+
+    public void ResetState()
+    {
+        State = CollisionState.Normal;
     }
 }

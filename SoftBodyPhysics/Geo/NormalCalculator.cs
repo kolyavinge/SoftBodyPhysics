@@ -10,14 +10,15 @@ internal interface INormalCalculator
 internal class NormalCalculator : INormalCalculator
 {
     private const double _halfPI = Math.PI / 2.0;
+    private const double _delta = 0.00001;
 
     public Vector GetNormal(Vector lineFrom, Vector lineTo)
     {
-        if (lineFrom.Y == lineTo.Y)
+        if (Math.Abs(lineFrom.Y - lineTo.Y) < _delta)
         {
             return new(0, 1);
         }
-        else if (lineFrom.X == lineTo.X)
+        else if (Math.Abs(lineFrom.X - lineTo.X) < _delta)
         {
             return new(1, 0);
         }

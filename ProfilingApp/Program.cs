@@ -3,9 +3,9 @@ using SoftBodyPhysics.Factories;
 
 var physicsWorld = PhysicsWorldFactory.Make();
 
-Example.SoftBodyCollisions(physicsWorld);
+Example.ManySoftBodyCollisions(physicsWorld);
 
-int frames = 500_000;
+int frames = 1000;
 
 for (int i = 0; i < frames; i++)
 {
