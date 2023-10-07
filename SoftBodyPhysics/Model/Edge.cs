@@ -2,7 +2,7 @@
 
 namespace SoftBodyPhysics.Model;
 
-public interface IEdge
+public interface IEdge : ISegment
 {
     Vector From { get; }
 
@@ -13,11 +13,24 @@ public interface IEdge
 
 internal class Edge : IEdge
 {
-    public Vector From { get; }
+    #region IEdge
+    public Vector FromPosition => From;
+    public Vector ToPosition => To;
+    #endregion
 
-    public Vector To { get; }
+    #region IEdge
+    Vector IEdge.From => From;
+    Vector IEdge.To => To;
+    CollisionState IEdge.State => State;
+    #endregion
 
-    public CollisionState State { get; set; }
+    // поля для оптимизации
+
+    public Vector From;
+
+    public Vector To;
+
+    public CollisionState State;
 
     public Edge(Vector from, Vector to)
     {

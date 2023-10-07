@@ -29,6 +29,7 @@ internal class MainInjectModule : InjectModule
         bindingProvider.Bind<ISoftBodySpringEdgeDetector, SoftBodySpringEdgeDetector>().ToSingleton();
         bindingProvider.Bind<IBodyEditorFactory, BodyEditorFactory>().ToSingleton();
         bindingProvider.Bind<ISoftBodyBordersUpdater, SoftBodyBordersUpdater>().ToSingleton();
+        bindingProvider.Bind<IHardBodyBordersUpdater, HardBodyBordersUpdater>().ToSingleton();
         bindingProvider.Bind<IPhysicsWorldUpdater, PhysicsWorldUpdater>().ToSingleton();
         bindingProvider.Bind<IPhysicsWorld, PhysicsWorld>().ToSingleton();
     }

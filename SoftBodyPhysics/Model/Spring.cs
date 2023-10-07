@@ -5,14 +5,18 @@ namespace SoftBodyPhysics.Model;
 
 public interface ISegment
 {
-    IMassPoint PointA { get; }
+    Vector FromPosition { get; }
 
-    IMassPoint PointB { get; }
+    Vector ToPosition { get; }
 }
 
 public interface ISpring : ISegment
 {
     bool IsEdge { get; }
+
+    IMassPoint PointA { get; }
+
+    IMassPoint PointB { get; }
 
     Vector Force { get; }
 
@@ -28,25 +32,35 @@ public interface ISpring : ISegment
 internal class Spring : ISpring
 {
     #region ISegment
-    IMassPoint ISegment.PointA => PointA;
-    IMassPoint ISegment.PointB => PointB;
+    Vector ISegment.FromPosition => PointA.Position;
+    Vector ISegment.ToPosition => PointB.Position;
     #endregion
 
-    public bool IsEdge { get; set; }
+    #region ISpring
+    bool ISpring.IsEdge => IsEdge;
+    IMassPoint ISpring.PointA => PointA;
+    IMassPoint ISpring.PointB => PointB;
+    Vector ISpring.Force => Force;
+    double ISpring.RestLength => RestLength;
+    double ISpring.Stiffness { get => Stiffness; set => Stiffness = value; }
+    public string? DebugInfo { get; set; }
+    #endregion
 
-    public MassPoint PointA { get; }
+    // поля для оптимизации
 
-    public MassPoint PointB { get; }
+    public bool IsEdge;
 
-    public Vector Force { get; set; }
+    public MassPoint PointA;
 
-    public double Stiffness { get; set; }
+    public MassPoint PointB;
 
-    public double RestLength { get; }
+    public Vector Force;
+
+    public double Stiffness;
+
+    public double RestLength;
 
     public double DeformLength => (PointA.Position - PointB.Position).Length - RestLength;
-
-    public string? DebugInfo { get; set; }
 
     public Spring(MassPoint a, MassPoint b)
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using SoftBodyPhysics.Factories;
 using SoftBodyPhysics.Geo;
 using SoftBodyPhysics.Utils;
-using System.Linq;
 
 namespace SoftBodyPhysics.Model;
 
@@ -33,6 +33,7 @@ internal class BodyEditor : IBodyEditor
     private readonly ISoftBodiesCollection _softBodiesCollection;
     private readonly IHardBodiesCollection _hardBodiesCollection;
     private readonly ISoftBodyBordersUpdater _softBodyBordersUpdater;
+    private readonly IHardBodyBordersUpdater _hardBodyBordersUpdater;
     private readonly ISoftBodySpringEdgeDetector _softBodySpringEdgeDetector;
     private readonly Dictionary<ISoftBody, SoftBody> _newSoftBodies;
     private readonly Dictionary<IMassPoint, MassPoint> _newMassPoints;
@@ -47,6 +48,7 @@ internal class BodyEditor : IBodyEditor
         ISoftBodiesCollection softBodiesCollection,
         IHardBodiesCollection hardBodiesCollection,
         ISoftBodyBordersUpdater softBodyBordersUpdater,
+        IHardBodyBordersUpdater hardBodyBordersUpdater,
         ISoftBodySpringEdgeDetector softBodySpringEdgeDetector)
     {
         _completeActions = new List<Action>();
@@ -58,6 +60,7 @@ internal class BodyEditor : IBodyEditor
         _softBodiesCollection = softBodiesCollection;
         _hardBodiesCollection = hardBodiesCollection;
         _softBodyBordersUpdater = softBodyBordersUpdater;
+        _hardBodyBordersUpdater = hardBodyBordersUpdater;
         _softBodySpringEdgeDetector = softBodySpringEdgeDetector;
         _newSoftBodies = new Dictionary<ISoftBody, SoftBody>();
         _newMassPoints = new Dictionary<IMassPoint, MassPoint>();
@@ -119,7 +122,7 @@ internal class BodyEditor : IBodyEditor
         Action action = () =>
         {
             var h = _newHardBodies[hardBody];
-            h.Edges.Add(edge);
+            h.Edges = h.Edges.Union(new[] { edge }).ToArray();
         };
 
         _completeActions.Add(action);
@@ -134,5 +137,6 @@ internal class BodyEditor : IBodyEditor
         _hardBodiesCollection.AddHardBodies(_newHardBodies.Values);
         _softBodySpringEdgeDetector.DetectEdges(_newSoftBodies.Values);
         _softBodyBordersUpdater.UpdateBorders(_newSoftBodies.Values);
+        _hardBodyBordersUpdater.UpdateBorders(_newHardBodies.Values);
     }
 }

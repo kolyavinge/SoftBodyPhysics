@@ -19,9 +19,9 @@ internal class SoftBodyBordersUpdater : ISoftBodyBordersUpdater
 
     public void UpdateBorders(IEnumerable<SoftBody> softBodies)
     {
-        foreach (var softBody in softBodies.Where(x => x.Edges.Length > 0))
+        foreach (var softBody in softBodies.Where(x => x.SpringsToCheckCollisions.Length > 0))
         {
-            softBody.Borders = _bordersCalculator.GetBorders(softBody.Edges);
+            softBody.Borders = _bordersCalculator.GetBorders(softBody.SpringsToCheckCollisions);
         }
     }
 }

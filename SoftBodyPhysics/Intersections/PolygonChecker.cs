@@ -20,17 +20,24 @@ internal class PolygonChecker : IPolygonChecker
 
     public bool IsPointInPolygon(IEnumerable<ISegment> polygonPoints, Borders borders, Vector point)
     {
-        if (!borders.IsPointIn(point, 10.0)) return false;
+        if (!IsPointIn(borders, point, 10.0)) return false;
         var pointTo = new Vector(point.X, borders.MaxY + 1000.0);
         int intersections = 0;
         foreach (var polygonPoint in polygonPoints)
         {
-            if (_segmentIntersector.GetIntersectPoint(polygonPoint.PointA.Position, polygonPoint.PointB.Position, point, pointTo) is not null)
+            if (_segmentIntersector.GetIntersectPoint(polygonPoint.FromPosition, polygonPoint.ToPosition, point, pointTo) is not null)
             {
                 intersections++;
             }
         }
 
         return intersections % 2 != 0;
+    }
+
+    private bool IsPointIn(Borders borders, Vector point, double delta)
+    {
+        return
+            borders.MinX - delta <= point.X && point.X <= borders.MaxX + delta &&
+            borders.MinY - delta <= point.Y && point.Y <= borders.MaxY + delta;
     }
 }

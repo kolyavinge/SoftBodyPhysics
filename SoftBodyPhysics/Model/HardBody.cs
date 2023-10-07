@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SoftBodyPhysics.Model;
 
@@ -13,10 +14,13 @@ internal class HardBody : IHardBody
     IReadOnlyCollection<IEdge> IHardBody.Edges => Edges;
     #endregion
 
-    public readonly List<Edge> Edges;
+    public Edge[] Edges;
+
+    public Borders Borders;
 
     public HardBody()
     {
-        Edges = new List<Edge>();
+        Edges = Array.Empty<Edge>();
+        Borders = Borders.Default;
     }
 }

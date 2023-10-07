@@ -10,7 +10,7 @@ public interface IMassPoint
 
     Vector Velocity { get; }
 
-    Vector Position { get; }
+    Vector Position { get; set; }
 
     Vector PrevPosition { get; }
 
@@ -23,30 +23,35 @@ public interface IMassPoint
 
 internal class MassPoint : IMassPoint
 {
-    public Vector Force { get; set; }
-
-    public Vector Velocity { get; set; }
-
-    public Vector Position { get; set; }
-
-    public Vector PrevPosition { get; private set; }
-
-    public double Mass { get; set; }
-
-    public CollisionState State { get; set; }
-
+    #region IMassPoint
+    Vector IMassPoint.Force => Force;
+    Vector IMassPoint.Velocity => Velocity;
+    Vector IMassPoint.Position { get => Position; set => Position = value; }
+    Vector IMassPoint.PrevPosition => PrevPosition;
+    double IMassPoint.Mass { get => Mass; set => Mass = value; }
+    CollisionState IMassPoint.State => State;
     public string? DebugInfo { get; set; }
+    #endregion
+
+    // поля для оптимизации
+
+    public Vector Force;
+
+    public Vector Velocity;
+
+    public Vector Position;
+
+    public Vector PrevPosition;
+
+    public double Mass;
+
+    public CollisionState State;
 
     public MassPoint(Vector position)
     {
         Position = position;
         PrevPosition = position;
         Velocity = Vector.Zero;
-        Force = Vector.Zero;
-    }
-
-    public void ResetForce()
-    {
         Force = Vector.Zero;
     }
 

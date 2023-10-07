@@ -7,7 +7,7 @@ namespace DemoApp;
 
 internal class RenderLogic
 {
-    private readonly double _massPointRadius = 3.0;
+    private readonly double _massPointRadius = 2.0;
     private readonly Pen _gridPen = new Pen(new SolidColorBrush(new() { A = 255, R = 40, G = 40, B = 40 }), 0.5);
     private readonly Pen _hardBodyPen = new Pen(Brushes.BlueViolet, 2.0);
     private readonly Pen _hardBodyCollisionPen = new Pen(Brushes.Red, 2.0);

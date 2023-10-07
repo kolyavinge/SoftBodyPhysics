@@ -24,7 +24,7 @@ internal class SoftBody : ISoftBody
 
     public Spring[] Springs;
 
-    public Spring[] Edges;
+    public Spring[] SpringsToCheckCollisions;
 
     public Borders Borders;
 
@@ -32,12 +32,13 @@ internal class SoftBody : ISoftBody
     {
         MassPoints = Array.Empty<MassPoint>();
         Springs = Array.Empty<Spring>();
-        Edges = Array.Empty<Spring>();
+        SpringsToCheckCollisions = Array.Empty<Spring>();
         Borders = Borders.Default;
     }
 
     public void UpdateEdges()
     {
-        Edges = Springs.Where(x => x.IsEdge).ToArray();
+        // сначала Edge, потом остальные
+        SpringsToCheckCollisions = Springs.OrderBy(x => x.IsEdge ? 0 : 1).ToArray();
     }
 }

@@ -1,7 +1,5 @@
 ﻿using SoftBodyPhysics.Geo;
 using SoftBodyPhysics.Intersections;
-using SoftBodyPhysics.Utils;
-using System.Runtime.InteropServices;
 
 namespace SoftBodyPhysics.Model;
 
@@ -14,30 +12,24 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
 {
     private readonly ISoftBodiesCollection _softBodiesCollection;
     private readonly IHardBodiesCollection _hardBodiesCollection;
-    private readonly ISegmentIntersector _segmentIntersector;
     private readonly ISegmentIntersectDetector _segmentIntersectDetector;
     private readonly ISoftBodyBordersUpdater _softBodyBordersUpdater;
     private readonly INormalCalculator _normalCalculator;
-    private readonly ISoftBodyIntersector _softBodyIntersector;
     private readonly IPhysicsUnits _physicsUnits;
 
     public PhysicsWorldUpdater(
         ISoftBodiesCollection softBodiesCollection,
         IHardBodiesCollection hardBodiesCollection,
         INormalCalculator normalCalculator,
-        ISoftBodyIntersector softBodyIntersector,
-        ISegmentIntersector segmentIntersector,
         ISegmentIntersectDetector segmentIntersectDetector,
         ISoftBodyBordersUpdater softBodyBordersUpdater,
         IPhysicsUnits physicsUnits)
     {
         _softBodiesCollection = softBodiesCollection;
         _hardBodiesCollection = hardBodiesCollection;
-        _segmentIntersector = segmentIntersector;
         _segmentIntersectDetector = segmentIntersectDetector;
         _softBodyBordersUpdater = softBodyBordersUpdater;
         _normalCalculator = normalCalculator;
-        _softBodyIntersector = softBodyIntersector;
         _physicsUnits = physicsUnits;
     }
 
@@ -110,27 +102,52 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
 
     private void CheckSoftBodyCollisions()
     {
-        foreach (var (body1, body2) in _softBodiesCollection.SoftBodiesCrossProduct)
+        foreach (var item in _softBodiesCollection.MassPointsToCheckCollisions)
         {
-            foreach (var massPoint in body1.MassPoints)
+            var massPoint = item.MassPoint;
+            var body = item.Body;
+
+            if (!(body.Borders.MinX - 10.0 <= massPoint.Position.X && massPoint.Position.X <= body.Borders.MaxX + 10.0 &&
+                  body.Borders.MinY - 10.0 <= massPoint.Position.Y && massPoint.Position.Y <= body.Borders.MaxY + 10.0)) continue;
+
+            foreach (var edge in body.SpringsToCheckCollisions)
             {
-                if (!body2.Borders.IsPointIn(massPoint.Position, 10.0)) continue;
-                foreach (var edge in body2.Edges)
+                if (!_segmentIntersectDetector.Check(edge.PointA.Position, edge.PointB.Position, massPoint.Position)) continue;
+                var normal = _normalCalculator.GetNormal(edge.PointA.Position, edge.PointB.Position);
+
+                edge.PointA.Position = edge.PointA.PrevPosition;
+                edge.PointB.Position = edge.PointB.PrevPosition;
+
+                edge.PointA.Velocity -= 2.0 * (edge.PointA.Velocity * normal) * normal;
+                edge.PointB.Velocity -= 2.0 * (edge.PointB.Velocity * normal) * normal;
+                edge.PointA.Velocity *= 1.0 - _physicsUnits.Friction;
+                edge.PointB.Velocity *= 1.0 - _physicsUnits.Friction;
+
+                massPoint.State = CollisionState.Collision;
+                massPoint.Position = massPoint.PrevPosition;
+                massPoint.Velocity -= 2.0 * (massPoint.Velocity * normal) * normal;
+                massPoint.Velocity *= 1.0 - _physicsUnits.Friction;
+
+                break;
+            }
+        }
+    }
+
+    private void CheckHardBodyCollisions()
+    {
+        foreach (var massPoint in _softBodiesCollection.AllMassPoints)
+        {
+            foreach (var body in _hardBodiesCollection.HardBodies)
+            {
+                if (!(body.Borders.MinX - 1.0 <= massPoint.Position.X && massPoint.Position.X <= body.Borders.MaxX + 1.0 &&
+                      body.Borders.MinY - 1.0 <= massPoint.Position.Y && massPoint.Position.Y <= body.Borders.MaxY + 1.0)) continue;
+
+                foreach (var edge in body.Edges)
                 {
-                    var edgePointA = edge.PointA;
-                    var edgePointB = edge.PointB;
+                    if (!_segmentIntersectDetector.Check(edge.From, edge.To, massPoint.Position)) continue;
 
-                    if (!_segmentIntersectDetector.Check(edgePointA.Position, edgePointB.Position, massPoint.Position)) continue;
-                    var normal = _normalCalculator.GetNormal(edgePointA.Position, edgePointB.Position);
-
-                    edgePointA.Position = edgePointA.PrevPosition;
-                    edgePointB.Position = edgePointB.PrevPosition;
-
-                    edgePointA.Velocity -= 2.0 * (edgePointA.Velocity * normal) * normal;
-                    edgePointB.Velocity -= 2.0 * (edgePointB.Velocity * normal) * normal;
-                    edgePointA.Velocity *= 1.0 - _physicsUnits.Friction;
-                    edgePointB.Velocity *= 1.0 - _physicsUnits.Friction;
-
+                    var normal = _normalCalculator.GetNormal(edge.From, edge.To);
+                    edge.State = CollisionState.Collision;
                     massPoint.State = CollisionState.Collision;
                     massPoint.Position = massPoint.PrevPosition;
                     massPoint.Velocity -= 2.0 * (massPoint.Velocity * normal) * normal;
@@ -138,23 +155,6 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
 
                     break;
                 }
-            }
-        }
-    }
-
-    private void CheckHardBodyCollisions()
-    {
-        foreach (var edge in _hardBodiesCollection.AllEdges)
-        {
-            foreach (var massPoint in _softBodiesCollection.AllMassPoints)
-            {
-                if (!_segmentIntersectDetector.Check(edge.From, edge.To, massPoint.Position)) continue;
-                var normal = _normalCalculator.GetNormal(edge.From, edge.To);
-                edge.State = CollisionState.Collision;
-                massPoint.State = CollisionState.Collision;
-                massPoint.Position = massPoint.PrevPosition;
-                massPoint.Velocity -= 2.0 * (massPoint.Velocity * normal) * normal;
-                massPoint.Velocity *= 1.0 - _physicsUnits.Friction;
             }
         }
     }

@@ -6,30 +6,31 @@ namespace SoftBodyPhysics.Model;
 
 internal interface IBordersCalculator
 {
-    Borders GetBorders(IReadOnlyList<Spring> springs);
+    Borders GetBorders(IReadOnlyList<ISegment> segments);
 }
 
 internal class BordersCalculator : IBordersCalculator
 {
-    public Borders GetBorders(IReadOnlyList<Spring> springs)
+    public Borders GetBorders(IReadOnlyList<ISegment> segments)
     {
-        if (!springs.Any()) return Borders.Default;
+        if (!segments.Any()) return Borders.Default;
 
-        var firstSpring = springs[0];
+        var first = segments[0];
 
-        Vector positionA = firstSpring.PointA.Position;
+        Vector positionA = first.FromPosition;
+        Vector positionB = first.ToPosition;
 
         double minX = positionA.X;
-        double maxX = positionA.X;
         double minY = positionA.Y;
-        double maxY = positionA.Y;
+        double maxX = positionB.X;
+        double maxY = positionB.Y;
 
-        for (int i = 1; i < springs.Count; i++)
+        for (int i = 1; i < segments.Count; i++)
         {
-            var edge = springs[i];
+            var edge = segments[i];
 
-            positionA = edge.PointA.Position;
-            var positionB = edge.PointB.Position;
+            positionA = edge.FromPosition;
+            positionB = edge.ToPosition;
 
             if (positionA.X < minX) minX = positionA.X;
             if (positionB.X < minX) minX = positionB.X;

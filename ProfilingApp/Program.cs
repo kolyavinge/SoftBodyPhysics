@@ -5,11 +5,9 @@ var physicsWorld = PhysicsWorldFactory.Make();
 
 Example.ManySoftBodyCollisions(physicsWorld);
 
-int frames = 1000;
+int frames = 100;
 
 for (int i = 0; i < frames; i++)
 {
     physicsWorld.Update();
 }
-
-Console.WriteLine("done!");
