@@ -8,25 +8,29 @@ namespace DemoApp;
 internal class RenderLogic
 {
     private readonly double _massPointRadius = 2.0;
-    private readonly Pen _gridPen = new Pen(new SolidColorBrush(new() { A = 255, R = 40, G = 40, B = 40 }), 0.5);
+    private readonly Pen _gridPen = new Pen(new SolidColorBrush(new() { A = 255, R = 60, G = 60, B = 60 }), 0.5);
     private readonly Pen _hardBodyPen = new Pen(Brushes.BlueViolet, 2.0);
     private readonly Pen _hardBodyCollisionPen = new Pen(Brushes.Red, 2.0);
     private readonly Pen _prevSpringPen = new Pen(Brushes.Gray, 1.0);
     private readonly Pen _springEdgePen = new Pen(Brushes.Blue, 1.0);
     private readonly Pen _springPen = new Pen(Brushes.CornflowerBlue, 1.0);
 
-    public void OnRender(IPhysicsWorld physicsWorld, DrawingContext dc, double actualWidth, double actualHeight, bool showMassPointAddInfo, bool showPrevPositions)
+    public void OnRender(
+        IPhysicsWorld physicsWorld, DrawingContext dc, double actualWidth, double actualHeight, bool showMassPointAddInfo, bool showPrevPositions, bool showGrid)
     {
         var yoffset = actualHeight;
 
-        for (double x = 0; x <= actualWidth; x += 100.0)
+        if (showGrid)
         {
-            dc.DrawLine(_gridPen, new(x, yoffset), new(x, yoffset - actualHeight));
-        }
+            for (double x = 0; x <= actualWidth; x += 100.0)
+            {
+                dc.DrawLine(_gridPen, new(x, yoffset), new(x, yoffset - actualHeight));
+            }
 
-        for (double y = 0; y <= actualHeight; y += 100.0)
-        {
-            dc.DrawLine(_gridPen, new(0, yoffset - y), new(actualWidth, yoffset - y));
+            for (double y = 0; y <= actualHeight; y += 100.0)
+            {
+                dc.DrawLine(_gridPen, new(0, yoffset - y), new(actualWidth, yoffset - y));
+            }
         }
 
         foreach (var hardBody in physicsWorld.HardBodies)

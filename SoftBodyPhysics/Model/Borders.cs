@@ -1,4 +1,6 @@
-﻿namespace SoftBodyPhysics.Model;
+﻿using SoftBodyPhysics.Geo;
+
+namespace SoftBodyPhysics.Model;
 
 internal class Borders
 {
@@ -15,5 +17,12 @@ internal class Borders
         MaxX = maxX;
         MinY = minY;
         MaxY = maxY;
+    }
+
+    public bool IsPointIn(Vector point, double delta)
+    {
+        return
+            MinX - delta < point.X && point.X < MaxX + delta &&
+            MinY - delta < point.Y && point.Y < MaxY + delta;
     }
 }

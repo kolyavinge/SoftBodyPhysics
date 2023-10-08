@@ -48,7 +48,7 @@ public partial class MainWindow : Window
 
     protected override void OnRender(DrawingContext dc)
     {
-        _renderLogic.OnRender(_physicsWorld!, dc, ActualWidth, ActualHeight, ShowMassPointAddInfo.IsChecked ?? false, ShowPrevPositions.IsChecked ?? false);
+        _renderLogic.OnRender(_physicsWorld!, dc, ActualWidth, ActualHeight, ShowMassPointAddInfo.IsChecked ?? false, ShowPrevPositions.IsChecked ?? false, ShowGrid.IsChecked ?? false);
     }
 
     private void OnResetClick(object sender, RoutedEventArgs e)
@@ -79,6 +79,11 @@ public partial class MainWindow : Window
     }
 
     private void OnShowPrevPositionsChecked(object sender, RoutedEventArgs e)
+    {
+        InvalidateVisual();
+    }
+
+    private void OnShowGridChecked(object sender, RoutedEventArgs e)
     {
         InvalidateVisual();
     }

@@ -102,35 +102,42 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
 
     private void CheckSoftBodyCollisions()
     {
-        foreach (var item in _softBodiesCollection.MassPointsToCheckCollisions)
+        foreach (var pair in _softBodiesCollection.SoftBodiesCrossProduct)
         {
-            var massPoint = item.MassPoint;
-            var body = item.Body;
-
-            if (!(body.Borders.MinX - 10.0 <= massPoint.Position.X && massPoint.Position.X <= body.Borders.MaxX + 10.0 &&
-                  body.Borders.MinY - 10.0 <= massPoint.Position.Y && massPoint.Position.Y <= body.Borders.MaxY + 10.0)) continue;
-
-            foreach (var edge in body.SpringsToCheckCollisions)
+            foreach (var massPoint in pair.Body1.MassPoints)
             {
-                if (!_segmentIntersectDetector.Check(edge.PointA.Position, edge.PointB.Position, massPoint.Position)) continue;
-                var normal = _normalCalculator.GetNormal(edge.PointA.Position, edge.PointB.Position);
+                if (!(pair.Body2.Borders.MinX - 10.0 < massPoint.Position.X && massPoint.Position.X < pair.Body2.Borders.MaxX + 10.0 &&
+                      pair.Body2.Borders.MinY - 10.0 < massPoint.Position.Y && massPoint.Position.Y < pair.Body2.Borders.MaxY + 10.0)) continue;
 
-                edge.PointA.Position = edge.PointA.PrevPosition;
-                edge.PointB.Position = edge.PointB.PrevPosition;
-
-                edge.PointA.Velocity -= 2.0 * (edge.PointA.Velocity * normal) * normal;
-                edge.PointB.Velocity -= 2.0 * (edge.PointB.Velocity * normal) * normal;
-                edge.PointA.Velocity *= 1.0 - _physicsUnits.Friction;
-                edge.PointB.Velocity *= 1.0 - _physicsUnits.Friction;
-
-                massPoint.State = CollisionState.Collision;
-                massPoint.Position = massPoint.PrevPosition;
-                massPoint.Velocity -= 2.0 * (massPoint.Velocity * normal) * normal;
-                massPoint.Velocity *= 1.0 - _physicsUnits.Friction;
-
-                break;
+                if (CheckMassPointAndSpringsCollision(massPoint, pair.Body2)) break;
             }
         }
+    }
+
+    private bool CheckMassPointAndSpringsCollision(MassPoint massPoint, SoftBody body)
+    {
+        foreach (var edge in body.SpringsToCheckCollisions)
+        {
+            if (!_segmentIntersectDetector.Check(edge.PointA.Position, edge.PointB.Position, massPoint.Position)) continue;
+            var normal = _normalCalculator.GetNormal(edge.PointA.Position, edge.PointB.Position);
+
+            edge.PointA.Position = edge.PointA.PrevPosition;
+            edge.PointB.Position = edge.PointB.PrevPosition;
+
+            edge.PointA.Velocity -= 2.0 * (edge.PointA.Velocity * normal) * normal;
+            edge.PointB.Velocity -= 2.0 * (edge.PointB.Velocity * normal) * normal;
+            edge.PointA.Velocity *= 1.0 - _physicsUnits.Friction;
+            edge.PointB.Velocity *= 1.0 - _physicsUnits.Friction;
+
+            massPoint.State = CollisionState.Collision;
+            massPoint.Position = massPoint.PrevPosition;
+            massPoint.Velocity -= 2.0 * (massPoint.Velocity * normal) * normal;
+            massPoint.Velocity *= 1.0 - _physicsUnits.Friction;
+
+            return true;
+        }
+
+        return false;
     }
 
     private void CheckHardBodyCollisions()
@@ -139,8 +146,8 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
         {
             foreach (var body in _hardBodiesCollection.HardBodies)
             {
-                if (!(body.Borders.MinX - 1.0 <= massPoint.Position.X && massPoint.Position.X <= body.Borders.MaxX + 1.0 &&
-                      body.Borders.MinY - 1.0 <= massPoint.Position.Y && massPoint.Position.Y <= body.Borders.MaxY + 1.0)) continue;
+                if (!(body.Borders.MinX - 1.0 < massPoint.Position.X && massPoint.Position.X < body.Borders.MaxX + 1.0 &&
+                      body.Borders.MinY - 1.0 < massPoint.Position.Y && massPoint.Position.Y < body.Borders.MaxY + 1.0)) continue;
 
                 foreach (var edge in body.Edges)
                 {

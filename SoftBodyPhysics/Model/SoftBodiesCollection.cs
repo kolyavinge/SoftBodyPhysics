@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SoftBodyPhysics.Utils;
 
 namespace SoftBodyPhysics.Model;
 
-internal class MassPointsToCheckCollisionsItem
+internal class SoftBodyPair
 {
-    public readonly MassPoint MassPoint;
-    public readonly SoftBody Body;
+    public readonly SoftBody Body1;
+    public readonly SoftBody Body2;
 
-    public MassPointsToCheckCollisionsItem(MassPoint massPoint, SoftBody softBody)
+    public SoftBodyPair(SoftBody body1, SoftBody body2)
     {
-        MassPoint = massPoint;
-        Body = softBody;
+        Body1 = body1;
+        Body2 = body2;
     }
 }
 
@@ -24,7 +25,7 @@ internal interface ISoftBodiesCollection
 
     Spring[] AllSprings { get; }
 
-    MassPointsToCheckCollisionsItem[] MassPointsToCheckCollisions { get; }
+    SoftBodyPair[] SoftBodiesCrossProduct { get; }
 
     void AddSoftBodies(IEnumerable<SoftBody> softBodies);
 }
@@ -39,7 +40,7 @@ internal class SoftBodiesCollection : ISoftBodiesCollection
 
     public Spring[] AllSprings { get; private set; }
 
-    public MassPointsToCheckCollisionsItem[] MassPointsToCheckCollisions { get; private set; }
+    public SoftBodyPair[] SoftBodiesCrossProduct { get; private set; }
 
     public SoftBodiesCollection()
     {
@@ -47,7 +48,7 @@ internal class SoftBodiesCollection : ISoftBodiesCollection
         SoftBodies = Array.Empty<SoftBody>();
         AllMassPoints = Array.Empty<MassPoint>();
         AllSprings = Array.Empty<Spring>();
-        MassPointsToCheckCollisions = Array.Empty<MassPointsToCheckCollisionsItem>();
+        SoftBodiesCrossProduct = Array.Empty<SoftBodyPair>();
     }
 
     public void AddSoftBodies(IEnumerable<SoftBody> softBodies)
@@ -56,23 +57,6 @@ internal class SoftBodiesCollection : ISoftBodiesCollection
         SoftBodies = _softBodies.ToArray();
         AllMassPoints = _softBodies.SelectMany(x => x.MassPoints).ToArray();
         AllSprings = _softBodies.SelectMany(x => x.Springs).ToArray();
-        MassPointsToCheckCollisions = GetMassPointsToCheckCollisions().ToArray();
-    }
-
-    private IEnumerable<MassPointsToCheckCollisionsItem> GetMassPointsToCheckCollisions()
-    {
-        foreach (var body1 in _softBodies)
-        {
-            foreach (var body2 in _softBodies)
-            {
-                if (!object.ReferenceEquals(body1, body2))
-                {
-                    foreach (var massPoint in body1.MassPoints)
-                    {
-                        yield return new(massPoint, body2);
-                    }
-                }
-            }
-        }
+        SoftBodiesCrossProduct = _softBodies.GetCrossProduct().Select(x => new SoftBodyPair(x.Item1, x.Item2)).ToArray();
     }
 }

@@ -13,6 +13,7 @@
             <TextBlock Name="FramesTextBox" Text="Frame: 0" Foreground="LightGray" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Height="23" VerticalAlignment="Top" HorizontalAlignment="Right">
+            <CheckBox Name="ShowGrid" Content="Grid" IsChecked="False" Foreground="LightGray" Margin="0,5,8,0" Checked="OnShowGridChecked" Unchecked="OnShowGridChecked" />
             <CheckBox Name="ShowMassPointAddInfo" Content="Mass point add info" IsChecked="False" Foreground="LightGray" Margin="0,5,8,0" Checked="OnShowMassPointAddInfoChecked" Unchecked="OnShowMassPointAddInfoChecked" />
             <CheckBox Name="ShowPrevPositions" Content="Prev positions" IsChecked="False" Foreground="LightGray" Margin="0,5,8,0" Checked="OnShowPrevPositionsChecked" Unchecked="OnShowPrevPositionsChecked" />
             <Button Content="Reset" Width="75" Click="OnResetClick" />
