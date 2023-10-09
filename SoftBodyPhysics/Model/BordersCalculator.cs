@@ -6,14 +6,15 @@ namespace SoftBodyPhysics.Model;
 
 internal interface IBordersCalculator
 {
-    Borders GetBorders(IReadOnlyList<ISegment> segments);
+    Borders? GetBordersBySegments(IReadOnlyList<ISegment> segments);
+    Borders GetBordersByMassPoint(Vector massPointPosition);
 }
 
 internal class BordersCalculator : IBordersCalculator
 {
-    public Borders GetBorders(IReadOnlyList<ISegment> segments)
+    public Borders? GetBordersBySegments(IReadOnlyList<ISegment> segments)
     {
-        if (!segments.Any()) return Borders.Default;
+        if (!segments.Any()) return null;
 
         var first = segments[0];
 
@@ -44,6 +45,16 @@ internal class BordersCalculator : IBordersCalculator
             if (positionA.Y > maxY) maxY = positionA.Y;
             if (positionB.Y > maxY) maxY = positionB.Y;
         }
+
+        return new(minX, maxX, minY, maxY);
+    }
+
+    public Borders GetBordersByMassPoint(Vector massPointPosition)
+    {
+        double minX = massPointPosition.X;
+        double minY = massPointPosition.Y;
+        double maxX = massPointPosition.X + Constants.MassPointRadius;
+        double maxY = massPointPosition.Y + Constants.MassPointRadius;
 
         return new(minX, maxX, minY, maxY);
     }

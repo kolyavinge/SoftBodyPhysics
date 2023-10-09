@@ -1,4 +1,5 @@
-﻿using SoftBodyPhysics.Geo;
+﻿using System;
+using SoftBodyPhysics.Geo;
 using SoftBodyPhysics.Intersections;
 
 namespace SoftBodyPhysics.Model;
@@ -91,73 +92,90 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
 
     private void ApplyPositions()
     {
-        foreach (var massPoint in _softBodiesCollection.AllMassPoints)
+        foreach (var softBody in _softBodiesCollection.SoftBodies)
         {
-            massPoint.Position += massPoint.Velocity * Constants.TimeStep;
-            CheckSoftBodyCollisions();
-            CheckHardBodyCollisions();
-            massPoint.SavePosition();
-        }
-    }
-
-    private void CheckSoftBodyCollisions()
-    {
-        foreach (var pair in _softBodiesCollection.SoftBodiesCrossProduct)
-        {
-            foreach (var massPoint in pair.Body1.MassPoints)
+            foreach (var massPoint in softBody.MassPoints)
             {
-                if (!(pair.Body2.Borders.MinX - 10.0 < massPoint.Position.X && massPoint.Position.X < pair.Body2.Borders.MaxX + 10.0 &&
-                      pair.Body2.Borders.MinY - 10.0 < massPoint.Position.Y && massPoint.Position.Y < pair.Body2.Borders.MaxY + 10.0)) continue;
-
-                if (CheckMassPointAndSpringsCollision(massPoint, pair.Body2)) break;
+                massPoint.Position += massPoint.Velocity * Constants.TimeStep;
+                if ((massPoint.Position - massPoint.PrevPosition).LengthSquare > 0.00001)
+                {
+                    CheckSoftBodyCollisions(softBody);
+                    CheckHardBodyCollisions(softBody);
+                    massPoint.SavePosition();
+                }
             }
         }
     }
 
-    private bool CheckMassPointAndSpringsCollision(MassPoint massPoint, SoftBody body)
+    private void CheckSoftBodyCollisions(SoftBody body1)
     {
-        foreach (var edge in body.SpringsToCheckCollisions)
+        foreach (var body2 in _softBodiesCollection.SoftBodies)
         {
-            if (!_segmentIntersectDetector.Check(edge.PointA.Position, edge.PointB.Position, massPoint.Position)) continue;
-            var normal = _normalCalculator.GetNormal(edge.PointA.Position, edge.PointB.Position);
+            if (body2 == body1) continue;
 
-            edge.PointA.Position = edge.PointA.PrevPosition;
-            edge.PointB.Position = edge.PointB.PrevPosition;
+            if (Math.Abs(body1.Borders.MiddleX - body2.Borders.MiddleX) > body1.Borders.Width + body2.Borders.Width) continue;
+            if (Math.Abs(body1.Borders.MiddleY - body2.Borders.MiddleY) > body1.Borders.Height + body2.Borders.Height) continue;
 
-            edge.PointA.Velocity -= 2.0 * (edge.PointA.Velocity * normal) * normal;
-            edge.PointB.Velocity -= 2.0 * (edge.PointB.Velocity * normal) * normal;
-            edge.PointA.Velocity *= 1.0 - _physicsUnits.Friction;
-            edge.PointB.Velocity *= 1.0 - _physicsUnits.Friction;
+            foreach (var massPoint in body1.MassPoints)
+            {
+                if (!(body2.Borders.MinX - 10.0 < massPoint.Position.X && massPoint.Position.X < body2.Borders.MaxX + 10.0 &&
+                      body2.Borders.MinY - 10.0 < massPoint.Position.Y && massPoint.Position.Y < body2.Borders.MaxY + 10.0)) continue;
+
+                CheckMassPointAndSpringsCollision(massPoint, body2.SpringsToCheckCollisions);
+            }
+
+            foreach (var massPoint in body2.MassPoints)
+            {
+                if (!(body1.Borders.MinX - 10.0 < massPoint.Position.X && massPoint.Position.X < body1.Borders.MaxX + 10.0 &&
+                      body1.Borders.MinY - 10.0 < massPoint.Position.Y && massPoint.Position.Y < body1.Borders.MaxY + 10.0)) continue;
+
+                CheckMassPointAndSpringsCollision(massPoint, body1.SpringsToCheckCollisions);
+            }
+        }
+    }
+
+    private void CheckMassPointAndSpringsCollision(MassPoint massPoint, Spring[] springsToCheckCollisions)
+    {
+        foreach (var spring in springsToCheckCollisions)
+        {
+            if (!_segmentIntersectDetector.Intersected(spring.PointA.Position, spring.PointB.Position, massPoint.Position)) continue;
+            var normal = _normalCalculator.GetNormal(spring.PointA.Position, spring.PointB.Position);
+
+            spring.PointA.Position = spring.PointA.PrevPosition;
+            spring.PointB.Position = spring.PointB.PrevPosition;
+
+            spring.PointA.Velocity -= 2.0 * (spring.PointA.Velocity * normal) * normal; // reflected vectors
+            spring.PointB.Velocity -= 2.0 * (spring.PointB.Velocity * normal) * normal;
+            spring.PointA.Velocity *= 1.0 - _physicsUnits.Friction;
+            spring.PointB.Velocity *= 1.0 - _physicsUnits.Friction;
 
             massPoint.State = CollisionState.Collision;
             massPoint.Position = massPoint.PrevPosition;
-            massPoint.Velocity -= 2.0 * (massPoint.Velocity * normal) * normal;
+            massPoint.Velocity -= 2.0 * (massPoint.Velocity * normal) * normal; // reflected vector
             massPoint.Velocity *= 1.0 - _physicsUnits.Friction;
 
-            return true;
+            return;
         }
-
-        return false;
     }
 
-    private void CheckHardBodyCollisions()
+    private void CheckHardBodyCollisions(SoftBody softBody)
     {
-        foreach (var massPoint in _softBodiesCollection.AllMassPoints)
+        foreach (var massPoint in softBody.MassPoints)
         {
-            foreach (var body in _hardBodiesCollection.HardBodies)
+            foreach (var hardBody in _hardBodiesCollection.HardBodies)
             {
-                if (!(body.Borders.MinX - 1.0 < massPoint.Position.X && massPoint.Position.X < body.Borders.MaxX + 1.0 &&
-                      body.Borders.MinY - 1.0 < massPoint.Position.Y && massPoint.Position.Y < body.Borders.MaxY + 1.0)) continue;
+                if (!(hardBody.Borders.MinX - 1.0 < massPoint.Position.X && massPoint.Position.X < hardBody.Borders.MaxX + 1.0 &&
+                      hardBody.Borders.MinY - 1.0 < massPoint.Position.Y && massPoint.Position.Y < hardBody.Borders.MaxY + 1.0)) continue;
 
-                foreach (var edge in body.Edges)
+                foreach (var edge in hardBody.Edges)
                 {
-                    if (!_segmentIntersectDetector.Check(edge.From, edge.To, massPoint.Position)) continue;
+                    if (!_segmentIntersectDetector.Intersected(edge.From, edge.To, massPoint.Position)) continue;
 
                     var normal = _normalCalculator.GetNormal(edge.From, edge.To);
                     edge.State = CollisionState.Collision;
                     massPoint.State = CollisionState.Collision;
                     massPoint.Position = massPoint.PrevPosition;
-                    massPoint.Velocity -= 2.0 * (massPoint.Velocity * normal) * normal;
+                    massPoint.Velocity -= 2.0 * (massPoint.Velocity * normal) * normal; // reflected vector
                     massPoint.Velocity *= 1.0 - _physicsUnits.Friction;
 
                     break;

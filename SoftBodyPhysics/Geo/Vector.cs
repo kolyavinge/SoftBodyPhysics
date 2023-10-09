@@ -17,6 +17,9 @@ public class Vector
 
     public double Length => Math.Sqrt(X * X + Y * Y);
 
+    // длина в квадрате, экономия на извлечении корня
+    public double LengthSquare => X * X + Y * Y;
+
     public Vector Normalized
     {
         get

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace SoftBodyPhysics.Model;
 
@@ -19,9 +18,10 @@ internal class SoftBodyBordersUpdater : ISoftBodyBordersUpdater
 
     public void UpdateBorders(IEnumerable<SoftBody> softBodies)
     {
-        foreach (var softBody in softBodies.Where(x => x.SpringsToCheckCollisions.Length > 0))
+        foreach (var softBody in softBodies)
         {
-            softBody.Borders = _bordersCalculator.GetBorders(softBody.SpringsToCheckCollisions);
+            softBody.Borders = _bordersCalculator.GetBordersBySegments(softBody.SpringsToCheckCollisions)
+                               ?? _bordersCalculator.GetBordersByMassPoint(softBody.MassPoints[0].Position);
         }
     }
 }

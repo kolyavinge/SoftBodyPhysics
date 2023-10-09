@@ -5,7 +5,7 @@ var physicsWorld = PhysicsWorldFactory.Make();
 
 Example.ManySoftBodyCollisions(physicsWorld);
 
-int frames = 100;
+int frames = 1000;
 
 var sw = System.Diagnostics.Stopwatch.StartNew();
 

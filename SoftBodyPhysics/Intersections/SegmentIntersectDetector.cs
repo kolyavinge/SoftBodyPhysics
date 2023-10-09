@@ -6,7 +6,7 @@ namespace SoftBodyPhysics.Intersections;
 
 internal interface ISegmentIntersectDetector
 {
-    bool Check(Vector lineFrom, Vector lineTo, Vector point);
+    bool Intersected(Vector lineFrom, Vector lineTo, Vector point);
 }
 
 internal class SegmentIntersectDetector : ISegmentIntersectDetector
@@ -23,7 +23,7 @@ internal class SegmentIntersectDetector : ISegmentIntersectDetector
         _physicsUnits = physicsUnits;
     }
 
-    public bool Check(Vector lineFrom, Vector lineTo, Vector point)
+    public bool Intersected(Vector lineFrom, Vector lineTo, Vector point)
     {
         // https://e-maxx.ru/algo/circle_line_intersection
 

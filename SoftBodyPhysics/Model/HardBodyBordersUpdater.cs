@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SoftBodyPhysics.Model;
 
@@ -19,9 +19,9 @@ internal class HardBodyBordersUpdater : IHardBodyBordersUpdater
 
     public void UpdateBorders(IEnumerable<HardBody> hardBodies)
     {
-        foreach (var hardBody in hardBodies.Where(x => x.Edges.Length > 0))
+        foreach (var hardBody in hardBodies)
         {
-            hardBody.Borders = _bordersCalculator.GetBorders(hardBody.Edges);
+            hardBody.Borders = _bordersCalculator.GetBordersBySegments(hardBody.Edges) ?? throw new InvalidOperationException();
         }
     }
 }

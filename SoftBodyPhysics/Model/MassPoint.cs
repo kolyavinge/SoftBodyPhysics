@@ -2,8 +2,6 @@
 
 namespace SoftBodyPhysics.Model;
 
-public enum CollisionState { Normal, Collision }
-
 public interface IMassPoint
 {
     Vector Force { get; }

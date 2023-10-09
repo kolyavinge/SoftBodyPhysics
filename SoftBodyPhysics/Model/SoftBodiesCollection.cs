@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SoftBodyPhysics.Utils;
 
 namespace SoftBodyPhysics.Model;
 
@@ -25,7 +24,7 @@ internal interface ISoftBodiesCollection
 
     Spring[] AllSprings { get; }
 
-    SoftBodyPair[] SoftBodiesCrossProduct { get; }
+    //SoftBodyPair[] SoftBodiesToCheckCollisions { get; }
 
     void AddSoftBodies(IEnumerable<SoftBody> softBodies);
 }
@@ -40,7 +39,7 @@ internal class SoftBodiesCollection : ISoftBodiesCollection
 
     public Spring[] AllSprings { get; private set; }
 
-    public SoftBodyPair[] SoftBodiesCrossProduct { get; private set; }
+    //public SoftBodyPair[] SoftBodiesToCheckCollisions { get; private set; }
 
     public SoftBodiesCollection()
     {
@@ -48,7 +47,7 @@ internal class SoftBodiesCollection : ISoftBodiesCollection
         SoftBodies = Array.Empty<SoftBody>();
         AllMassPoints = Array.Empty<MassPoint>();
         AllSprings = Array.Empty<Spring>();
-        SoftBodiesCrossProduct = Array.Empty<SoftBodyPair>();
+        //SoftBodiesToCheckCollisions = Array.Empty<SoftBodyPair>();
     }
 
     public void AddSoftBodies(IEnumerable<SoftBody> softBodies)
@@ -57,6 +56,6 @@ internal class SoftBodiesCollection : ISoftBodiesCollection
         SoftBodies = _softBodies.ToArray();
         AllMassPoints = _softBodies.SelectMany(x => x.MassPoints).ToArray();
         AllSprings = _softBodies.SelectMany(x => x.Springs).ToArray();
-        SoftBodiesCrossProduct = _softBodies.GetCrossProduct().Select(x => new SoftBodyPair(x.Item1, x.Item2)).ToArray();
+        //SoftBodiesToCheckCollisions = _softBodies.GetCartesianProduct().Select(x => new SoftBodyPair(x.Item1, x.Item2)).ToArray();
     }
 }
