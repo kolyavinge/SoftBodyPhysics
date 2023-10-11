@@ -13,7 +13,7 @@ internal interface ISoftBodySpringEdgeDetector
 
 internal class SoftBodySpringEdgeDetector : ISoftBodySpringEdgeDetector
 {
-    private const double _step = 0.1;
+    private const float _step = 0.1f;
     private readonly ISegmentIntersector _segmentIntersector;
     private readonly IBordersCalculator _bordersCalculator;
 

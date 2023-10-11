@@ -2,36 +2,36 @@
 
 public interface IPhysicsUnits
 {
-    double Mass { get; set; }
+    float Mass { get; set; }
 
-    double MassPointRadius { get; }
+    float MassPointRadius { get; }
 
-    double Time { get; set; }
+    float Time { get; set; }
 
-    double SpringStiffness { get; set; }
+    float SpringStiffness { get; set; }
 
-    double SpringDamper { get; set; }
+    float SpringDamper { get; set; }
 
-    double Friction { get; set; }
+    float Friction { get; set; }
 
-    double GravityAcceleration { get; set; }
+    float GravityAcceleration { get; set; }
 }
 
 internal class PhysicsUnits : IPhysicsUnits
 {
-    public double Mass { get; set; }
+    public float Mass { get; set; }
 
-    public double MassPointRadius { get; }
+    public float MassPointRadius { get; }
 
-    public double Time { get; set; }
+    public float Time { get; set; }
 
-    public double SpringStiffness { get; set; }
+    public float SpringStiffness { get; set; }
 
-    public double SpringDamper { get; set; }
+    public float SpringDamper { get; set; }
 
-    public double Friction { get; set; }
+    public float Friction { get; set; }
 
-    public double GravityAcceleration { get; set; }
+    public float GravityAcceleration { get; set; }
 
     public PhysicsUnits()
     {

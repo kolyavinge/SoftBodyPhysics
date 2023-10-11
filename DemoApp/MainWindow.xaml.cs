@@ -31,7 +31,7 @@ public partial class MainWindow : Window
         FramesTextBox.Text = "Frame: 0";
         _physicsWorld = PhysicsWorldFactory.Make();
         //_physicsWorld.Units.Time = 0.1;
-        Example.ManySoftBodyCollisions(_physicsWorld);
+        Example.ManyBodiesCollisions(_physicsWorld);
     }
 
     private void UpdateWorld()

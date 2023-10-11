@@ -4,9 +4,9 @@ namespace Examples;
 
 public static class Example
 {
-    public static void OneMassPointCollisions(IPhysicsWorld physicsWorld)
+    public static void OnePointCollisions(IPhysicsWorld physicsWorld)
     {
-        physicsWorld.Units.Friction = 0.1;
+        physicsWorld.Units.Friction = 0.1f;
 
         var editor = physicsWorld.MakEditor();
 
@@ -31,7 +31,7 @@ public static class Example
         editor.Complete();
     }
 
-    public static void OneSoftBody(IPhysicsWorld physicsWorld)
+    public static void OneBody(IPhysicsWorld physicsWorld)
     {
         var editor = physicsWorld.MakEditor();
 
@@ -53,7 +53,7 @@ public static class Example
         editor.Complete();
     }
 
-    public static void OneSoftBodyCollisions(IPhysicsWorld physicsWorld)
+    public static void OneBodyCollisions(IPhysicsWorld physicsWorld)
     {
         var editor = physicsWorld.MakEditor();
 
@@ -83,7 +83,7 @@ public static class Example
         editor.Complete();
     }
 
-    public static void OneSoftBodyOneMassPointCollisions(IPhysicsWorld physicsWorld)
+    public static void OneBodyOnePointCollisions(IPhysicsWorld physicsWorld)
     {
         var editor = physicsWorld.MakEditor();
 
@@ -108,7 +108,7 @@ public static class Example
         editor.Complete();
     }
 
-    public static void SoftBodyCollisions(IPhysicsWorld physicsWorld)
+    public static void TwoBodiesCollisions(IPhysicsWorld physicsWorld)
     {
         var editor = physicsWorld.MakEditor();
 
@@ -144,7 +144,7 @@ public static class Example
         editor.Complete();
     }
 
-    public static void SoftBodyVerticalCollisions(IPhysicsWorld physicsWorld)
+    public static void TwoBodiesVerticalCollisions(IPhysicsWorld physicsWorld)
     {
         var editor = physicsWorld.MakEditor();
 
@@ -180,7 +180,7 @@ public static class Example
         editor.Complete();
     }
 
-    public static void SoftBodyCollisionsManyMassPoints(IPhysicsWorld physicsWorld)
+    public static void TwoBodiesManyPointsCollisions(IPhysicsWorld physicsWorld)
     {
         physicsWorld.Units.SpringStiffness = 10;
 
@@ -294,7 +294,7 @@ public static class Example
         editor.Complete();
     }
 
-    public static void ManySoftBodyCollisions(IPhysicsWorld physicsWorld)
+    public static void ManyBodiesCollisions(IPhysicsWorld physicsWorld)
     {
         physicsWorld.Units.SpringStiffness = 10;
 

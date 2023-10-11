@@ -37,7 +37,7 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
     public void Update()
     {
         Init();
-        for (var time = 0.0; time < _physicsUnits.Time; time += Constants.TimeStep)
+        for (var time = 0.0f; time < _physicsUnits.Time; time += Constants.TimeStep)
         {
             InitGravityForce();
             ApplySpringForce();
@@ -63,7 +63,7 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
     {
         foreach (var massPoint in _softBodiesCollection.AllMassPoints)
         {
-            massPoint.Force = new Vector(0.0, -_physicsUnits.GravityAcceleration * massPoint.Mass);
+            massPoint.Force = new Vector(0, -_physicsUnits.GravityAcceleration * massPoint.Mass);
         }
     }
 
@@ -97,7 +97,7 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
             foreach (var massPoint in softBody.MassPoints)
             {
                 massPoint.Position += massPoint.Velocity * Constants.TimeStep;
-                if ((massPoint.Position - massPoint.PrevPosition).LengthSquare > 0.00001)
+                if ((massPoint.Position - massPoint.PrevPosition).LengthSquare > 0.001f)
                 {
                     CheckSoftBodyCollisions(softBody);
                     CheckHardBodyCollisions(softBody);
@@ -118,18 +118,20 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
 
             foreach (var massPoint in body1.MassPoints)
             {
-                if (!(body2.Borders.MinX - 10.0 < massPoint.Position.X && massPoint.Position.X < body2.Borders.MaxX + 10.0 &&
-                      body2.Borders.MinY - 10.0 < massPoint.Position.Y && massPoint.Position.Y < body2.Borders.MaxY + 10.0)) continue;
-
-                CheckMassPointAndSpringsCollision(massPoint, body2.SpringsToCheckCollisions);
+                if (body2.Borders.MinX - 10.0f < massPoint.Position.X && massPoint.Position.X < body2.Borders.MaxX + 10.0f &&
+                    body2.Borders.MinY - 10.0f < massPoint.Position.Y && massPoint.Position.Y < body2.Borders.MaxY + 10.0f)
+                {
+                    CheckMassPointAndSpringsCollision(massPoint, body2.SpringsToCheckCollisions);
+                }
             }
 
             foreach (var massPoint in body2.MassPoints)
             {
-                if (!(body1.Borders.MinX - 10.0 < massPoint.Position.X && massPoint.Position.X < body1.Borders.MaxX + 10.0 &&
-                      body1.Borders.MinY - 10.0 < massPoint.Position.Y && massPoint.Position.Y < body1.Borders.MaxY + 10.0)) continue;
-
-                CheckMassPointAndSpringsCollision(massPoint, body1.SpringsToCheckCollisions);
+                if (body1.Borders.MinX - 10.0f < massPoint.Position.X && massPoint.Position.X < body1.Borders.MaxX + 10.0f &&
+                    body1.Borders.MinY - 10.0f < massPoint.Position.Y && massPoint.Position.Y < body1.Borders.MaxY + 10.0f)
+                {
+                    CheckMassPointAndSpringsCollision(massPoint, body1.SpringsToCheckCollisions);
+                }
             }
         }
     }
@@ -144,15 +146,15 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
             spring.PointA.Position = spring.PointA.PrevPosition;
             spring.PointB.Position = spring.PointB.PrevPosition;
 
-            spring.PointA.Velocity -= 2.0 * (spring.PointA.Velocity * normal) * normal; // reflected vectors
-            spring.PointB.Velocity -= 2.0 * (spring.PointB.Velocity * normal) * normal;
-            spring.PointA.Velocity *= 1.0 - _physicsUnits.Friction;
-            spring.PointB.Velocity *= 1.0 - _physicsUnits.Friction;
+            spring.PointA.Velocity -= 2.0f * (spring.PointA.Velocity * normal) * normal; // reflected vectors
+            spring.PointB.Velocity -= 2.0f * (spring.PointB.Velocity * normal) * normal;
+            spring.PointA.Velocity *= 1.0f - _physicsUnits.Friction;
+            spring.PointB.Velocity *= 1.0f - _physicsUnits.Friction;
 
             massPoint.State = CollisionState.Collision;
             massPoint.Position = massPoint.PrevPosition;
-            massPoint.Velocity -= 2.0 * (massPoint.Velocity * normal) * normal; // reflected vector
-            massPoint.Velocity *= 1.0 - _physicsUnits.Friction;
+            massPoint.Velocity -= 2.0f * (massPoint.Velocity * normal) * normal; // reflected vector
+            massPoint.Velocity *= 1.0f - _physicsUnits.Friction;
 
             return;
         }
@@ -164,8 +166,8 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
         {
             foreach (var hardBody in _hardBodiesCollection.HardBodies)
             {
-                if (!(hardBody.Borders.MinX - 1.0 < massPoint.Position.X && massPoint.Position.X < hardBody.Borders.MaxX + 1.0 &&
-                      hardBody.Borders.MinY - 1.0 < massPoint.Position.Y && massPoint.Position.Y < hardBody.Borders.MaxY + 1.0)) continue;
+                if (!(hardBody.Borders.MinX - 1.0f < massPoint.Position.X && massPoint.Position.X < hardBody.Borders.MaxX + 1.0f &&
+                      hardBody.Borders.MinY - 1.0f < massPoint.Position.Y && massPoint.Position.Y < hardBody.Borders.MaxY + 1.0f)) continue;
 
                 foreach (var edge in hardBody.Edges)
                 {
@@ -175,8 +177,8 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
                     edge.State = CollisionState.Collision;
                     massPoint.State = CollisionState.Collision;
                     massPoint.Position = massPoint.PrevPosition;
-                    massPoint.Velocity -= 2.0 * (massPoint.Velocity * normal) * normal; // reflected vector
-                    massPoint.Velocity *= 1.0 - _physicsUnits.Friction;
+                    massPoint.Velocity -= 2.0f * (massPoint.Velocity * normal) * normal; // reflected vector
+                    massPoint.Velocity *= 1.0f - _physicsUnits.Friction;
 
                     break;
                 }

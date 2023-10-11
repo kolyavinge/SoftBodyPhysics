@@ -7,18 +7,18 @@ internal class Borders
 {
     public static readonly Borders Default = new(0, 0, 0, 0);
 
-    public readonly double MinX;
-    public readonly double MaxX;
-    public readonly double MinY;
-    public readonly double MaxY;
-    public readonly double Width;
-    public readonly double Height;
-    public readonly double WidthHalf;
-    public readonly double HeightHalf;
-    public readonly double MiddleX;
-    public readonly double MiddleY;
+    public readonly float MinX;
+    public readonly float MaxX;
+    public readonly float MinY;
+    public readonly float MaxY;
+    public readonly float Width;
+    public readonly float Height;
+    public readonly float WidthHalf;
+    public readonly float HeightHalf;
+    public readonly float MiddleX;
+    public readonly float MiddleY;
 
-    public Borders(double minX, double maxX, double minY, double maxY)
+    public Borders(float minX, float maxX, float minY, float maxY)
     {
         MinX = minX;
         MaxX = maxX;
@@ -26,14 +26,14 @@ internal class Borders
         MaxY = maxY;
         Width = maxX - minX;
         Height = maxY - minY;
-        WidthHalf = Width / 2.0;
-        HeightHalf = Height / 2.0;
+        WidthHalf = Width / 2.0f;
+        HeightHalf = Height / 2.0f;
         MiddleX = minX + WidthHalf;
         MiddleY = minY + HeightHalf;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsPointIn(Borders borders, Vector point, double delta)
+    public static bool IsPointIn(Borders borders, Vector point, float delta)
     {
         return
             borders.MinX - delta < point.X && point.X < borders.MaxX + delta &&

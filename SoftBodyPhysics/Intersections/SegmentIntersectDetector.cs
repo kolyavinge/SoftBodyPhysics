@@ -51,8 +51,8 @@ internal class SegmentIntersectDetector : ISegmentIntersectDetector
 
         var d = r * r - c * c / (a * a + b * b);
         var mult = Math.Sqrt(d / (a * a + b * b));
-        var ax = x0 + b * mult;
-        var ay = y0 - a * mult;
+        var ax = (float)(x0 + b * mult);
+        var ay = (float)(y0 - a * mult);
         //var bx = x0 - b * mult;
         //var by = y0 + a * mult;
 

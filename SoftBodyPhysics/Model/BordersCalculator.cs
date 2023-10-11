@@ -21,10 +21,10 @@ internal class BordersCalculator : IBordersCalculator
         Vector positionA = first.FromPosition;
         Vector positionB = first.ToPosition;
 
-        double minX = positionA.X;
-        double minY = positionA.Y;
-        double maxX = positionB.X;
-        double maxY = positionB.Y;
+        float minX = positionA.X;
+        float minY = positionA.Y;
+        float maxX = positionB.X;
+        float maxY = positionB.Y;
 
         for (int i = 1; i < segments.Count; i++)
         {
@@ -51,10 +51,10 @@ internal class BordersCalculator : IBordersCalculator
 
     public Borders GetBordersByMassPoint(Vector massPointPosition)
     {
-        double minX = massPointPosition.X;
-        double minY = massPointPosition.Y;
-        double maxX = massPointPosition.X + Constants.MassPointRadius;
-        double maxY = massPointPosition.Y + Constants.MassPointRadius;
+        float minX = massPointPosition.X;
+        float minY = massPointPosition.Y;
+        float maxX = massPointPosition.X + Constants.MassPointRadius;
+        float maxY = massPointPosition.Y + Constants.MassPointRadius;
 
         return new(minX, maxX, minY, maxY);
     }

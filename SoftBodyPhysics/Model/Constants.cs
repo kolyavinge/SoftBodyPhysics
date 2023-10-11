@@ -2,19 +2,19 @@
 
 internal static class Constants
 {
-    public const double Time = 0.1;
+    public const float Time = 0.1f;
 
-    public const double TimeStep = 0.01;
+    public const float TimeStep = 0.01f;
 
-    public const double Mass = 1.0;
+    public const float Mass = 1.0f;
 
-    public const double MassPointRadius = 1.0;
+    public const float MassPointRadius = 1.0f;
 
-    public const double SpringStiffness = 0.5;
+    public const float SpringStiffness = 0.5f;
 
-    public const double SpringDamper = 0.5;
+    public const float SpringDamper = 0.5f;
 
-    public const double Friction = 0.2;
+    public const float Friction = 0.2f;
 
-    public const double GravityAcceleration = 9.8;
+    public const float GravityAcceleration = 9.8f;
 }

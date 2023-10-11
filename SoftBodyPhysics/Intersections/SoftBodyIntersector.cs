@@ -40,10 +40,10 @@ internal class SoftBodyIntersector : ISoftBodyIntersector
 
         var pointToList = new Vector[]
         {
-            new(softBody.Borders.MinX - 1.0, point.Y),
-            new(softBody.Borders.MaxX - 1.0, point.Y),
-            new(point.X, softBody.Borders.MinY + 1.0),
-            new(point.X, softBody.Borders.MaxY + 1.0)
+            new(softBody.Borders.MinX - 1.0f, point.Y),
+            new(softBody.Borders.MaxX - 1.0f, point.Y),
+            new(point.X, softBody.Borders.MinY + 1.0f),
+            new(point.X, softBody.Borders.MaxY + 1.0f)
         };
 
         IntersectResult? result = null;

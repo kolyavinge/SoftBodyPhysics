@@ -9,7 +9,7 @@ internal interface ISegmentChecker
 
 internal class SegmentChecker : ISegmentChecker
 {
-    private const double _delta = 0.00001;
+    private const float _delta = 0.00001f;
 
     public bool IsPointInSegment(Vector segmentFrom, Vector segementTo, Vector point)
     {

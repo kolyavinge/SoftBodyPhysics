@@ -12,7 +12,7 @@ public interface IMassPoint
 
     Vector PrevPosition { get; }
 
-    double Mass { get; set; }
+    float Mass { get; set; }
 
     CollisionState State { get; }
 
@@ -26,7 +26,7 @@ internal class MassPoint : IMassPoint
     Vector IMassPoint.Velocity => Velocity;
     Vector IMassPoint.Position { get => Position; set => Position = value; }
     Vector IMassPoint.PrevPosition => PrevPosition;
-    double IMassPoint.Mass { get => Mass; set => Mass = value; }
+    float IMassPoint.Mass { get => Mass; set => Mass = value; }
     CollisionState IMassPoint.State => State;
     public string? DebugInfo { get; set; }
     #endregion
@@ -41,7 +41,7 @@ internal class MassPoint : IMassPoint
 
     public Vector PrevPosition;
 
-    public double Mass;
+    public float Mass;
 
     public CollisionState State;
 

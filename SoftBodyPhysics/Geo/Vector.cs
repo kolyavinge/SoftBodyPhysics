@@ -6,19 +6,19 @@ public class Vector
 {
     public static readonly Vector Zero = new(0, 0);
 
-    public readonly double X;
-    public readonly double Y;
+    public readonly float X;
+    public readonly float Y;
 
-    public Vector(double x, double y)
+    public Vector(float x, float y)
     {
         X = x;
         Y = y;
     }
 
-    public double Length => Math.Sqrt(X * X + Y * Y);
+    public float Length => (float)Math.Sqrt(X * X + Y * Y);
 
     // длина в квадрате, экономия на извлечении корня
-    public double LengthSquare => X * X + Y * Y;
+    public float LengthSquare => X * X + Y * Y;
 
     public Vector Normalized
     {
@@ -35,11 +35,11 @@ public class Vector
 
     public static Vector operator -(Vector a, Vector b) => new(a.X - b.X, a.Y - b.Y);
 
-    public static Vector operator *(Vector a, double k) => new(k * a.X, k * a.Y);
+    public static Vector operator *(Vector a, float k) => new(k * a.X, k * a.Y);
 
-    public static Vector operator *(double k, Vector a) => a * k;
+    public static Vector operator *(float k, Vector a) => a * k;
 
-    public static double operator *(Vector a, Vector b) => a.X * b.X + a.Y * b.Y;
+    public static float operator *(Vector a, Vector b) => a.X * b.X + a.Y * b.Y;
 
     public override string ToString() => $"{X:F2} : {Y:F2}";
 }

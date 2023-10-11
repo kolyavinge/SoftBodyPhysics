@@ -27,8 +27,8 @@ internal class NormalCalculator : INormalCalculator
             var (sortedFrom, sortedTo) = lineFrom.X < lineTo.X ? (lineFrom, lineTo) : (lineTo, lineFrom);
             var alpha = Math.Abs(Math.Atan((sortedTo.Y - sortedFrom.Y) / (sortedTo.X - sortedFrom.X)));
             if (sortedTo.Y < sortedFrom.Y) alpha = -alpha;
-            var x = Math.Cos(_halfPI + alpha);
-            var y = Math.Sin(_halfPI + alpha);
+            var x = (float)Math.Cos(_halfPI + alpha);
+            var y = (float)Math.Sin(_halfPI + alpha);
 
             return new(x, y);
         }

@@ -20,11 +20,11 @@ public interface ISpring : ISegment
 
     Vector Force { get; }
 
-    double Stiffness { get; set; }
+    float Stiffness { get; set; }
 
-    double RestLength { get; }
+    float RestLength { get; }
 
-    double DeformLength { get; }
+    float DeformLength { get; }
 
     string? DebugInfo { get; set; }
 }
@@ -41,8 +41,8 @@ internal class Spring : ISpring
     IMassPoint ISpring.PointA => PointA;
     IMassPoint ISpring.PointB => PointB;
     Vector ISpring.Force => Force;
-    double ISpring.RestLength => RestLength;
-    double ISpring.Stiffness { get => Stiffness; set => Stiffness = value; }
+    float ISpring.RestLength => RestLength;
+    float ISpring.Stiffness { get => Stiffness; set => Stiffness = value; }
     public string? DebugInfo { get; set; }
     #endregion
 
@@ -56,11 +56,11 @@ internal class Spring : ISpring
 
     public Vector Force;
 
-    public double Stiffness;
+    public float Stiffness;
 
-    public double RestLength;
+    public float RestLength;
 
-    public double DeformLength => (PointA.Position - PointB.Position).Length - RestLength;
+    public float DeformLength => (PointA.Position - PointB.Position).Length - RestLength;
 
     public Spring(MassPoint a, MassPoint b)
     {
