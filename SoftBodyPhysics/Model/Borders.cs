@@ -38,6 +38,5 @@ internal class Borders
         return
             borders.MinX - delta < point.X && point.X < borders.MaxX + delta &&
             borders.MinY - delta < point.Y && point.Y < borders.MaxY + delta;
-
     }
 }

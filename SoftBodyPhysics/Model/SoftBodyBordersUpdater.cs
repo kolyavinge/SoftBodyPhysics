@@ -20,8 +20,8 @@ internal class SoftBodyBordersUpdater : ISoftBodyBordersUpdater
     {
         foreach (var softBody in softBodies)
         {
-            softBody.Borders = _bordersCalculator.GetBordersBySegments(softBody.SpringsToCheckCollisions)
-                               ?? _bordersCalculator.GetBordersByMassPoint(softBody.MassPoints[0].Position);
+            softBody.Borders = _bordersCalculator.GetBordersBySegments(softBody.SpringsToCheckCollisions) ??
+                               _bordersCalculator.GetBordersByMassPoint(softBody.MassPoints[0].Position);
         }
     }
 }

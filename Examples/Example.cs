@@ -329,4 +329,42 @@ public static class Example
 
         editor.Complete();
     }
+
+    public static void VeryFast(IPhysicsWorld physicsWorld)
+    {
+        physicsWorld.Units.SpringStiffness = 100;
+
+        var editor = physicsWorld.MakEditor();
+
+        var softBody = editor.MakeSoftBody();
+        var p1 = editor.AddMassPoint(softBody, new(120, 950));
+        var p2 = editor.AddMassPoint(softBody, new(120, 970));
+        var p3 = editor.AddMassPoint(softBody, new(140, 970));
+        var p4 = editor.AddMassPoint(softBody, new(140, 950));
+        editor.AddSpring(softBody, p1, p2);
+        editor.AddSpring(softBody, p2, p3);
+        editor.AddSpring(softBody, p3, p4);
+        editor.AddSpring(softBody, p4, p1);
+        editor.AddSpring(softBody, p1, p3);
+        editor.AddSpring(softBody, p2, p4);
+
+        var hardBody = editor.AddHardBody();
+        editor.AddEdge(hardBody, new(100, 100), new(800, 100));
+
+        hardBody = editor.AddHardBody();
+        editor.AddEdge(hardBody, new(100, 100), new(100, 1000));
+
+        hardBody = editor.AddHardBody();
+        editor.AddEdge(hardBody, new(800, 100), new(800, 1000));
+
+        hardBody = editor.AddHardBody();
+        editor.AddEdge(hardBody, new(100, 1000), new(800, 1000));
+
+        editor.Complete();
+
+        foreach (var m in softBody.MassPoints)
+        {
+            m.Velocity = new(10000, -10000);
+        }
+    }
 }

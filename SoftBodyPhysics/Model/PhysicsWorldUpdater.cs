@@ -37,11 +37,13 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
     public void Update()
     {
         Init();
-        for (var time = 0.0f; time < _physicsUnits.Time; time += Constants.TimeStep)
+        var timeStep = Constants.TimeStep;
+        for (var time = 0.0f; time < _physicsUnits.Time; time += timeStep)
         {
             InitGravityForce();
             ApplySpringForce();
-            ApplyVelocity();
+            ApplyVelocity(timeStep);
+            timeStep = GetTimeStepAndCorrectPositionSteps(timeStep);
             ApplyPositions();
             _softBodyBordersUpdater.UpdateBorders(_softBodiesCollection.SoftBodies);
         }
@@ -77,16 +79,42 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
             var diffBA = (b.Position - a.Position).Normalized;
             var fd = _physicsUnits.SpringDamper * (diffBA * (b.Velocity - a.Velocity)); // (B.Position - A.Position).Normalized * (B.Velocity - A.Velocity)
             var f = fs + fd;
-            a.Force += f * diffBA; // (B.Position - A.Position).Normalized
-            b.Force -= f * diffBA; // (A.Position - B.Position).Normalized
+            var df = f * diffBA;
+            a.Force += df; // (B.Position - A.Position).Normalized
+            b.Force -= df; // (A.Position - B.Position).Normalized
         }
     }
 
-    private void ApplyVelocity()
+    private void ApplyVelocity(float timeStep)
     {
         foreach (var massPoint in _softBodiesCollection.AllMassPoints)
         {
-            massPoint.Velocity += massPoint.Force * (Constants.TimeStep / massPoint.Mass);
+            massPoint.Velocity += massPoint.Force * (timeStep / massPoint.Mass);
+            massPoint.PositionStep = massPoint.Velocity * timeStep;
+        }
+    }
+
+    private float GetTimeStepAndCorrectPositionSteps(float timeStep)
+    {
+        float max = 0;
+        foreach (var massPoint in _softBodiesCollection.AllMassPoints)
+        {
+            float current = massPoint.PositionStep.Length / Constants.MassPointRadius;
+            max = Math.Max(max, current);
+        }
+        if (max > 1.0f)
+        {
+            var imax = 1.0f / max;
+            foreach (var massPoint in _softBodiesCollection.AllMassPoints)
+            {
+                massPoint.PositionStep *= imax;
+            }
+
+            return timeStep / max;
+        }
+        else
+        {
+            return timeStep;
         }
     }
 
@@ -96,19 +124,18 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
         {
             foreach (var massPoint in softBody.MassPoints)
             {
-                massPoint.Position += massPoint.Velocity * Constants.TimeStep;
-                if ((massPoint.Position - massPoint.PrevPosition).LengthSquare > 0.001f)
-                {
-                    CheckSoftBodyCollisions(softBody);
-                    CheckHardBodyCollisions(softBody);
-                    massPoint.SavePosition();
-                }
+                massPoint.Position += massPoint.PositionStep;
+                //if ((massPoint.Position - massPoint.PrevPosition).LengthSquare > 0.0001f)
+                CheckSoftBodyCollisions(softBody);
+                CheckHardBodyCollisions(softBody);
+                massPoint.SavePosition();
             }
         }
     }
 
     private void CheckSoftBodyCollisions(SoftBody body1)
     {
+        var delta = 2.0f;
         foreach (var body2 in _softBodiesCollection.SoftBodies)
         {
             if (body2 == body1) continue;
@@ -118,8 +145,8 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
 
             foreach (var massPoint in body1.MassPoints)
             {
-                if (body2.Borders.MinX - 10.0f < massPoint.Position.X && massPoint.Position.X < body2.Borders.MaxX + 10.0f &&
-                    body2.Borders.MinY - 10.0f < massPoint.Position.Y && massPoint.Position.Y < body2.Borders.MaxY + 10.0f)
+                if (body2.Borders.MinX - delta < massPoint.Position.X && massPoint.Position.X < body2.Borders.MaxX + delta &&
+                    body2.Borders.MinY - delta < massPoint.Position.Y && massPoint.Position.Y < body2.Borders.MaxY + delta)
                 {
                     CheckMassPointAndSpringsCollision(massPoint, body2.SpringsToCheckCollisions);
                 }
@@ -127,8 +154,8 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
 
             foreach (var massPoint in body2.MassPoints)
             {
-                if (body1.Borders.MinX - 10.0f < massPoint.Position.X && massPoint.Position.X < body1.Borders.MaxX + 10.0f &&
-                    body1.Borders.MinY - 10.0f < massPoint.Position.Y && massPoint.Position.Y < body1.Borders.MaxY + 10.0f)
+                if (body1.Borders.MinX - delta < massPoint.Position.X && massPoint.Position.X < body1.Borders.MaxX + delta &&
+                    body1.Borders.MinY - delta < massPoint.Position.Y && massPoint.Position.Y < body1.Borders.MaxY + delta)
                 {
                     CheckMassPointAndSpringsCollision(massPoint, body1.SpringsToCheckCollisions);
                 }

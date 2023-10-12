@@ -4,7 +4,7 @@ internal static class Constants
 {
     public const float Time = 0.1f;
 
-    public const float TimeStep = 0.01f;
+    public const float TimeStep = 0.1f;
 
     public const float Mass = 1.0f;
 
