@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using SoftBodyPhysics.Geo;
 using SoftBodyPhysics.Intersections;
+using SoftBodyPhysics.Model;
 using SoftBodyPhysics.Utils;
 
-namespace SoftBodyPhysics.Model;
+namespace SoftBodyPhysics.Ancillary;
 
 internal interface ISoftBodySpringEdgeDetector
 {

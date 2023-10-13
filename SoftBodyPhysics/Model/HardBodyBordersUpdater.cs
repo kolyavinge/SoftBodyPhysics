@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using SoftBodyPhysics.Model;
 
-namespace SoftBodyPhysics.Model;
+namespace SoftBodyPhysics.Ancillary;
 
 internal interface IHardBodyBordersUpdater
 {

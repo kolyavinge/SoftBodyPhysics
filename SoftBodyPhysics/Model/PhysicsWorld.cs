@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SoftBodyPhysics.Ancillary;
 using SoftBodyPhysics.Factories;
 
 namespace SoftBodyPhysics.Model;

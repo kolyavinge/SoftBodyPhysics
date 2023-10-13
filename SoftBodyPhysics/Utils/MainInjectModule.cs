@@ -1,4 +1,5 @@
 ﻿using DependencyInjection;
+using SoftBodyPhysics.Ancillary;
 using SoftBodyPhysics.Factories;
 using SoftBodyPhysics.Geo;
 using SoftBodyPhysics.Intersections;
@@ -30,6 +31,9 @@ internal class MainInjectModule : InjectModule
         bindingProvider.Bind<IBodyEditorFactory, BodyEditorFactory>().ToSingleton();
         bindingProvider.Bind<ISoftBodyBordersUpdater, SoftBodyBordersUpdater>().ToSingleton();
         bindingProvider.Bind<IHardBodyBordersUpdater, HardBodyBordersUpdater>().ToSingleton();
+        bindingProvider.Bind<ITimeStepCalculator, TimeStepCalculator>().ToSingleton();
+        bindingProvider.Bind<ISoftBodyCollisionChecker, SoftBodyCollisionChecker>().ToSingleton();
+        bindingProvider.Bind<IHardBodyCollisionChecker, HardBodyCollisionChecker>().ToSingleton();
         bindingProvider.Bind<IPhysicsWorldUpdater, PhysicsWorldUpdater>().ToSingleton();
         bindingProvider.Bind<IPhysicsWorld, PhysicsWorld>().ToSingleton();
     }

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using SoftBodyPhysics.Factories;
 using SoftBodyPhysics.Geo;
+using SoftBodyPhysics.Model;
 using SoftBodyPhysics.Utils;
 
-namespace SoftBodyPhysics.Model;
+namespace SoftBodyPhysics.Ancillary;
 
 public interface IBodyEditor
 {
