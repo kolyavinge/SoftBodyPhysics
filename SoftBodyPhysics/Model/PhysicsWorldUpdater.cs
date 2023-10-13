@@ -37,7 +37,7 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
     public void Update()
     {
         Init();
-        var timeStep = Constants.TimeStep;
+        var timeStep = _physicsUnits.Time;
         for (var time = 0.0f; time < _physicsUnits.Time; time += timeStep)
         {
             InitGravityForce();
@@ -45,7 +45,7 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
             ApplyVelocity(timeStep);
             timeStep = GetTimeStepAndCorrectPositionSteps(timeStep);
             ApplyPositions();
-            _softBodyBordersUpdater.UpdateBorders(_softBodiesCollection.SoftBodies);
+            _softBodyBordersUpdater.UpdateBorders();
         }
     }
 
@@ -96,26 +96,19 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
 
     private float GetTimeStepAndCorrectPositionSteps(float timeStep)
     {
-        float max = 0;
+        var max = 0.0f;
         foreach (var massPoint in _softBodiesCollection.AllMassPoints)
         {
-            float current = massPoint.PositionStep.Length / Constants.MassPointRadius;
-            max = Math.Max(max, current);
+            max = Math.Max(max, massPoint.PositionStep.Length);
         }
-        if (max > 1.0f)
+        var aspect = max / Constants.MassPointRadius;
+        var iaspect = 1.0f / aspect;
+        foreach (var massPoint in _softBodiesCollection.AllMassPoints)
         {
-            var imax = 1.0f / max;
-            foreach (var massPoint in _softBodiesCollection.AllMassPoints)
-            {
-                massPoint.PositionStep *= imax;
-            }
+            massPoint.PositionStep *= iaspect;
+        }
 
-            return timeStep / max;
-        }
-        else
-        {
-            return timeStep;
-        }
+        return timeStep / aspect;
     }
 
     private void ApplyPositions()
@@ -125,9 +118,11 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
             foreach (var massPoint in softBody.MassPoints)
             {
                 massPoint.Position += massPoint.PositionStep;
-                //if ((massPoint.Position - massPoint.PrevPosition).LengthSquare > 0.0001f)
-                CheckSoftBodyCollisions(softBody);
-                CheckHardBodyCollisions(softBody);
+            }
+            CheckSoftBodyCollisions(softBody);
+            CheckHardBodyCollisions(softBody);
+            foreach (var massPoint in softBody.MassPoints)
+            {
                 massPoint.SavePosition();
             }
         }
@@ -138,7 +133,7 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
         var delta = 2.0f;
         foreach (var body2 in _softBodiesCollection.SoftBodies)
         {
-            if (body2 == body1) continue;
+            if (body1 == body2) continue;
 
             if (Math.Abs(body1.Borders.MiddleX - body2.Borders.MiddleX) > body1.Borders.Width + body2.Borders.Width) continue;
             if (Math.Abs(body1.Borders.MiddleY - body2.Borders.MiddleY) > body1.Borders.Height + body2.Borders.Height) continue;
@@ -193,23 +188,31 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
         {
             foreach (var hardBody in _hardBodiesCollection.HardBodies)
             {
-                if (!(hardBody.Borders.MinX - 1.0f < massPoint.Position.X && massPoint.Position.X < hardBody.Borders.MaxX + 1.0f &&
-                      hardBody.Borders.MinY - 1.0f < massPoint.Position.Y && massPoint.Position.Y < hardBody.Borders.MaxY + 1.0f)) continue;
-
-                foreach (var edge in hardBody.Edges)
+                if (hardBody.Borders.MinX - 1.0f < massPoint.Position.X && massPoint.Position.X < hardBody.Borders.MaxX + 1.0f &&
+                    hardBody.Borders.MinY - 1.0f < massPoint.Position.Y && massPoint.Position.Y < hardBody.Borders.MaxY + 1.0f)
                 {
-                    if (!_segmentIntersectDetector.Intersected(edge.From, edge.To, massPoint.Position)) continue;
-
-                    var normal = _normalCalculator.GetNormal(edge.From, edge.To);
-                    edge.State = CollisionState.Collision;
-                    massPoint.State = CollisionState.Collision;
-                    massPoint.Position = massPoint.PrevPosition;
-                    massPoint.Velocity -= 2.0f * (massPoint.Velocity * normal) * normal; // reflected vector
-                    massPoint.Velocity *= 1.0f - _physicsUnits.Friction;
-
-                    break;
+                    if (CheckMassPointAndEdgeCollision(massPoint, hardBody.Edges)) break;
                 }
             }
         }
+    }
+
+    private bool CheckMassPointAndEdgeCollision(MassPoint massPoint, Edge[] edges)
+    {
+        foreach (var edge in edges)
+        {
+            if (!_segmentIntersectDetector.Intersected(edge.From, edge.To, massPoint.Position)) continue;
+
+            var normal = _normalCalculator.GetNormal(edge.From, edge.To);
+            edge.State = CollisionState.Collision;
+            massPoint.State = CollisionState.Collision;
+            massPoint.Position = massPoint.PrevPosition;
+            massPoint.Velocity -= 2.0f * (massPoint.Velocity * normal) * normal; // reflected vector
+            massPoint.Velocity *= 1.0f - _physicsUnits.Friction;
+
+            return true;
+        }
+
+        return false;
     }
 }

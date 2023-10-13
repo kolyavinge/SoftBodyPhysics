@@ -1,21 +1,24 @@
 ﻿using Examples;
 using SoftBodyPhysics.Factories;
+using System.Diagnostics;
 
-var physicsWorld = PhysicsWorldFactory.Make();
+Update(100);
+Update(250);
+Update(500);
+Update(1000);
+Update(2000);
+Update(4000);
+Update(8000);
 
-Example.ManyBodiesCollisions(physicsWorld);
-
-int frames = 4000;
-
-var sw = System.Diagnostics.Stopwatch.StartNew();
-
-for (int i = 0; i < frames; i++)
-{
-    physicsWorld.Update();
-}
-
-sw.Stop();
-
-Console.WriteLine($"Time: {sw.Elapsed}");
-Console.WriteLine($"{frames / sw.Elapsed.Seconds} frames per second");
+Console.WriteLine("done.");
 Console.ReadKey();
+
+void Update(int frames)
+{
+    var physicsWorld = PhysicsWorldFactory.Make();
+    Example.ManyBodiesCollisions(physicsWorld);
+    var sw = Stopwatch.StartNew();
+    for (int i = 0; i < frames; i++) physicsWorld.Update();
+    sw.Stop();
+    Console.WriteLine($"Frames: {frames}\tTime: {sw.Elapsed}\tFPS: {1000 * frames / (int)sw.Elapsed.TotalMilliseconds}");
+}

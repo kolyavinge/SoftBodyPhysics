@@ -48,7 +48,7 @@ public partial class MainWindow : Window
 
     protected override void OnRender(DrawingContext dc)
     {
-        _renderLogic.OnRender(_physicsWorld!, dc, ActualWidth, ActualHeight, ShowMassPointAddInfo.IsChecked ?? false, ShowPrevPositions.IsChecked ?? false, ShowGrid.IsChecked ?? false);
+        _renderLogic.OnRender(_physicsWorld!, dc, ActualWidth, ActualHeight, ShowMassPointAddInfo.IsChecked ?? false, ShowGrid.IsChecked ?? false);
     }
 
     private void OnResetClick(object sender, RoutedEventArgs e)

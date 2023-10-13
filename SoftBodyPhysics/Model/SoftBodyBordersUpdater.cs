@@ -4,24 +4,43 @@ namespace SoftBodyPhysics.Model;
 
 internal interface ISoftBodyBordersUpdater
 {
+    void UpdateBorders();
     void UpdateBorders(IEnumerable<SoftBody> softBodies);
+    void UpdateBorders(SoftBody softBody);
 }
 
 internal class SoftBodyBordersUpdater : ISoftBodyBordersUpdater
 {
+    private readonly ISoftBodiesCollection _softBodiesCollection;
     private readonly IBordersCalculator _bordersCalculator;
 
-    public SoftBodyBordersUpdater(IBordersCalculator bordersCalculator)
+    public SoftBodyBordersUpdater(
+        ISoftBodiesCollection softBodiesCollection,
+        IBordersCalculator bordersCalculator)
     {
+        _softBodiesCollection = softBodiesCollection;
         _bordersCalculator = bordersCalculator;
+    }
+
+    public void UpdateBorders()
+    {
+        foreach (var softBody in _softBodiesCollection.SoftBodies)
+        {
+            UpdateBorders(softBody);
+        }
     }
 
     public void UpdateBorders(IEnumerable<SoftBody> softBodies)
     {
         foreach (var softBody in softBodies)
         {
-            softBody.Borders = _bordersCalculator.GetBordersBySegments(softBody.SpringsToCheckCollisions) ??
-                               _bordersCalculator.GetBordersByMassPoint(softBody.MassPoints[0].Position);
+            UpdateBorders(softBody);
         }
+    }
+
+    public void UpdateBorders(SoftBody softBody)
+    {
+        softBody.Borders = _bordersCalculator.GetBordersBySegments(softBody.SpringsToCheckCollisions) ??
+                           _bordersCalculator.GetBordersByMassPoint(softBody.MassPoints[0].Position);
     }
 }

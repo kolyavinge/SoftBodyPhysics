@@ -11,12 +11,11 @@ internal class RenderLogic
     private readonly Pen _gridPen = new Pen(new SolidColorBrush(new() { A = 255, R = 60, G = 60, B = 60 }), 0.5);
     private readonly Pen _hardBodyPen = new Pen(Brushes.BlueViolet, 2.0);
     private readonly Pen _hardBodyCollisionPen = new Pen(Brushes.Red, 2.0);
-    private readonly Pen _prevSpringPen = new Pen(Brushes.Gray, 1.0);
     private readonly Pen _springEdgePen = new Pen(Brushes.Blue, 1.0);
     private readonly Pen _springPen = new Pen(Brushes.CornflowerBlue, 1.0);
 
     public void OnRender(
-        IPhysicsWorld physicsWorld, DrawingContext dc, double actualWidth, double actualHeight, bool showMassPointAddInfo, bool showPrevPositions, bool showGrid)
+        IPhysicsWorld physicsWorld, DrawingContext dc, double actualWidth, double actualHeight, bool showMassPointAddInfo, bool showGrid)
     {
         var yoffset = actualHeight;
 
@@ -52,13 +51,6 @@ internal class RenderLogic
         {
             foreach (var spring in softBody.Springs)
             {
-                if (showPrevPositions)
-                {
-                    var prevPosA = spring.PointA.PrevPosition;
-                    var prevPosB = spring.PointB.PrevPosition;
-                    dc.DrawLine(_prevSpringPen, new(prevPosA.X, yoffset - prevPosA.Y), new(prevPosB.X, yoffset - prevPosB.Y));
-                }
-
                 var posA = spring.PointA.Position;
                 var posB = spring.PointB.Position;
 
@@ -74,12 +66,6 @@ internal class RenderLogic
 
             foreach (var massPoint in softBody.MassPoints)
             {
-                if (showPrevPositions)
-                {
-                    var prevPos = massPoint.PrevPosition;
-                    dc.DrawEllipse(Brushes.Gray, null, new(prevPos.X, yoffset - prevPos.Y), _massPointRadius, _massPointRadius);
-                }
-
                 var pos = massPoint.Position;
                 if (massPoint.State == CollisionState.Normal)
                 {
