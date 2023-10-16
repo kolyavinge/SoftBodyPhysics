@@ -1,4 +1,4 @@
-﻿namespace SoftBodyPhysics.Model;
+﻿namespace SoftBodyPhysics.Core;
 
 public interface IPhysicsUnits
 {

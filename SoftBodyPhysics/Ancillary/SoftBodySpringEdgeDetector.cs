@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SoftBodyPhysics.Core;
 using SoftBodyPhysics.Geo;
 using SoftBodyPhysics.Intersections;
 using SoftBodyPhysics.Model;

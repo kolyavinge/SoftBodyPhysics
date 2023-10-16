@@ -1,6 +1,6 @@
 ﻿using SoftBodyPhysics.Geo;
 
-namespace SoftBodyPhysics.Model;
+namespace SoftBodyPhysics.Core;
 
 internal interface IPhysicsWorldUpdater
 {

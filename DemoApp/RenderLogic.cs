@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
+using SoftBodyPhysics.Core;
 using SoftBodyPhysics.Model;
 
 namespace DemoApp;

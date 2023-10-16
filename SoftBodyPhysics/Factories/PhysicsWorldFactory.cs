@@ -1,5 +1,5 @@
 ﻿using DependencyInjection;
-using SoftBodyPhysics.Model;
+using SoftBodyPhysics.Core;
 using SoftBodyPhysics.Utils;
 
 namespace SoftBodyPhysics.Factories;

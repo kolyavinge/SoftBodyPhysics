@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SoftBodyPhysics.Geo;
+using SoftBodyPhysics.Model;
 
-namespace SoftBodyPhysics.Model;
+namespace SoftBodyPhysics.Core;
 
 internal interface IBordersCalculator
 {

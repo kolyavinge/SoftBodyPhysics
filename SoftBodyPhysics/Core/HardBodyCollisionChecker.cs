@@ -1,7 +1,8 @@
 ﻿using SoftBodyPhysics.Geo;
 using SoftBodyPhysics.Intersections;
+using SoftBodyPhysics.Model;
 
-namespace SoftBodyPhysics.Model;
+namespace SoftBodyPhysics.Core;
 
 internal interface IHardBodyCollisionChecker
 {

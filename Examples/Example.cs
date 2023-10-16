@@ -1,4 +1,4 @@
-﻿using SoftBodyPhysics.Model;
+﻿using SoftBodyPhysics.Core;
 
 namespace Examples;
 

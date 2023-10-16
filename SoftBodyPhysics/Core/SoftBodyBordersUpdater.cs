@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using SoftBodyPhysics.Model;
 
-namespace SoftBodyPhysics.Model;
+namespace SoftBodyPhysics.Core;
 
 internal interface ISoftBodyBordersUpdater
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SoftBodyPhysics.Model;
+namespace SoftBodyPhysics.Core;
 
 internal interface ITimeStepCalculator
 {

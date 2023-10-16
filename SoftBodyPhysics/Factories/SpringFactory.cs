@@ -1,4 +1,5 @@
-﻿using SoftBodyPhysics.Model;
+﻿using SoftBodyPhysics.Core;
+using SoftBodyPhysics.Model;
 
 namespace SoftBodyPhysics.Factories;
 

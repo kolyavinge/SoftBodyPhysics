@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using SoftBodyPhysics.Ancillary;
 using SoftBodyPhysics.Factories;
+using SoftBodyPhysics.Model;
 
-namespace SoftBodyPhysics.Model;
+namespace SoftBodyPhysics.Core;
 
 public interface IPhysicsWorld
 {
