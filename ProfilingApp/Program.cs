@@ -1,6 +1,6 @@
-﻿using Examples;
+﻿using System.Diagnostics;
+using Examples;
 using SoftBodyPhysics.Factories;
-using System.Diagnostics;
 
 Update(100);
 Update(250);

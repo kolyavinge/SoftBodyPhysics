@@ -31,9 +31,16 @@ internal class MainInjectModule : InjectModule
         bindingProvider.Bind<IBodyEditorFactory, BodyEditorFactory>().ToSingleton();
         bindingProvider.Bind<ISoftBodyBordersUpdater, SoftBodyBordersUpdater>().ToSingleton();
         bindingProvider.Bind<IHardBodyBordersUpdater, HardBodyBordersUpdater>().ToSingleton();
+        bindingProvider.Bind<IGravityForceCalculator, GravityForceCalculator>().ToSingleton();
+        bindingProvider.Bind<IPhysicsWorldFrameInitializer, PhysicsWorldFrameInitializer>().ToSingleton();
+        bindingProvider.Bind<ISpringForceCalculator, SpringForceCalculator>().ToSingleton();
+        bindingProvider.Bind<IVelocityCalculator, VelocityCalculator>().ToSingleton();
         bindingProvider.Bind<ITimeStepCalculator, TimeStepCalculator>().ToSingleton();
+        bindingProvider.Bind<IMassPointSpringsCollisionChecker, MassPointSpringsCollisionChecker>().ToSingleton();
+        bindingProvider.Bind<IMassPointEdgeCollisionChecker, MassPointEdgeCollisionChecker>().ToSingleton();
         bindingProvider.Bind<ISoftBodyCollisionChecker, SoftBodyCollisionChecker>().ToSingleton();
         bindingProvider.Bind<IHardBodyCollisionChecker, HardBodyCollisionChecker>().ToSingleton();
+        bindingProvider.Bind<ICollisionChecker, CollisionChecker>().ToSingleton();
         bindingProvider.Bind<IPhysicsWorldUpdater, PhysicsWorldUpdater>().ToSingleton();
         bindingProvider.Bind<IPhysicsWorld, PhysicsWorld>().ToSingleton();
     }

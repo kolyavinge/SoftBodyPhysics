@@ -52,6 +52,6 @@ internal class PhysicsWorld : IPhysicsWorld
 
     public void Update()
     {
-        _updater.Update();
+        _updater.UpdateFrame();
     }
 }
