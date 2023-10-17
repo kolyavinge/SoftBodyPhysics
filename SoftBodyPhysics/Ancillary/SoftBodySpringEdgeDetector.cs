@@ -61,7 +61,7 @@ internal class SoftBodySpringEdgeDetector : ISoftBodySpringEdgeDetector
                         minY = p.Y;
                         minSpring = spring;
                     }
-                    else if (p.Y > maxY)
+                    if (p.Y > maxY)
                     {
                         maxY = p.Y;
                         maxSpring = spring;
@@ -95,7 +95,7 @@ internal class SoftBodySpringEdgeDetector : ISoftBodySpringEdgeDetector
                         minX = p.X;
                         minSpring = spring;
                     }
-                    else if (p.X > maxX)
+                    if (p.X > maxX)
                     {
                         maxX = p.X;
                         maxSpring = spring;
