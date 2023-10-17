@@ -32,11 +32,12 @@ internal class MassPointEdgeCollisionChecker : IMassPointEdgeCollisionChecker
             if (!_segmentIntersectDetector.Intersected(edge.From, edge.To, massPoint.Position)) continue;
 
             var normal = _vectorCalculator.GetNormalVector(edge.From, edge.To);
-            edge.State = CollisionState.Collision;
-            massPoint.State = CollisionState.Collision;
+
+            edge.Collisions.Add(massPoint);
+
+            massPoint.Collision = edge;
             massPoint.Position = massPoint.PrevPosition;
-            massPoint.Velocity = _vectorCalculator.GetReflectedVector(massPoint.Velocity, normal);
-            massPoint.Velocity *= 1.0f - _physicsUnits.Friction;
+            massPoint.Velocity = _physicsUnits.Sliding * _vectorCalculator.GetReflectedVector(massPoint.Velocity, normal);
 
             return true;
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using SoftBodyPhysics.Geo;
 
 namespace SoftBodyPhysics.Model;
@@ -10,7 +11,7 @@ public interface ISegment
     Vector ToPosition { get; }
 }
 
-public interface ISpring : ISegment
+public interface ISpring : ISegment, IBarrier
 {
     bool IsEdge { get; }
 
@@ -26,24 +27,24 @@ public interface ISpring : ISegment
 
     float DeformLength { get; }
 
-    string? DebugInfo { get; set; }
+    IReadOnlyCollection<IMassPoint> Collisions { get; }
+
+    object? Tag { get; set; }
 }
 
 internal class Spring : ISpring
 {
-    #region ISegment
+    #region ISpring
     Vector ISegment.FromPosition => PointA.Position;
     Vector ISegment.ToPosition => PointB.Position;
-    #endregion
-
-    #region ISpring
     bool ISpring.IsEdge => IsEdge;
     IMassPoint ISpring.PointA => PointA;
     IMassPoint ISpring.PointB => PointB;
     Vector ISpring.Force => Force;
     float ISpring.RestLength => RestLength;
     float ISpring.Stiffness { get => Stiffness; set => Stiffness = value; }
-    public string? DebugInfo { get; set; }
+    IReadOnlyCollection<IMassPoint> ISpring.Collisions => Collisions;
+    public object? Tag { get; set; }
     #endregion
 
     // поля для оптимизации
@@ -60,6 +61,8 @@ internal class Spring : ISpring
 
     public float RestLength;
 
+    public readonly List<IMassPoint> Collisions;
+
     public float DeformLength => (PointA.Position - PointB.Position).Length - RestLength;
 
     public Spring(MassPoint a, MassPoint b)
@@ -68,5 +71,6 @@ internal class Spring : ISpring
         PointB = b;
         RestLength = Math.Abs((a.Position - b.Position).Length);
         Force = Vector.Zero;
+        Collisions = new List<IMassPoint>();
     }
 }

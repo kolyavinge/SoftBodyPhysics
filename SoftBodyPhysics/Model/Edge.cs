@@ -1,14 +1,17 @@
-﻿using SoftBodyPhysics.Geo;
+﻿using System.Collections.Generic;
+using SoftBodyPhysics.Geo;
 
 namespace SoftBodyPhysics.Model;
 
-public interface IEdge : ISegment
+public interface IEdge : ISegment, IBarrier
 {
     Vector From { get; }
 
     Vector To { get; }
 
-    CollisionState State { get; }
+    IReadOnlyCollection<IMassPoint> Collisions { get; }
+
+    object? Tag { get; set; }
 }
 
 internal class Edge : IEdge
@@ -16,12 +19,10 @@ internal class Edge : IEdge
     #region IEdge
     public Vector FromPosition => From;
     public Vector ToPosition => To;
-    #endregion
-
-    #region IEdge
     Vector IEdge.From => From;
     Vector IEdge.To => To;
-    CollisionState IEdge.State => State;
+    IReadOnlyCollection<IMassPoint> IEdge.Collisions => Collisions;
+    public object? Tag { get; set; }
     #endregion
 
     // поля для оптимизации
@@ -30,16 +31,12 @@ internal class Edge : IEdge
 
     public Vector To;
 
-    public CollisionState State;
+    public readonly List<IMassPoint> Collisions;
 
     public Edge(Vector from, Vector to)
     {
         From = from;
         To = to;
-    }
-
-    public void ResetState()
-    {
-        State = CollisionState.Normal;
+        Collisions = new List<IMassPoint>();
     }
 }

@@ -33,7 +33,7 @@ internal class CollisionChecker : ICollisionChecker
             _hardBodyCollisionChecker.CheckCollisions(softBody);
             foreach (var massPoint in softBody.MassPoints)
             {
-                massPoint.SavePosition();
+                massPoint.PrevPosition = massPoint.Position;
             }
         }
     }

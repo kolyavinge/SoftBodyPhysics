@@ -12,7 +12,7 @@ internal static class Constants
 
     public const float SpringDamper = 1.0f;
 
-    public const float Friction = 0.2f;
+    public const float Sliding = 0.8f;
 
     public const float GravityAcceleration = 9.8f;
 }

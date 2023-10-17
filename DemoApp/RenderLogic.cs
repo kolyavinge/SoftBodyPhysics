@@ -1,8 +1,8 @@
 ﻿using System.Globalization;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using SoftBodyPhysics.Core;
-using SoftBodyPhysics.Model;
 
 namespace DemoApp;
 
@@ -37,7 +37,7 @@ internal class RenderLogic
         {
             foreach (var edge in hardBody.Edges)
             {
-                if (edge.State == CollisionState.Normal)
+                if (!edge.Collisions.Any())
                 {
                     dc.DrawLine(_hardBodyPen, new(edge.From.X, yoffset - edge.From.Y), new(edge.To.X, yoffset - edge.To.Y));
                 }
@@ -68,11 +68,11 @@ internal class RenderLogic
             foreach (var massPoint in softBody.MassPoints)
             {
                 var pos = massPoint.Position;
-                if (massPoint.State == CollisionState.Normal)
+                if (massPoint.Collision is null)
                 {
                     dc.DrawEllipse(Brushes.DarkRed, null, new(pos.X, yoffset - pos.Y), _massPointRadius, _massPointRadius);
                 }
-                else if (massPoint.State == CollisionState.Collision)
+                else
                 {
                     dc.DrawEllipse(Brushes.OrangeRed, null, new(pos.X, yoffset - pos.Y), _massPointRadius, _massPointRadius);
                 }

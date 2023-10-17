@@ -12,9 +12,9 @@ public interface IMassPoint
 
     float Mass { get; set; }
 
-    CollisionState State { get; }
+    IBarrier? Collision { get; }
 
-    string? DebugInfo { get; set; }
+    object? Tag { get; set; }
 }
 
 internal class MassPoint : IMassPoint
@@ -24,8 +24,8 @@ internal class MassPoint : IMassPoint
     Vector IMassPoint.Velocity { get => Velocity; set => Velocity = value; }
     Vector IMassPoint.Position { get => Position; set => Position = value; }
     float IMassPoint.Mass { get => Mass; set => Mass = value; }
-    CollisionState IMassPoint.State => State;
-    public string? DebugInfo { get; set; }
+    IBarrier? IMassPoint.Collision => Collision;
+    public object? Tag { get; set; }
     #endregion
 
     // поля для оптимизации
@@ -42,7 +42,7 @@ internal class MassPoint : IMassPoint
 
     public float Mass;
 
-    public CollisionState State;
+    public IBarrier? Collision;
 
     public MassPoint(Vector position)
     {
@@ -51,15 +51,5 @@ internal class MassPoint : IMassPoint
         Velocity = Vector.Zero;
         PositionStep = Vector.Zero;
         Force = Vector.Zero;
-    }
-
-    public void ResetState()
-    {
-        State = CollisionState.Normal;
-    }
-
-    public void SavePosition()
-    {
-        PrevPosition = Position;
     }
 }

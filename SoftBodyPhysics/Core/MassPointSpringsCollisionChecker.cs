@@ -30,20 +30,18 @@ internal class MassPointSpringsCollisionChecker : IMassPointSpringsCollisionChec
         foreach (var spring in springs)
         {
             if (!_segmentIntersectDetector.Intersected(spring.PointA.Position, spring.PointB.Position, massPoint.Position)) continue;
+
             var normal = _vectorCalculator.GetNormalVector(spring.PointA.Position, spring.PointB.Position);
 
+            spring.Collisions.Add(massPoint);
             spring.PointA.Position = spring.PointA.PrevPosition;
             spring.PointB.Position = spring.PointB.PrevPosition;
+            spring.PointA.Velocity = _physicsUnits.Sliding * _vectorCalculator.GetReflectedVector(spring.PointA.Velocity, normal);
+            spring.PointB.Velocity = _physicsUnits.Sliding * _vectorCalculator.GetReflectedVector(spring.PointB.Velocity, normal);
 
-            spring.PointA.Velocity = _vectorCalculator.GetReflectedVector(spring.PointA.Velocity, normal);
-            spring.PointB.Velocity = _vectorCalculator.GetReflectedVector(spring.PointB.Velocity, normal);
-            spring.PointA.Velocity *= 1.0f - _physicsUnits.Friction;
-            spring.PointB.Velocity *= 1.0f - _physicsUnits.Friction;
-
-            massPoint.State = CollisionState.Collision;
+            massPoint.Collision = spring;
             massPoint.Position = massPoint.PrevPosition;
-            massPoint.Velocity = _vectorCalculator.GetReflectedVector(massPoint.Velocity, normal);
-            massPoint.Velocity *= 1.0f - _physicsUnits.Friction;
+            massPoint.Velocity = _physicsUnits.Sliding * _vectorCalculator.GetReflectedVector(massPoint.Velocity, normal);
 
             return;
         }

@@ -12,7 +12,7 @@ public interface IPhysicsUnits
 
     float SpringDamper { get; set; }
 
-    float Friction { get; set; }
+    float Sliding { get; set; }
 
     float GravityAcceleration { get; set; }
 }
@@ -29,7 +29,7 @@ internal class PhysicsUnits : IPhysicsUnits
 
     public float SpringDamper { get; set; }
 
-    public float Friction { get; set; }
+    public float Sliding { get; set; }
 
     public float GravityAcceleration { get; set; }
 
@@ -40,7 +40,7 @@ internal class PhysicsUnits : IPhysicsUnits
         Time = Constants.Time;
         SpringStiffness = Constants.SpringStiffness;
         SpringDamper = Constants.SpringDamper;
-        Friction = Constants.Friction;
+        Sliding = Constants.Sliding;
         GravityAcceleration = Constants.GravityAcceleration;
     }
 }

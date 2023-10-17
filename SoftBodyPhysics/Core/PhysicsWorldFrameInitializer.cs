@@ -22,11 +22,11 @@ internal class PhysicsWorldFrameInitializer : IPhysicsWorldFrameInitializer
     {
         foreach (var massPoint in _softBodiesCollection.AllMassPoints)
         {
-            massPoint.ResetState();
+            massPoint.Collision = null;
         }
         foreach (var spring in _hardBodiesCollection.AllEdges)
         {
-            spring.ResetState();
+            spring.Collisions.Clear();
         }
     }
 }

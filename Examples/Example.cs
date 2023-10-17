@@ -6,7 +6,7 @@ public static class Example
 {
     public static void OnePointCollisions(IPhysicsWorld physicsWorld)
     {
-        physicsWorld.Units.Friction = 0.1f;
+        physicsWorld.Units.Sliding = 0.1f;
 
         var editor = physicsWorld.MakEditor();
 
