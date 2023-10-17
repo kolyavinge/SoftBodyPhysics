@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SoftBodyPhysics.Geo;
 
-public class Vector
+public class Vector : IEquatable<Vector?>
 {
     public static readonly Vector Zero = new(0, 0);
 
@@ -20,7 +21,7 @@ public class Vector
     // длина в квадрате, экономия на извлечении корня
     public float LengthSquare => X * X + Y * Y;
 
-    public Vector Normalized
+    public Vector Unit
     {
         get
         {
@@ -41,5 +42,29 @@ public class Vector
 
     public static float operator *(Vector a, Vector b) => a.X * b.X + a.Y * b.Y;
 
-    public override string ToString() => $"{X:F2} : {Y:F2}";
+    public static bool operator ==(Vector? left, Vector? right) => EqualityComparer<Vector>.Default.Equals(left!, right!);
+
+    public static bool operator !=(Vector? left, Vector? right) => !(left == right);
+
+    public override string ToString()
+    {
+        return $"{X:F2} : {Y:F2}";
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return Equals(obj as Vector);
+    }
+
+    public bool Equals(Vector? other)
+    {
+        return other is not null &&
+               X == other.X &&
+               Y == other.Y;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(X, Y);
+    }
 }

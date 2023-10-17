@@ -2,17 +2,18 @@
 
 namespace SoftBodyPhysics.Geo;
 
-internal interface INormalCalculator
+internal interface IVectorCalculator
 {
-    Vector GetNormal(Vector lineFrom, Vector lineTo);
+    Vector GetNormalVector(Vector lineFrom, Vector lineTo);
+    Vector GetReflectedVector(Vector vector, Vector normal);
 }
 
-internal class NormalCalculator : INormalCalculator
+internal class VectorCalculator : IVectorCalculator
 {
     private const double _halfPI = Math.PI / 2.0;
     private const double _delta = 0.00001;
 
-    public Vector GetNormal(Vector lineFrom, Vector lineTo)
+    public Vector GetNormalVector(Vector lineFrom, Vector lineTo)
     {
         if (Math.Abs(lineFrom.Y - lineTo.Y) < _delta)
         {
@@ -32,5 +33,10 @@ internal class NormalCalculator : INormalCalculator
 
             return new(x, y);
         }
+    }
+
+    public Vector GetReflectedVector(Vector vector, Vector normal)
+    {
+        return vector - 2.0f * (vector * normal) * normal;
     }
 }

@@ -25,12 +25,12 @@ internal class SpringForceCalculator : ISpringForceCalculator
             var a = spring.PointA;
             var b = spring.PointB;
             var fs = spring.Stiffness * spring.DeformLength;
-            var diffBA = (b.Position - a.Position).Normalized;
-            var fd = _physicsUnits.SpringDamper * (diffBA * (b.Velocity - a.Velocity)); // (B.Position - A.Position).Normalized * (B.Velocity - A.Velocity)
+            var diffBA = (b.Position - a.Position).Unit;
+            var fd = _physicsUnits.SpringDamper * (diffBA * (b.Velocity - a.Velocity)); // (B.Position - A.Position).Unit * (B.Velocity - A.Velocity)
             var f = fs + fd;
             var df = f * diffBA;
-            a.Force += df; // (B.Position - A.Position).Normalized
-            b.Force -= df; // (A.Position - B.Position).Normalized
+            a.Force += df; // (B.Position - A.Position).Unit
+            b.Force -= df; // (A.Position - B.Position).Unit
         }
     }
 }

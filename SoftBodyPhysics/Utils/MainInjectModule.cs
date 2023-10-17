@@ -12,7 +12,7 @@ internal class MainInjectModule : InjectModule
     public override void Init(IBindingProvider bindingProvider)
     {
         bindingProvider.Bind<IPhysicsUnits, PhysicsUnits>().ToSingleton();
-        bindingProvider.Bind<INormalCalculator, NormalCalculator>().ToSingleton();
+        bindingProvider.Bind<IVectorCalculator, VectorCalculator>().ToSingleton();
         bindingProvider.Bind<ILineIntersector, LineIntersector>().ToSingleton();
         bindingProvider.Bind<ISegmentChecker, SegmentChecker>().ToSingleton();
         bindingProvider.Bind<ISegmentIntersector, SegmentIntersector>().ToSingleton();
