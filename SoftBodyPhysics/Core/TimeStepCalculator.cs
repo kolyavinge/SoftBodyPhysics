@@ -4,19 +4,23 @@ namespace SoftBodyPhysics.Core;
 
 internal interface ITimeStepCalculator
 {
-    float GetTimeStepAndCorrectPositionSteps(float currentTimeStep);
+    float GetTimeStep(float currentTimeStep);
 }
 
 internal class TimeStepCalculator : ITimeStepCalculator
 {
     private readonly ISoftBodiesCollection _softBodiesCollection;
+    private readonly IPhysicsUnits _physicsUnits;
 
-    public TimeStepCalculator(ISoftBodiesCollection softBodiesCollection)
+    public TimeStepCalculator(
+        ISoftBodiesCollection softBodiesCollection,
+        IPhysicsUnits physicsUnits)
     {
         _softBodiesCollection = softBodiesCollection;
+        _physicsUnits = physicsUnits;
     }
 
-    public float GetTimeStepAndCorrectPositionSteps(float currentTimeStep)
+    public float GetTimeStep(float currentTimeStep)
     {
         var max = 0.0f;
         foreach (var massPoint in _softBodiesCollection.AllMassPoints)
@@ -24,12 +28,8 @@ internal class TimeStepCalculator : ITimeStepCalculator
             max = Math.Max(max, massPoint.PositionStep.Length);
         }
         var aspect = max / Constants.MassPointRadius;
-        var iaspect = 1.0f / aspect;
-        foreach (var massPoint in _softBodiesCollection.AllMassPoints)
-        {
-            massPoint.PositionStep *= iaspect;
-        }
+        var newTimeStep = currentTimeStep / aspect;
 
-        return currentTimeStep / aspect;
+        return newTimeStep > _physicsUnits.Time ? _physicsUnits.Time : newTimeStep;
     }
 }

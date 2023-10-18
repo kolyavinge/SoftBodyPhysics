@@ -44,8 +44,9 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
         {
             _gravityForceCalculator.InitGravityForce();
             _springForceCalculator.ApplySpringForce();
+            _velocityCalculator.CalculatePositionStep(timeStep);
+            timeStep = _timeStepCalculator.GetTimeStep(timeStep);
             _velocityCalculator.ApplyVelocity(timeStep);
-            timeStep = _timeStepCalculator.GetTimeStepAndCorrectPositionSteps(timeStep);
             _collisionChecker.CheckCollisions();
             _softBodyBordersUpdater.UpdateBorders();
         }
