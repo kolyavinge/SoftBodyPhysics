@@ -10,14 +10,11 @@ internal interface ITimeStepCalculator
 internal class TimeStepCalculator : ITimeStepCalculator
 {
     private readonly ISoftBodiesCollection _softBodiesCollection;
-    private readonly IPhysicsUnits _physicsUnits;
 
     public TimeStepCalculator(
-        ISoftBodiesCollection softBodiesCollection,
-        IPhysicsUnits physicsUnits)
+        ISoftBodiesCollection softBodiesCollection)
     {
         _softBodiesCollection = softBodiesCollection;
-        _physicsUnits = physicsUnits;
     }
 
     public float GetTimeStep(float currentTimeStep)
@@ -30,6 +27,6 @@ internal class TimeStepCalculator : ITimeStepCalculator
         var aspect = max / Constants.MassPointRadius;
         var newTimeStep = currentTimeStep / aspect;
 
-        return newTimeStep > _physicsUnits.Time ? _physicsUnits.Time : newTimeStep;
+        return newTimeStep > currentTimeStep ? currentTimeStep : newTimeStep;
     }
 }
