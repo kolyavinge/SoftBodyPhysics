@@ -7,8 +7,8 @@ public class Vector : IEquatable<Vector?>
 {
     public static readonly Vector Zero = new(0, 0);
 
-    public readonly float X;
-    public readonly float Y;
+    public float X;
+    public float Y;
 
     public Vector(float x, float y)
     {

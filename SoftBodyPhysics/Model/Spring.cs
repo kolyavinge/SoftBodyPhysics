@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using SoftBodyPhysics.Geo;
 
 namespace SoftBodyPhysics.Model;
@@ -25,8 +24,6 @@ public interface ISpring : ISegment, IBarrier
 
     float RestLength { get; }
 
-    float DeformLength { get; }
-
     IReadOnlyCollection<IMassPoint> Collisions { get; }
 
     object? Tag { get; set; }
@@ -51,25 +48,23 @@ internal class Spring : ISpring
 
     public bool IsEdge;
 
-    public MassPoint PointA;
+    public readonly MassPoint PointA;
 
-    public MassPoint PointB;
+    public readonly MassPoint PointB;
 
     public Vector Force;
 
     public float Stiffness;
 
-    public float RestLength;
+    public readonly float RestLength;
 
     public readonly List<IMassPoint> Collisions;
-
-    public float DeformLength => (PointA.Position - PointB.Position).Length - RestLength;
 
     public Spring(MassPoint a, MassPoint b)
     {
         PointA = a;
         PointB = b;
-        RestLength = Math.Abs((a.Position - b.Position).Length);
+        RestLength = (a.Position - b.Position).Length;
         Force = Vector.Zero;
         Collisions = new List<IMassPoint>();
     }

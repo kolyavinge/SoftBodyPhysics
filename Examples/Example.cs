@@ -374,7 +374,6 @@ public static class Example
     {
         physicsWorld.Units.Time = 0.05f;
         physicsWorld.Units.SpringStiffness = 50;
-        //physicsWorld.Units.Sliding = 0.1f;
         physicsWorld.Units.SpringDamper = 10;
 
         var editor = physicsWorld.MakEditor();
@@ -387,6 +386,49 @@ public static class Example
             for (int j = 0; j < points.GetLength(1); j++)
             {
                 points[i, j] = editor.AddMassPoint(softBody, new(400 + j * size, 600 + i * size));
+            }
+        }
+        for (int i = 0; i < points.GetLength(0); i++)
+        {
+            for (int j = 1; j < points.GetLength(1); j++)
+            {
+                editor.AddSpring(softBody, points[i, j], points[i, j - 1]);
+            }
+        }
+        for (int i = 1; i < points.GetLength(0); i++)
+        {
+            for (int j = 0; j < points.GetLength(1); j++)
+            {
+                editor.AddSpring(softBody, points[i, j], points[i - 1, j]);
+            }
+        }
+
+        var hardBody = editor.AddHardBody();
+        editor.AddEdge(hardBody, new(100, 100), new(800, 100));
+
+        hardBody = editor.AddHardBody();
+        editor.AddEdge(hardBody, new(100, 100), new(100, 1000));
+
+        hardBody = editor.AddHardBody();
+        editor.AddEdge(hardBody, new(800, 100), new(800, 1000));
+
+        editor.Complete();
+    }
+
+    public static void BigCube(IPhysicsWorld physicsWorld)
+    {
+        physicsWorld.Units.SpringStiffness = 50;
+
+        var editor = physicsWorld.MakEditor();
+
+        var softBody = editor.MakeSoftBody();
+        var size = 20;
+        var points = new IMassPoint[35, 27];
+        for (int i = 0; i < points.GetLength(0); i++)
+        {
+            for (int j = 0; j < points.GetLength(1); j++)
+            {
+                points[i, j] = editor.AddMassPoint(softBody, new(200 + j * size, 100 + i * size));
             }
         }
         for (int i = 0; i < points.GetLength(0); i++)

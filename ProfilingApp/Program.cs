@@ -16,7 +16,7 @@ Console.ReadKey();
 void Update(int frames)
 {
     var physicsWorld = PhysicsWorldFactory.Make();
-    Example.ManyBodiesCollisions(physicsWorld);
+    Example.BigCube(physicsWorld);
     var sw = Stopwatch.StartNew();
     for (int i = 0; i < frames; i++) physicsWorld.Update();
     sw.Stop();

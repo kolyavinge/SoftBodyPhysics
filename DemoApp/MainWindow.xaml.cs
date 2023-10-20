@@ -30,7 +30,7 @@ public partial class MainWindow : Window
         _frames = 0;
         FramesTextBox.Text = "Frame: 0";
         _physicsWorld = PhysicsWorldFactory.Make();
-        Example.LongPipe(_physicsWorld);
+        Example.ManyBodiesCollisions(_physicsWorld);
     }
 
     private void UpdateWorld()

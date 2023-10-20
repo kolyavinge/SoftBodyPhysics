@@ -1,4 +1,6 @@
-﻿namespace SoftBodyPhysics.Core;
+﻿using System;
+
+namespace SoftBodyPhysics.Core;
 
 internal interface ISpringForceCalculator
 {
@@ -24,13 +26,36 @@ internal class SpringForceCalculator : ISpringForceCalculator
         {
             var a = spring.PointA;
             var b = spring.PointB;
-            var fs = spring.Stiffness * spring.DeformLength;
-            var diffBA = (b.Position - a.Position).Unit;
-            var fd = _physicsUnits.SpringDamper * (diffBA * (b.Velocity - a.Velocity)); // (B.Position - A.Position).Unit * (B.Velocity - A.Velocity)
+
+            var positionDiffX = b.Position.X - a.Position.X;
+            var positionDiffY = b.Position.Y - a.Position.Y;
+
+            //if (positionDiffX == 0 && positionDiffY == 0) continue;
+
+            var positionDiffLength = (float)Math.Sqrt(positionDiffX * positionDiffX + positionDiffY * positionDiffY);
+            var positionDiffUnitX = positionDiffX / positionDiffLength;
+            var positionDiffUnitY = positionDiffY / positionDiffLength;
+
+            var velocityDiffX = b.Velocity.X - a.Velocity.X;
+            var velocityDiffY = b.Velocity.Y - a.Velocity.Y;
+
+            // stiffness force
+            var fs = spring.Stiffness * (positionDiffLength - spring.RestLength);
+
+            // damper force
+            // SpringDamper * (B.Position - A.Position).Unit * (B.Velocity - A.Velocity)
+            var fd = _physicsUnits.SpringDamper * (positionDiffUnitX * velocityDiffX + positionDiffUnitY * velocityDiffY);
+
+            // total force
             var f = fs + fd;
-            var df = f * diffBA;
-            a.Force += df; // (B.Position - A.Position).Unit
-            b.Force -= df; // (A.Position - B.Position).Unit
+            var dfX = f * positionDiffUnitX;
+            var dfY = f * positionDiffUnitY;
+
+            a.Force.X += dfX;
+            a.Force.Y += dfY;
+
+            b.Force.X -= dfX;
+            b.Force.Y -= dfY;
         }
     }
 }
