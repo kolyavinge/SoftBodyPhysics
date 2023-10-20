@@ -7,19 +7,22 @@ public class Vector : IEquatable<Vector?>
 {
     public static readonly Vector Zero = new(0, 0);
 
-    public float X;
-    public float Y;
+    public float X => x;
+    public float Y => y;
+
+    // внутри сборки использовать эти поля
+    internal float x;
+    internal float y;
 
     public Vector(float x, float y)
     {
-        X = x;
-        Y = y;
+        this.x = x;
+        this.y = y;
     }
 
-    public float Length => (float)Math.Sqrt(X * X + Y * Y);
+    public float Length => (float)Math.Sqrt(x * x + y * y);
 
-    // длина в квадрате, экономия на извлечении корня
-    public float LengthSquare => X * X + Y * Y;
+    internal float LengthSquare => x * x + y * y; // длина в квадрате, экономия на извлечении корня
 
     public Vector Unit
     {
@@ -28,19 +31,19 @@ public class Vector : IEquatable<Vector?>
             var length = Length;
             if (length == 0) return Vector.Zero;
 
-            return new(X / length, Y / length);
+            return new(x / length, y / length);
         }
     }
 
-    public static Vector operator +(Vector a, Vector b) => new(a.X + b.X, a.Y + b.Y);
+    public static Vector operator +(Vector a, Vector b) => new(a.x + b.x, a.y + b.y);
 
-    public static Vector operator -(Vector a, Vector b) => new(a.X - b.X, a.Y - b.Y);
+    public static Vector operator -(Vector a, Vector b) => new(a.x - b.x, a.y - b.y);
 
-    public static Vector operator *(Vector a, float k) => new(k * a.X, k * a.Y);
+    public static Vector operator *(Vector a, float k) => new(k * a.x, k * a.y);
 
     public static Vector operator *(float k, Vector a) => a * k;
 
-    public static float operator *(Vector a, Vector b) => a.X * b.X + a.Y * b.Y;
+    public static float operator *(Vector a, Vector b) => a.x * b.x + a.y * b.y;
 
     public static bool operator ==(Vector? left, Vector? right) => EqualityComparer<Vector>.Default.Equals(left!, right!);
 
@@ -48,7 +51,7 @@ public class Vector : IEquatable<Vector?>
 
     public override string ToString()
     {
-        return $"{X:F2} : {Y:F2}";
+        return $"{x:F2} : {y:F2}";
     }
 
     public override bool Equals(object? obj)
@@ -59,12 +62,12 @@ public class Vector : IEquatable<Vector?>
     public bool Equals(Vector? other)
     {
         return other is not null &&
-               X == other.X &&
-               Y == other.Y;
+               x == other.x &&
+               y == other.y;
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(X, Y);
+        return HashCode.Combine(x, y);
     }
 }

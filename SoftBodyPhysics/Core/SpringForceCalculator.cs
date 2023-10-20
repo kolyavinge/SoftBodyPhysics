@@ -27,8 +27,8 @@ internal class SpringForceCalculator : ISpringForceCalculator
             var a = spring.PointA;
             var b = spring.PointB;
 
-            var positionDiffX = b.Position.X - a.Position.X;
-            var positionDiffY = b.Position.Y - a.Position.Y;
+            var positionDiffX = b.Position.x - a.Position.x;
+            var positionDiffY = b.Position.y - a.Position.y;
 
             //if (positionDiffX == 0 && positionDiffY == 0) continue;
 
@@ -36,8 +36,8 @@ internal class SpringForceCalculator : ISpringForceCalculator
             var positionDiffUnitX = positionDiffX / positionDiffLength;
             var positionDiffUnitY = positionDiffY / positionDiffLength;
 
-            var velocityDiffX = b.Velocity.X - a.Velocity.X;
-            var velocityDiffY = b.Velocity.Y - a.Velocity.Y;
+            var velocityDiffX = b.Velocity.x - a.Velocity.x;
+            var velocityDiffY = b.Velocity.y - a.Velocity.y;
 
             // stiffness force
             var fs = spring.Stiffness * (positionDiffLength - spring.RestLength);
@@ -51,11 +51,11 @@ internal class SpringForceCalculator : ISpringForceCalculator
             var dfX = f * positionDiffUnitX;
             var dfY = f * positionDiffUnitY;
 
-            a.Force.X += dfX;
-            a.Force.Y += dfY;
+            a.Force.x += dfX;
+            a.Force.y += dfY;
 
-            b.Force.X -= dfX;
-            b.Force.Y -= dfY;
+            b.Force.x -= dfX;
+            b.Force.y -= dfY;
         }
     }
 }

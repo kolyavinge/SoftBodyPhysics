@@ -36,7 +36,7 @@ internal class Borders
     public static bool IsPointIn(Borders borders, Vector point, float delta)
     {
         return
-            borders.MinX - delta < point.X && point.X < borders.MaxX + delta &&
-            borders.MinY - delta < point.Y && point.Y < borders.MaxY + delta;
+            borders.MinX - delta < point.x && point.x < borders.MaxX + delta &&
+            borders.MinY - delta < point.y && point.y < borders.MaxY + delta;
     }
 }

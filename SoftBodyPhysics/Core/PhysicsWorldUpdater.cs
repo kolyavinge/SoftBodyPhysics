@@ -42,13 +42,13 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
         var timeStep = _physicsUnits.Time;
         for (var time = 0.0f; time < _physicsUnits.Time; time += timeStep)
         {
+            _softBodyBordersUpdater.UpdateBorders();
             _gravityForceCalculator.InitGravityForce();
             _springForceCalculator.ApplySpringForce();
             _velocityCalculator.CalculatePositionStep(timeStep);
             timeStep = _timeStepCalculator.GetTimeStep(timeStep);
             _velocityCalculator.ApplyVelocity(timeStep);
             _collisionChecker.CheckCollisions();
-            _softBodyBordersUpdater.UpdateBorders();
         }
     }
 }

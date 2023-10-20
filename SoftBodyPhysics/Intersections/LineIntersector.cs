@@ -11,13 +11,13 @@ internal class LineIntersector : ILineIntersector
 {
     public Vector? GetIntersectPoint(Vector line1From, Vector line1To, Vector line2From, Vector line2To)
     {
-        var a1 = line1From.Y - line1To.Y;
-        var b1 = line1To.X - line1From.X;
-        var c1 = line1From.X * line1To.Y - line1To.X * line1From.Y;
+        var a1 = line1From.y - line1To.y;
+        var b1 = line1To.x - line1From.x;
+        var c1 = line1From.x * line1To.y - line1To.x * line1From.y;
 
-        var a2 = line2From.Y - line2To.Y;
-        var b2 = line2To.X - line2From.X;
-        var c2 = line2From.X * line2To.Y - line2To.X * line2From.Y;
+        var a2 = line2From.y - line2To.y;
+        var b2 = line2To.x - line2From.x;
+        var c2 = line2From.x * line2To.y - line2To.x * line2From.y;
 
         var denominator = a1 * b2 - a2 * b1;
         if (denominator == 0) return null;

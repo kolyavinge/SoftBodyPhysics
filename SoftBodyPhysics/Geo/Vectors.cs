@@ -9,10 +9,10 @@ internal static class Vectors
     {
         if (!vectors.Any()) throw new ArgumentException();
 
-        var result = vectors[0].X;
+        var result = vectors[0].x;
         for (int i = 1; i < vectors.Length; i++)
         {
-            result = Math.Min(result, vectors[i].X);
+            result = Math.Min(result, vectors[i].x);
         }
 
         return result;
@@ -22,10 +22,10 @@ internal static class Vectors
     {
         if (!vectors.Any()) throw new ArgumentException();
 
-        var result = vectors[0].X;
+        var result = vectors[0].x;
         for (int i = 1; i < vectors.Length; i++)
         {
-            result = Math.Max(result, vectors[i].X);
+            result = Math.Max(result, vectors[i].x);
         }
 
         return result;
@@ -35,10 +35,10 @@ internal static class Vectors
     {
         if (!vectors.Any()) throw new ArgumentException();
 
-        var result = vectors[0].Y;
+        var result = vectors[0].y;
         for (int i = 1; i < vectors.Length; i++)
         {
-            result = Math.Min(result, vectors[i].Y);
+            result = Math.Min(result, vectors[i].y);
         }
 
         return result;
@@ -48,10 +48,10 @@ internal static class Vectors
     {
         if (!vectors.Any()) throw new ArgumentException();
 
-        var result = vectors[0].Y;
+        var result = vectors[0].y;
         for (int i = 1; i < vectors.Length; i++)
         {
-            result = Math.Max(result, vectors[i].Y);
+            result = Math.Max(result, vectors[i].y);
         }
 
         return result;

@@ -26,8 +26,8 @@ internal class HardBodyCollisionChecker : IHardBodyCollisionChecker
         {
             foreach (var hardBody in _hardBodiesCollection.HardBodies)
             {
-                if (hardBody.Borders.MinX - 1.0f < massPoint.Position.X && massPoint.Position.X < hardBody.Borders.MaxX + 1.0f &&
-                    hardBody.Borders.MinY - 1.0f < massPoint.Position.Y && massPoint.Position.Y < hardBody.Borders.MaxY + 1.0f)
+                if (hardBody.Borders.MinX - 1.0f < massPoint.Position.x && massPoint.Position.x < hardBody.Borders.MaxX + 1.0f &&
+                    hardBody.Borders.MinY - 1.0f < massPoint.Position.y && massPoint.Position.y < hardBody.Borders.MaxY + 1.0f)
                 {
                     if (_collisionChecker.CheckMassPointAndEdgeCollision(massPoint, hardBody.Edges)) break;
                 }

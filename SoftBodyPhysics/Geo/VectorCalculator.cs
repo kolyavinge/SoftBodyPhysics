@@ -15,19 +15,19 @@ internal class VectorCalculator : IVectorCalculator
 
     public Vector GetNormalVector(Vector lineFrom, Vector lineTo)
     {
-        if (Math.Abs(lineFrom.Y - lineTo.Y) < _delta)
+        if (Math.Abs(lineFrom.y - lineTo.y) < _delta)
         {
             return new(0, 1);
         }
-        else if (Math.Abs(lineFrom.X - lineTo.X) < _delta)
+        else if (Math.Abs(lineFrom.x - lineTo.x) < _delta)
         {
             return new(1, 0);
         }
         else
         {
-            var (sortedFrom, sortedTo) = lineFrom.X < lineTo.X ? (lineFrom, lineTo) : (lineTo, lineFrom);
-            var alpha = Math.Abs(Math.Atan((sortedTo.Y - sortedFrom.Y) / (sortedTo.X - sortedFrom.X)));
-            if (sortedTo.Y < sortedFrom.Y) alpha = -alpha;
+            var (sortedFrom, sortedTo) = lineFrom.x < lineTo.x ? (lineFrom, lineTo) : (lineTo, lineFrom);
+            var alpha = Math.Abs(Math.Atan((sortedTo.y - sortedFrom.y) / (sortedTo.x - sortedFrom.x)));
+            if (sortedTo.y < sortedFrom.y) alpha = -alpha;
             var x = (float)Math.Cos(_halfPI + alpha);
             var y = (float)Math.Sin(_halfPI + alpha);
 

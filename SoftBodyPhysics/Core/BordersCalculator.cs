@@ -22,10 +22,10 @@ internal class BordersCalculator : IBordersCalculator
         Vector positionA = first.FromPosition;
         Vector positionB = first.ToPosition;
 
-        float minX = positionA.X;
-        float minY = positionA.Y;
-        float maxX = positionB.X;
-        float maxY = positionB.Y;
+        float minX = positionA.x;
+        float minY = positionA.y;
+        float maxX = positionB.x;
+        float maxY = positionB.y;
 
         for (int i = 1; i < segments.Count; i++)
         {
@@ -34,17 +34,17 @@ internal class BordersCalculator : IBordersCalculator
             positionA = edge.FromPosition;
             positionB = edge.ToPosition;
 
-            if (positionA.X < minX) minX = positionA.X;
-            if (positionB.X < minX) minX = positionB.X;
+            if (positionA.x < minX) minX = positionA.x;
+            if (positionB.x < minX) minX = positionB.x;
 
-            if (positionA.X > maxX) maxX = positionA.X;
-            if (positionB.X > maxX) maxX = positionB.X;
+            if (positionA.x > maxX) maxX = positionA.x;
+            if (positionB.x > maxX) maxX = positionB.x;
 
-            if (positionA.Y < minY) minY = positionA.Y;
-            if (positionB.Y < minY) minY = positionB.Y;
+            if (positionA.y < minY) minY = positionA.y;
+            if (positionB.y < minY) minY = positionB.y;
 
-            if (positionA.Y > maxY) maxY = positionA.Y;
-            if (positionB.Y > maxY) maxY = positionB.Y;
+            if (positionA.y > maxY) maxY = positionA.y;
+            if (positionB.y > maxY) maxY = positionB.y;
         }
 
         return new(minX, maxX, minY, maxY);
@@ -52,10 +52,10 @@ internal class BordersCalculator : IBordersCalculator
 
     public Borders GetBordersByMassPoint(Vector massPointPosition)
     {
-        float minX = massPointPosition.X;
-        float minY = massPointPosition.Y;
-        float maxX = massPointPosition.X + Constants.MassPointRadius;
-        float maxY = massPointPosition.Y + Constants.MassPointRadius;
+        float minX = massPointPosition.x;
+        float minY = massPointPosition.y;
+        float maxX = massPointPosition.x + Constants.MassPointRadius;
+        float maxY = massPointPosition.y + Constants.MassPointRadius;
 
         return new(minX, maxX, minY, maxY);
     }

@@ -4,8 +4,6 @@ namespace SoftBodyPhysics.Model;
 
 public interface IMassPoint
 {
-    Vector Force { get; }
-
     Vector Velocity { get; set; }
 
     Vector Position { get; set; }
@@ -20,7 +18,6 @@ public interface IMassPoint
 internal class MassPoint : IMassPoint
 {
     #region IMassPoint
-    Vector IMassPoint.Force => Force;
     Vector IMassPoint.Velocity { get => Velocity; set => Velocity = value; }
     Vector IMassPoint.Position { get => Position; set => Position = value; }
     float IMassPoint.Mass { get => Mass; set => Mass = value; }

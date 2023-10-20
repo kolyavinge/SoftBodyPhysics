@@ -28,10 +28,10 @@ internal class SegmentIntersectDetector : ISegmentIntersectDetector
         // https://e-maxx.ru/algo/circle_line_intersection
 
         // двигаем точку в начало координат
-        var lineFromX = lineFrom.X - point.X;
-        var lineFromY = lineFrom.Y - point.Y;
-        var lineToX = lineTo.X - point.X;
-        var lineToY = lineTo.Y - point.Y;
+        var lineFromX = lineFrom.x - point.x;
+        var lineFromY = lineFrom.y - point.y;
+        var lineToX = lineTo.x - point.x;
+        var lineToY = lineTo.y - point.y;
 
         // уравнение прямой
         var a = lineFromY - lineToY;
@@ -46,7 +46,7 @@ internal class SegmentIntersectDetector : ISegmentIntersectDetector
 
         if (Math.Abs(c * c - r * r * (a * a + b * b)) < _delta)
         {
-            return _segmentChecker.IsPointInSegment(lineFrom, lineTo, new(x0 + point.X, y0 + point.Y));
+            return _segmentChecker.IsPointInSegment(lineFrom, lineTo, new(x0 + point.x, y0 + point.y));
         }
 
         var d = r * r - c * c / (a * a + b * b);
@@ -56,6 +56,6 @@ internal class SegmentIntersectDetector : ISegmentIntersectDetector
         //var bx = x0 - b * mult;
         //var by = y0 + a * mult;
 
-        return _segmentChecker.IsPointInSegment(lineFrom, lineTo, new(ax + point.X, ay + point.Y));
+        return _segmentChecker.IsPointInSegment(lineFrom, lineTo, new(ax + point.x, ay + point.y));
     }
 }
