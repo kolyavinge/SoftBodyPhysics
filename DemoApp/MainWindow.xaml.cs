@@ -20,8 +20,8 @@ public partial class MainWindow : Window
         InitializeComponent();
         InitWorld();
         _renderLogic = new RenderLogic();
-        _timer = new DispatcherTimer();
-        _timer.Interval = TimeSpan.FromMilliseconds(10);
+        _timer = new DispatcherTimer(DispatcherPriority.Render);
+        _timer.Interval = TimeSpan.FromMilliseconds(20);
         _timer.Tick += OnTimer;
     }
 

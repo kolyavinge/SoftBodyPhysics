@@ -297,7 +297,7 @@ public static class Example
 
     public static void ManyBodiesCollisions(IPhysicsWorld physicsWorld)
     {
-        //physicsWorld.Units.Time = 0.05f;
+        physicsWorld.Units.Time = 0.2f;
         physicsWorld.Units.SpringStiffness = 100;
 
         var editor = physicsWorld.MakEditor();
