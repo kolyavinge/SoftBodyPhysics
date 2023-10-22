@@ -43,10 +43,10 @@ internal class MassPoint : IMassPoint
 
     public MassPoint(Vector position)
     {
-        Position = position;
-        PrevPosition = position;
-        Velocity = Vector.Zero;
-        PositionStep = Vector.Zero;
-        Force = Vector.Zero;
+        Position = new(position.x, position.y);
+        PrevPosition = new(position.x, position.y);
+        Velocity = new Vector(0, 0);
+        PositionStep = new Vector(0, 0);
+        Force = new Vector(0, 0);
     }
 }

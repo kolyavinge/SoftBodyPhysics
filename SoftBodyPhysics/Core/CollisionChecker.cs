@@ -27,13 +27,15 @@ internal class CollisionChecker : ICollisionChecker
         {
             foreach (var massPoint in softBody.MassPoints)
             {
-                massPoint.Position += massPoint.PositionStep;
+                massPoint.Position.x += massPoint.PositionStep.x;
+                massPoint.Position.y += massPoint.PositionStep.y;
             }
             _softBodyCollisionChecker.CheckCollisions(softBody);
             _hardBodyCollisionChecker.CheckCollisions(softBody);
             foreach (var massPoint in softBody.MassPoints)
             {
-                massPoint.PrevPosition = massPoint.Position;
+                massPoint.PrevPosition.x = massPoint.Position.x;
+                massPoint.PrevPosition.y = massPoint.Position.y;
             }
         }
     }

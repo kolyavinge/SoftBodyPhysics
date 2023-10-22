@@ -5,8 +5,6 @@ namespace SoftBodyPhysics.Geo;
 
 public class Vector : IEquatable<Vector?>
 {
-    public static readonly Vector Zero = new(0, 0);
-
     public float X => x;
     public float Y => y;
 
@@ -22,18 +20,18 @@ public class Vector : IEquatable<Vector?>
 
     public float Length => (float)Math.Sqrt(x * x + y * y);
 
-    internal float LengthSquare => x * x + y * y; // длина в квадрате, экономия на извлечении корня
-
     public Vector Unit
     {
         get
         {
             var length = Length;
-            if (length == 0) return Vector.Zero;
+            if (length == 0) return new(0, 0);
 
             return new(x / length, y / length);
         }
     }
+
+    // для производительности операции лучше не использовать
 
     public static Vector operator +(Vector a, Vector b) => new(a.x + b.x, a.y + b.y);
 
@@ -69,5 +67,14 @@ public class Vector : IEquatable<Vector?>
     public override int GetHashCode()
     {
         return HashCode.Combine(x, y);
+    }
+
+    internal static float GetDistanceBetween(Vector a, Vector b)
+    {
+        var dx = a.x - b.x;
+        var dy = a.y - b.y;
+        var distance = (float)Math.Sqrt(dx * dx + dy * dy);
+
+        return distance;
     }
 }

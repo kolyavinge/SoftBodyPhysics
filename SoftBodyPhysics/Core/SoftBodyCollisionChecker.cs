@@ -10,6 +10,7 @@ internal interface ISoftBodyCollisionChecker
 
 internal class SoftBodyCollisionChecker : ISoftBodyCollisionChecker
 {
+    private const float _delta = 2.0f;
     private readonly ISoftBodiesCollection _softBodiesCollection;
     private readonly IMassPointSpringsCollisionChecker _collisionChecker;
 
@@ -23,7 +24,6 @@ internal class SoftBodyCollisionChecker : ISoftBodyCollisionChecker
 
     public void CheckCollisions(SoftBody body)
     {
-        var delta = 2.0f;
         foreach (var body2 in _softBodiesCollection.SoftBodies)
         {
             if (body == body2) continue;
@@ -33,8 +33,8 @@ internal class SoftBodyCollisionChecker : ISoftBodyCollisionChecker
 
             foreach (var massPoint in body.MassPoints)
             {
-                if (body2.Borders.MinX - delta < massPoint.Position.x && massPoint.Position.x < body2.Borders.MaxX + delta &&
-                    body2.Borders.MinY - delta < massPoint.Position.y && massPoint.Position.y < body2.Borders.MaxY + delta)
+                if (body2.Borders.MinX - _delta < massPoint.Position.x && massPoint.Position.x < body2.Borders.MaxX + _delta &&
+                    body2.Borders.MinY - _delta < massPoint.Position.y && massPoint.Position.y < body2.Borders.MaxY + _delta)
                 {
                     _collisionChecker.CheckMassPointAndSpringsCollision(massPoint, body2.SpringsToCheckCollisions);
                 }
@@ -42,8 +42,8 @@ internal class SoftBodyCollisionChecker : ISoftBodyCollisionChecker
 
             foreach (var massPoint in body2.MassPoints)
             {
-                if (body.Borders.MinX - delta < massPoint.Position.x && massPoint.Position.x < body.Borders.MaxX + delta &&
-                    body.Borders.MinY - delta < massPoint.Position.y && massPoint.Position.y < body.Borders.MaxY + delta)
+                if (body.Borders.MinX - _delta < massPoint.Position.x && massPoint.Position.x < body.Borders.MaxX + _delta &&
+                    body.Borders.MinY - _delta < massPoint.Position.y && massPoint.Position.y < body.Borders.MaxY + _delta)
                 {
                     _collisionChecker.CheckMassPointAndSpringsCollision(massPoint, body.SpringsToCheckCollisions);
                 }

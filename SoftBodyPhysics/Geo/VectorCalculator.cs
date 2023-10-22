@@ -5,7 +5,7 @@ namespace SoftBodyPhysics.Geo;
 internal interface IVectorCalculator
 {
     Vector GetNormalVector(Vector lineFrom, Vector lineTo);
-    Vector GetReflectedVector(Vector vector, Vector normal);
+    void ReflectVector(Vector vector, Vector normal);
 }
 
 internal class VectorCalculator : IVectorCalculator
@@ -35,8 +35,11 @@ internal class VectorCalculator : IVectorCalculator
         }
     }
 
-    public Vector GetReflectedVector(Vector vector, Vector normal)
+    public void ReflectVector(Vector vector, Vector normal)
     {
-        return vector - 2.0f * (vector * normal) * normal;
+        // vector - 2.0f * (vector * normal) * normal
+        var product = 2.0f * (vector.x * normal.x + vector.y * normal.y);
+        vector.x -= product * normal.x;
+        vector.y -= product * normal.y;
     }
 }

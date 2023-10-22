@@ -19,8 +19,13 @@ internal class VelocityCalculator : IVelocityCalculator
     {
         foreach (var massPoint in _softBodiesCollection.AllMassPoints)
         {
-            var newVelocity = massPoint.Velocity + massPoint.Force * (timeStep / massPoint.Mass);
-            massPoint.PositionStep = newVelocity * timeStep;
+            var tsd = timeStep / massPoint.Mass;
+
+            var newVelocityX = massPoint.Velocity.x + massPoint.Force.x * tsd;
+            var newVelocityY = massPoint.Velocity.y + massPoint.Force.y * tsd;
+
+            massPoint.PositionStep.x = newVelocityX * timeStep;
+            massPoint.PositionStep.y = newVelocityY * timeStep;
         }
     }
 
@@ -28,8 +33,13 @@ internal class VelocityCalculator : IVelocityCalculator
     {
         foreach (var massPoint in _softBodiesCollection.AllMassPoints)
         {
-            massPoint.Velocity += massPoint.Force * (timeStep / massPoint.Mass);
-            massPoint.PositionStep = massPoint.Velocity * timeStep;
+            var tsd = timeStep / massPoint.Mass;
+
+            massPoint.Velocity.x += massPoint.Force.x * tsd;
+            massPoint.Velocity.y += massPoint.Force.y * tsd;
+
+            massPoint.PositionStep.x = massPoint.Velocity.x * timeStep;
+            massPoint.PositionStep.y = massPoint.Velocity.y * timeStep;
         }
     }
 }

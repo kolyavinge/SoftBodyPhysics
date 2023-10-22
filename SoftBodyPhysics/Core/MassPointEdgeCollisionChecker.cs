@@ -36,8 +36,12 @@ internal class MassPointEdgeCollisionChecker : IMassPointEdgeCollisionChecker
             edge.Collisions.Add(massPoint);
 
             massPoint.Collision = edge;
-            massPoint.Position = massPoint.PrevPosition;
-            massPoint.Velocity = _physicsUnits.Sliding * _vectorCalculator.GetReflectedVector(massPoint.Velocity, normal);
+            massPoint.Position.x = massPoint.PrevPosition.x;
+            massPoint.Position.y = massPoint.PrevPosition.y;
+
+            _vectorCalculator.ReflectVector(massPoint.Velocity, normal);
+            massPoint.Velocity.x *= _physicsUnits.Sliding;
+            massPoint.Velocity.y *= _physicsUnits.Sliding;
 
             return true;
         }

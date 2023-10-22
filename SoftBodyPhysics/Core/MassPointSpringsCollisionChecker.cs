@@ -34,14 +34,26 @@ internal class MassPointSpringsCollisionChecker : IMassPointSpringsCollisionChec
             var normal = _vectorCalculator.GetNormalVector(spring.PointA.Position, spring.PointB.Position);
 
             spring.Collisions.Add(massPoint);
-            spring.PointA.Position = spring.PointA.PrevPosition;
-            spring.PointB.Position = spring.PointB.PrevPosition;
-            spring.PointA.Velocity = _physicsUnits.Sliding * _vectorCalculator.GetReflectedVector(spring.PointA.Velocity, normal);
-            spring.PointB.Velocity = _physicsUnits.Sliding * _vectorCalculator.GetReflectedVector(spring.PointB.Velocity, normal);
+            spring.PointA.Position.x = spring.PointA.PrevPosition.x;
+            spring.PointA.Position.y = spring.PointA.PrevPosition.y;
+            spring.PointB.Position.x = spring.PointB.PrevPosition.x;
+            spring.PointB.Position.y = spring.PointB.PrevPosition.y;
+
+            _vectorCalculator.ReflectVector(spring.PointA.Velocity, normal);
+            spring.PointA.Velocity.x *= _physicsUnits.Sliding;
+            spring.PointA.Velocity.y *= _physicsUnits.Sliding;
+
+            _vectorCalculator.ReflectVector(spring.PointB.Velocity, normal);
+            spring.PointB.Velocity.x *= _physicsUnits.Sliding;
+            spring.PointB.Velocity.y *= _physicsUnits.Sliding;
 
             massPoint.Collision = spring;
-            massPoint.Position = massPoint.PrevPosition;
-            massPoint.Velocity = _physicsUnits.Sliding * _vectorCalculator.GetReflectedVector(massPoint.Velocity, normal);
+            massPoint.Position.x = massPoint.PrevPosition.x;
+            massPoint.Position.y = massPoint.PrevPosition.y;
+
+            _vectorCalculator.ReflectVector(massPoint.Velocity, normal);
+            massPoint.Velocity.x *= _physicsUnits.Sliding;
+            massPoint.Velocity.y *= _physicsUnits.Sliding;
 
             return;
         }

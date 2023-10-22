@@ -64,8 +64,8 @@ internal class Spring : ISpring
     {
         PointA = a;
         PointB = b;
-        RestLength = (a.Position - b.Position).Length;
-        Force = Vector.Zero;
+        RestLength = Vector.GetDistanceBetween(a.Position, b.Position);
+        Force = new Vector(0, 0);
         Collisions = new List<IMassPoint>();
     }
 }

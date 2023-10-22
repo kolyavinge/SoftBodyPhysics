@@ -57,7 +57,7 @@ internal class SoftBodyIntersector : ISoftBodyIntersector
                 var intersectPoint = _segmentIntersector.GetIntersectPoint(edge.PointA.Position, edge.PointB.Position, point, pointTo);
                 if (intersectPoint is not null)
                 {
-                    var distance = (intersectPoint - point).Length;
+                    var distance = Vector.GetDistanceBetween(intersectPoint, point);
                     if (distance < minDistance)
                     {
                         minDistance = distance;

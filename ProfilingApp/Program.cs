@@ -2,13 +2,15 @@
 using Examples;
 using SoftBodyPhysics.Factories;
 
+Update(1000);
+return;
+
 Update(100);
 Update(250);
 Update(500);
 Update(1000);
 Update(2000);
 Update(4000);
-Update(8000);
 
 Console.WriteLine("done.");
 Console.ReadKey();
@@ -17,7 +19,7 @@ void Update(int frames)
 {
     var physicsWorld = PhysicsWorldFactory.Make();
 
-    Example.BigCube(physicsWorld);
+    Example.ManyBodiesCollisions(physicsWorld);
 
     var sw = Stopwatch.StartNew();
     for (int i = 0; i < frames; i++) physicsWorld.Update();
