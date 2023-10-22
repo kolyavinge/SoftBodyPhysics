@@ -17,8 +17,11 @@ internal class VelocityCalculator : IVelocityCalculator
 
     public void CalculatePositionStep(float timeStep)
     {
-        foreach (var massPoint in _softBodiesCollection.AllMassPoints)
+        var allMassPoints = _softBodiesCollection.AllMassPoints;
+        for (var i = 0; i < allMassPoints.Length; i++)
         {
+            var massPoint = allMassPoints[i];
+
             var tsd = timeStep / massPoint.Mass;
 
             var newVelocityX = massPoint.Velocity.x + massPoint.Force.x * tsd;
@@ -31,8 +34,11 @@ internal class VelocityCalculator : IVelocityCalculator
 
     public void ApplyVelocity(float timeStep)
     {
-        foreach (var massPoint in _softBodiesCollection.AllMassPoints)
+        var allMassPoints = _softBodiesCollection.AllMassPoints;
+        for (var i = 0; i < allMassPoints.Length; i++)
         {
+            var massPoint = allMassPoints[i];
+
             var tsd = timeStep / massPoint.Mass;
 
             massPoint.Velocity.x += massPoint.Force.x * tsd;

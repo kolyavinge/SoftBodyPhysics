@@ -2,9 +2,6 @@
 using Examples;
 using SoftBodyPhysics.Factories;
 
-Update(1000);
-return;
-
 Update(100);
 Update(250);
 Update(500);

@@ -23,17 +23,25 @@ internal class CollisionChecker : ICollisionChecker
 
     public void CheckCollisions()
     {
-        foreach (var softBody in _softBodiesCollection.SoftBodies)
+        var softBodies = _softBodiesCollection.SoftBodies;
+        for (var i = 0; i < softBodies.Length; i++)
         {
-            foreach (var massPoint in softBody.MassPoints)
+            var softBody = softBodies[i];
+
+            var massPoints = softBody.MassPoints;
+            for (var j = 0; j < massPoints.Length; j++)
             {
+                var massPoint = massPoints[j];
                 massPoint.Position.x += massPoint.PositionStep.x;
                 massPoint.Position.y += massPoint.PositionStep.y;
             }
+
             _softBodyCollisionChecker.CheckCollisions(softBody);
             _hardBodyCollisionChecker.CheckCollisions(softBody);
-            foreach (var massPoint in softBody.MassPoints)
+
+            for (var j = 0; j < massPoints.Length; j++)
             {
+                var massPoint = massPoints[j];
                 massPoint.PrevPosition.x = massPoint.Position.x;
                 massPoint.PrevPosition.y = massPoint.Position.y;
             }

@@ -25,8 +25,6 @@ internal interface ISoftBodiesCollection
 
     Spring[] AllSprings { get; }
 
-    //SoftBodyPair[] SoftBodiesToCheckCollisions { get; }
-
     void AddSoftBodies(IEnumerable<SoftBody> softBodies);
 }
 
@@ -40,15 +38,12 @@ internal class SoftBodiesCollection : ISoftBodiesCollection
 
     public Spring[] AllSprings { get; private set; }
 
-    //public SoftBodyPair[] SoftBodiesToCheckCollisions { get; private set; }
-
     public SoftBodiesCollection()
     {
         _softBodies = new List<SoftBody>();
         SoftBodies = Array.Empty<SoftBody>();
         AllMassPoints = Array.Empty<MassPoint>();
         AllSprings = Array.Empty<Spring>();
-        //SoftBodiesToCheckCollisions = Array.Empty<SoftBodyPair>();
     }
 
     public void AddSoftBodies(IEnumerable<SoftBody> softBodies)
@@ -57,6 +52,5 @@ internal class SoftBodiesCollection : ISoftBodiesCollection
         SoftBodies = _softBodies.ToArray();
         AllMassPoints = _softBodies.SelectMany(x => x.MassPoints).ToArray();
         AllSprings = _softBodies.SelectMany(x => x.Springs).ToArray();
-        //SoftBodiesToCheckCollisions = _softBodies.GetCartesianProduct().Select(x => new SoftBodyPair(x.Item1, x.Item2)).ToArray();
     }
 }

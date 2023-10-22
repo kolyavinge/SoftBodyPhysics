@@ -20,10 +20,14 @@ internal class TimeStepCalculator : ITimeStepCalculator
     public float GetTimeStep(float currentTimeStep)
     {
         var max = 0.0f;
-        foreach (var massPoint in _softBodiesCollection.AllMassPoints)
+
+        var allMassPoints = _softBodiesCollection.AllMassPoints;
+        for (var i = 0; i < allMassPoints.Length; i++)
         {
+            var massPoint = allMassPoints[i];
             max = Math.Max(max, massPoint.PositionStep.Length);
         }
+
         var aspect = max / Constants.MassPointRadius;
         var newTimeStep = currentTimeStep / aspect;
 

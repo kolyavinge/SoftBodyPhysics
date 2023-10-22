@@ -27,8 +27,9 @@ internal class MassPointEdgeCollisionChecker : IMassPointEdgeCollisionChecker
 
     public bool CheckMassPointAndEdgeCollision(MassPoint massPoint, Edge[] edges)
     {
-        foreach (var edge in edges)
+        for (var i = 0; i < edges.Length; i++)
         {
+            var edge = edges[i];
             if (!_segmentIntersectDetector.Intersected(edge.From, edge.To, massPoint.Position)) continue;
 
             var normal = _vectorCalculator.GetNormalVector(edge.From, edge.To);

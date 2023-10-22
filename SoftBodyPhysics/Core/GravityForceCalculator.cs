@@ -1,6 +1,4 @@
-﻿using SoftBodyPhysics.Geo;
-
-namespace SoftBodyPhysics.Core;
+﻿namespace SoftBodyPhysics.Core;
 
 internal interface IGravityForceCalculator
 {
@@ -22,9 +20,12 @@ internal class GravityForceCalculator : IGravityForceCalculator
 
     public void InitGravityForce()
     {
-        foreach (var massPoint in _softBodiesCollection.AllMassPoints)
+        var allMassPoints = _softBodiesCollection.AllMassPoints;
+        for (var i = 0; i < allMassPoints.Length; i++)
         {
-            massPoint.Force = new Vector(0, -_physicsUnits.GravityAcceleration * massPoint.Mass);
+            var massPoint = allMassPoints[i];
+            massPoint.Force.x = 0;
+            massPoint.Force.y = -_physicsUnits.GravityAcceleration * massPoint.Mass;
         }
     }
 }

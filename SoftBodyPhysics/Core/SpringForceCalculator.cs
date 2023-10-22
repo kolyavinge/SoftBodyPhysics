@@ -22,8 +22,10 @@ internal class SpringForceCalculator : ISpringForceCalculator
 
     public void ApplySpringForce()
     {
-        foreach (var spring in _softBodiesCollection.AllSprings)
+        var allSprings = _softBodiesCollection.AllSprings;
+        for (var i = 0; i < allSprings.Length; i++)
         {
+            var spring = allSprings[i];
             var a = spring.PointA;
             var b = spring.PointB;
 

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using SoftBodyPhysics.Geo;
 using SoftBodyPhysics.Model;
 
@@ -7,13 +6,13 @@ namespace SoftBodyPhysics.Core;
 
 internal interface IBordersCalculator
 {
-    Borders? GetBordersBySegments(IReadOnlyList<ISegment> segments);
+    Borders? GetBordersBySegments(ISegment[] segments);
     Borders GetBordersByMassPoint(Vector massPointPosition);
 }
 
 internal class BordersCalculator : IBordersCalculator
 {
-    public Borders? GetBordersBySegments(IReadOnlyList<ISegment> segments)
+    public Borders? GetBordersBySegments(ISegment[] segments)
     {
         if (!segments.Any()) return null;
 
@@ -27,7 +26,7 @@ internal class BordersCalculator : IBordersCalculator
         float maxX = positionB.x;
         float maxY = positionB.y;
 
-        for (int i = 1; i < segments.Count; i++)
+        for (int i = 1; i < segments.Length; i++)
         {
             var edge = segments[i];
 

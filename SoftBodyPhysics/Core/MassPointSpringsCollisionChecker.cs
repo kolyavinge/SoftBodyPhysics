@@ -27,8 +27,9 @@ internal class MassPointSpringsCollisionChecker : IMassPointSpringsCollisionChec
 
     public void CheckMassPointAndSpringsCollision(MassPoint massPoint, Spring[] springs)
     {
-        foreach (var spring in springs)
+        for (var i = 0; i < springs.Length; i++)
         {
+            var spring = springs[i];
             if (!_segmentIntersectDetector.Intersected(spring.PointA.Position, spring.PointB.Position, massPoint.Position)) continue;
 
             var normal = _vectorCalculator.GetNormalVector(spring.PointA.Position, spring.PointB.Position);

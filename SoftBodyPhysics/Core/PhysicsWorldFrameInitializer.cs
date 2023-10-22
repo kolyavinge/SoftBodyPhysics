@@ -20,13 +20,18 @@ internal class PhysicsWorldFrameInitializer : IPhysicsWorldFrameInitializer
 
     public void Init()
     {
-        foreach (var massPoint in _softBodiesCollection.AllMassPoints)
+        var allMassPoints = _softBodiesCollection.AllMassPoints;
+        for (var i = 0; i < allMassPoints.Length; i++)
         {
+            var massPoint = allMassPoints[i];
             massPoint.Collision = null;
         }
-        foreach (var spring in _hardBodiesCollection.AllEdges)
+
+        var allEdges = _hardBodiesCollection.AllEdges;
+        for (var i = 0; i < allEdges.Length; i++)
         {
-            spring.Collisions.Clear();
+            var edge = allEdges[i];
+            edge.Collisions.Clear();
         }
     }
 }
