@@ -27,6 +27,7 @@ internal class CollisionChecker : ICollisionChecker
         for (var i = 0; i < softBodies.Length; i++)
         {
             var softBody = softBodies[i];
+            if (!softBody.IsMoving) continue;
 
             var massPoints = softBody.MassPoints;
             for (var j = 0; j < massPoints.Length; j++)

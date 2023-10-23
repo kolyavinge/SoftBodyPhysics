@@ -17,35 +17,45 @@ internal class VelocityCalculator : IVelocityCalculator
 
     public void CalculatePositionStep(float timeStep)
     {
-        var allMassPoints = _softBodiesCollection.AllMassPoints;
-        for (var i = 0; i < allMassPoints.Length; i++)
+        var softBodies = _softBodiesCollection.SoftBodies;
+        for (int i = 0; i < softBodies.Length; i++)
         {
-            var massPoint = allMassPoints[i];
+            var softBody = softBodies[i];
+            if (!softBody.IsMoving) continue;
+            for (var j = 0; j < softBody.MassPoints.Length; j++)
+            {
+                var massPoint = softBody.MassPoints[j];
 
-            var tsd = timeStep / massPoint.Mass;
+                var tsd = timeStep / massPoint.Mass;
 
-            var newVelocityX = massPoint.Velocity.x + massPoint.Force.x * tsd;
-            var newVelocityY = massPoint.Velocity.y + massPoint.Force.y * tsd;
+                var newVelocityX = massPoint.Velocity.x + massPoint.Force.x * tsd;
+                var newVelocityY = massPoint.Velocity.y + massPoint.Force.y * tsd;
 
-            massPoint.PositionStep.x = newVelocityX * timeStep;
-            massPoint.PositionStep.y = newVelocityY * timeStep;
+                massPoint.PositionStep.x = newVelocityX * timeStep;
+                massPoint.PositionStep.y = newVelocityY * timeStep;
+            }
         }
     }
 
     public void ApplyVelocity(float timeStep)
     {
-        var allMassPoints = _softBodiesCollection.AllMassPoints;
-        for (var i = 0; i < allMassPoints.Length; i++)
+        var softBodies = _softBodiesCollection.SoftBodies;
+        for (int i = 0; i < softBodies.Length; i++)
         {
-            var massPoint = allMassPoints[i];
+            var softBody = softBodies[i];
+            if (!softBody.IsMoving) continue;
+            for (var j = 0; j < softBody.MassPoints.Length; j++)
+            {
+                var massPoint = softBody.MassPoints[j];
 
-            var tsd = timeStep / massPoint.Mass;
+                var tsd = timeStep / massPoint.Mass;
 
-            massPoint.Velocity.x += massPoint.Force.x * tsd;
-            massPoint.Velocity.y += massPoint.Force.y * tsd;
+                massPoint.Velocity.x += massPoint.Force.x * tsd;
+                massPoint.Velocity.y += massPoint.Force.y * tsd;
 
-            massPoint.PositionStep.x = massPoint.Velocity.x * timeStep;
-            massPoint.PositionStep.y = massPoint.Velocity.y * timeStep;
+                massPoint.PositionStep.x = massPoint.Velocity.x * timeStep;
+                massPoint.PositionStep.y = massPoint.Velocity.y * timeStep;
+            }
         }
     }
 }

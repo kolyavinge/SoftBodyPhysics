@@ -28,12 +28,15 @@ internal class SoftBody : ISoftBody
 
     public Borders Borders;
 
+    public bool IsMoving;
+
     public SoftBody()
     {
         MassPoints = Array.Empty<MassPoint>();
         Springs = Array.Empty<Spring>();
         SpringsToCheckCollisions = Array.Empty<Spring>();
         Borders = Borders.Default;
+        IsMoving = true;
     }
 
     public void UpdateEdges()
