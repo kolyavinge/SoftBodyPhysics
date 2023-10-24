@@ -52,7 +52,7 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
             timeStep = _timeStepCalculator.GetTimeStep(timeStep);
             _velocityCalculator.ApplyVelocity(timeStep);
             _collisionChecker.CheckCollisions();
-            _softBodyMovingDetector.DetectMoving();
         }
+        _softBodyMovingDetector.DetectMoving();
     }
 }

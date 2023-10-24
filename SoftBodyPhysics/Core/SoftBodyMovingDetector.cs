@@ -10,7 +10,7 @@ internal interface ISoftBodyMovingDetector
 
 internal class SoftBodyMovingDetector : ISoftBodyMovingDetector
 {
-    private const float _delta = 0.1f;
+    private const float _delta = 0.02f;
     private readonly ISoftBodiesCollection _softBodiesCollection;
 
     public SoftBodyMovingDetector(
@@ -34,8 +34,8 @@ internal class SoftBodyMovingDetector : ISoftBodyMovingDetector
         for (int i = 0; i < massPoints.Length; i++)
         {
             var massPoint = massPoints[i];
-            if (Math.Abs(massPoint.Velocity.x) >= _delta) return true;
-            if (Math.Abs(massPoint.Velocity.y) >= _delta) return true;
+            if (Math.Abs(massPoint.Position.x - massPoint.PositionBeforeUpdate.x) >= _delta) return true;
+            if (Math.Abs(massPoint.Position.y - massPoint.PositionBeforeUpdate.y) >= _delta) return true;
         }
 
         return false;

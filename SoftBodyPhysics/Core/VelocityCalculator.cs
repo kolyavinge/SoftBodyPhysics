@@ -21,7 +21,9 @@ internal class VelocityCalculator : IVelocityCalculator
         for (int i = 0; i < softBodies.Length; i++)
         {
             var softBody = softBodies[i];
+
             if (!softBody.IsMoving) continue;
+
             for (var j = 0; j < softBody.MassPoints.Length; j++)
             {
                 var massPoint = softBody.MassPoints[j];
@@ -43,7 +45,9 @@ internal class VelocityCalculator : IVelocityCalculator
         for (int i = 0; i < softBodies.Length; i++)
         {
             var softBody = softBodies[i];
+
             if (!softBody.IsMoving) continue;
+
             for (var j = 0; j < softBody.MassPoints.Length; j++)
             {
                 var massPoint = softBody.MassPoints[j];

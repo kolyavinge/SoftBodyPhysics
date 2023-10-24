@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using SoftBodyPhysics.Geo;
+﻿using SoftBodyPhysics.Geo;
 using SoftBodyPhysics.Model;
 
 namespace SoftBodyPhysics.Core;
@@ -14,7 +13,7 @@ internal class BordersCalculator : IBordersCalculator
 {
     public Borders? GetBordersBySegments(ISegment[] segments)
     {
-        if (!segments.Any()) return null;
+        if (segments.Length == 0) return null;
 
         var first = segments[0];
 

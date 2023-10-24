@@ -22,7 +22,6 @@ internal class HardBodyCollisionChecker : IHardBodyCollisionChecker
 
     public void CheckCollisions(SoftBody softBody)
     {
-        if (!softBody.IsMoving) return;
         var massPoints = softBody.MassPoints;
         for (var i = 0; i < massPoints.Length; i++)
         {

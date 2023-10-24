@@ -37,6 +37,8 @@ internal class MassPoint : IMassPoint
 
     public Vector PositionStep;
 
+    public Vector PositionBeforeUpdate;
+
     public float Mass;
 
     public IBarrier? Collision;
@@ -47,6 +49,7 @@ internal class MassPoint : IMassPoint
         PrevPosition = new(position.x, position.y);
         Velocity = new Vector(0, 0);
         PositionStep = new Vector(0, 0);
+        PositionBeforeUpdate = new Vector(0, 0);
         Force = new Vector(0, 0);
     }
 }

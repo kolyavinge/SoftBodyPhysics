@@ -24,7 +24,11 @@ internal class PhysicsWorldFrameInitializer : IPhysicsWorldFrameInitializer
         for (var i = 0; i < allMassPoints.Length; i++)
         {
             var massPoint = allMassPoints[i];
+
             massPoint.Collision = null;
+
+            massPoint.PositionBeforeUpdate.x = massPoint.Position.x;
+            massPoint.PositionBeforeUpdate.y = massPoint.Position.y;
         }
 
         var allEdges = _hardBodiesCollection.AllEdges;
