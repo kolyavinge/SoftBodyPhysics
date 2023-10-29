@@ -41,11 +41,14 @@ public class Vector : IEquatable<Vector?>
 
     public static Vector operator *(float k, Vector a) => a * k;
 
-    public static float operator *(Vector a, Vector b) => a.x * b.x + a.y * b.y;
-
     public static bool operator ==(Vector? left, Vector? right) => EqualityComparer<Vector>.Default.Equals(left!, right!);
 
     public static bool operator !=(Vector? left, Vector? right) => !(left == right);
+
+    public Vector Clone()
+    {
+        return new(x, y);
+    }
 
     public override string ToString()
     {

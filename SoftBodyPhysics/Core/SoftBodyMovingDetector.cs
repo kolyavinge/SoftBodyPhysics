@@ -10,7 +10,7 @@ internal interface ISoftBodyMovingDetector
 
 internal class SoftBodyMovingDetector : ISoftBodyMovingDetector
 {
-    private const float _delta = 0.02f;
+    private const float _delta = 0.01f;
     private readonly ISoftBodiesCollection _softBodiesCollection;
 
     public SoftBodyMovingDetector(

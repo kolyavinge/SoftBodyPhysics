@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SoftBodyPhysics.Geo;
 
 namespace SoftBodyPhysics.Model;
 
@@ -9,6 +10,8 @@ public interface ISoftBody
     IReadOnlyCollection<IMassPoint> MassPoints { get; }
 
     IReadOnlyCollection<ISpring> Springs { get; }
+
+    Vector MiddlePoint { get; }
 }
 
 internal class SoftBody : ISoftBody
@@ -16,6 +19,7 @@ internal class SoftBody : ISoftBody
     #region ISoftBody
     IReadOnlyCollection<IMassPoint> ISoftBody.MassPoints => MassPoints;
     IReadOnlyCollection<ISpring> ISoftBody.Springs => Springs;
+    Vector ISoftBody.MiddlePoint => new(Borders.MiddleX, Borders.MiddleY);
     #endregion
 
     // массивы а не списки для оптимизации
