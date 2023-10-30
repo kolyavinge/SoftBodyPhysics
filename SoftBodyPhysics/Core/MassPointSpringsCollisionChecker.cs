@@ -1,4 +1,5 @@
-﻿using SoftBodyPhysics.Geo;
+﻿using SoftBodyPhysics.Ancillary;
+using SoftBodyPhysics.Geo;
 using SoftBodyPhysics.Intersections;
 using SoftBodyPhysics.Model;
 
@@ -12,16 +13,13 @@ internal interface IMassPointSpringsCollisionChecker
 internal class MassPointSpringsCollisionChecker : IMassPointSpringsCollisionChecker
 {
     private readonly ISegmentIntersectDetector _segmentIntersectDetector;
-    private readonly IVectorCalculator _vectorCalculator;
     private readonly IPhysicsUnits _physicsUnits;
 
     public MassPointSpringsCollisionChecker(
         ISegmentIntersectDetector segmentIntersectDetector,
-        IVectorCalculator vectorCalculator,
         IPhysicsUnits physicsUnits)
     {
         _segmentIntersectDetector = segmentIntersectDetector;
-        _vectorCalculator = vectorCalculator;
         _physicsUnits = physicsUnits;
     }
 
@@ -32,31 +30,48 @@ internal class MassPointSpringsCollisionChecker : IMassPointSpringsCollisionChec
             var spring = springs[i];
             if (!_segmentIntersectDetector.Intersected(spring.PointA.Position, spring.PointB.Position, massPoint.Position)) continue;
 
-            var normal = _vectorCalculator.GetNormalVector(spring.PointA.Position, spring.PointB.Position);
+            var (massPointNewVelocity, springNewVelocity) = PhysCalcs.GetNewVelocityAfterCollision(
+                massPoint.Mass,
+                massPoint.Velocity,
+                0.5f * (spring.PointA.Mass + spring.PointB.Mass),
+                0.5f * (spring.PointA.Velocity + spring.PointB.Velocity));
 
             spring.Collisions.Add(massPoint);
-            spring.PointA.Position.x = spring.PointA.PrevPosition.x;
-            spring.PointA.Position.y = spring.PointA.PrevPosition.y;
-            spring.PointB.Position.x = spring.PointB.PrevPosition.x;
-            spring.PointB.Position.y = spring.PointB.PrevPosition.y;
-
-            _vectorCalculator.ReflectVector(spring.PointA.Velocity, normal);
-            spring.PointA.Velocity.x *= _physicsUnits.Sliding;
-            spring.PointA.Velocity.y *= _physicsUnits.Sliding;
-
-            _vectorCalculator.ReflectVector(spring.PointB.Velocity, normal);
-            spring.PointB.Velocity.x *= _physicsUnits.Sliding;
-            spring.PointB.Velocity.y *= _physicsUnits.Sliding;
-
             massPoint.Collision = spring;
-            massPoint.Position.x = massPoint.PrevPosition.x;
-            massPoint.Position.y = massPoint.PrevPosition.y;
-
-            _vectorCalculator.ReflectVector(massPoint.Velocity, normal);
-            massPoint.Velocity.x *= _physicsUnits.Sliding;
-            massPoint.Velocity.y *= _physicsUnits.Sliding;
+            ApplyPositionAndVelocity(spring, springNewVelocity);
+            ApplyPositionAndVelocity(massPoint, massPointNewVelocity);
 
             return;
         }
+    }
+
+    private void ApplyPositionAndVelocity(Spring spring, Vector springNewVelocity)
+    {
+        spring.PointA.Position.x = spring.PointA.PrevPosition.x;
+        spring.PointA.Position.y = spring.PointA.PrevPosition.y;
+        spring.PointB.Position.x = spring.PointB.PrevPosition.x;
+        spring.PointB.Position.y = spring.PointB.PrevPosition.y;
+
+        spring.PointA.Velocity.x = springNewVelocity.x;
+        spring.PointA.Velocity.y = springNewVelocity.y;
+        spring.PointB.Velocity.x = springNewVelocity.x;
+        spring.PointB.Velocity.y = springNewVelocity.y;
+
+        spring.PointA.Velocity.x *= _physicsUnits.Sliding;
+        spring.PointA.Velocity.y *= _physicsUnits.Sliding;
+        spring.PointB.Velocity.x *= _physicsUnits.Sliding;
+        spring.PointB.Velocity.y *= _physicsUnits.Sliding;
+    }
+
+    private void ApplyPositionAndVelocity(MassPoint massPoint, Vector massPointNewVelocity)
+    {
+        massPoint.Position.x = massPoint.PrevPosition.x;
+        massPoint.Position.y = massPoint.PrevPosition.y;
+
+        massPoint.Velocity.x = massPointNewVelocity.x;
+        massPoint.Velocity.y = massPointNewVelocity.y;
+
+        massPoint.Velocity.x *= _physicsUnits.Sliding;
+        massPoint.Velocity.y *= _physicsUnits.Sliding;
     }
 }
