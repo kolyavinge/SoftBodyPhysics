@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace SoftBodyPhysics.Geo;
+namespace SoftBodyPhysics.Calculations;
 
 internal static class Vectors
 {

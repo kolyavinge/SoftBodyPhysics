@@ -1,8 +1,8 @@
 ﻿using DependencyInjection;
 using SoftBodyPhysics.Ancillary;
+using SoftBodyPhysics.Calculations;
 using SoftBodyPhysics.Core;
 using SoftBodyPhysics.Factories;
-using SoftBodyPhysics.Geo;
 using SoftBodyPhysics.Intersections;
 
 namespace SoftBodyPhysics.Utils;

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SoftBodyPhysics.Geo;
+namespace SoftBodyPhysics.Calculations;
 
 internal interface IVectorCalculator
 {

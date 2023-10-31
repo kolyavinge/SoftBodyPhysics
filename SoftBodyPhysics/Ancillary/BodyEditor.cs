@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SoftBodyPhysics.Calculations;
 using SoftBodyPhysics.Core;
 using SoftBodyPhysics.Factories;
-using SoftBodyPhysics.Geo;
 using SoftBodyPhysics.Model;
 using SoftBodyPhysics.Utils;
 

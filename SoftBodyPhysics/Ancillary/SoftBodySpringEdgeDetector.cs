@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using SoftBodyPhysics.Calculations;
 using SoftBodyPhysics.Core;
-using SoftBodyPhysics.Geo;
 using SoftBodyPhysics.Intersections;
 using SoftBodyPhysics.Model;
 using SoftBodyPhysics.Utils;

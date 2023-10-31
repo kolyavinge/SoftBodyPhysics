@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SoftBodyPhysics.Geo;
+namespace SoftBodyPhysics.Calculations;
 
 public class Vector : IEquatable<Vector?>
 {

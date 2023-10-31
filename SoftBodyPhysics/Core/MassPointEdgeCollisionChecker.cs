@@ -1,4 +1,4 @@
-﻿using SoftBodyPhysics.Geo;
+﻿using SoftBodyPhysics.Calculations;
 using SoftBodyPhysics.Intersections;
 using SoftBodyPhysics.Model;
 

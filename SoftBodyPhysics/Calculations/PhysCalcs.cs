@@ -1,6 +1,4 @@
-﻿using SoftBodyPhysics.Geo;
-
-namespace SoftBodyPhysics.Ancillary;
+﻿namespace SoftBodyPhysics.Calculations;
 
 internal static class PhysCalcs
 {

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using SoftBodyPhysics.Geo;
+using SoftBodyPhysics.Calculations;
 using SoftBodyPhysics.Model;
 
 namespace SoftBodyPhysics.Intersections;

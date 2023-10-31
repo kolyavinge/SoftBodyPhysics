@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using SoftBodyPhysics.Geo;
+using SoftBodyPhysics.Calculations;
 
 namespace SoftBodyPhysics.Model;
 
