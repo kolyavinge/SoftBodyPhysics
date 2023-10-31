@@ -13,14 +13,11 @@ internal class SegmentIntersectDetector : ISegmentIntersectDetector
 {
     private const double _delta = 0.0001;
     private readonly ISegmentChecker _segmentChecker;
-    private readonly IPhysicsUnits _physicsUnits;
 
     public SegmentIntersectDetector(
-        ISegmentChecker segmentChecker,
-        IPhysicsUnits physicsUnits)
+        ISegmentChecker segmentChecker)
     {
         _segmentChecker = segmentChecker;
-        _physicsUnits = physicsUnits;
     }
 
     public bool Intersected(Vector lineFrom, Vector lineTo, Vector point)
@@ -37,24 +34,23 @@ internal class SegmentIntersectDetector : ISegmentIntersectDetector
         var a = lineFromY - lineToY;
         var b = lineToX - lineFromX;
         var c = lineFromX * lineToY - lineToX * lineFromY;
-        var r = _physicsUnits.MassPointRadius;
+        var r = Constants.MassPointRadius;
 
-        var x0 = -a * c / (a * a + b * b);
-        var y0 = -b * c / (a * a + b * b);
+        var m = a * a + b * b;
+        var x0 = -a * c / m;
+        var y0 = -b * c / m;
 
-        if (c * c > r * r * (a * a + b * b) + _delta) return false;
+        if (c * c > r * r * m + _delta) return false;
 
-        if (Math.Abs(c * c - r * r * (a * a + b * b)) < _delta)
+        if (Math.Abs(c * c - r * r * m) < _delta)
         {
             return _segmentChecker.IsPointInSegment(lineFrom, lineTo, new(x0 + point.x, y0 + point.y));
         }
 
-        var d = r * r - c * c / (a * a + b * b);
-        var mult = Math.Sqrt(d / (a * a + b * b));
-        var ax = (float)(x0 + b * mult);
-        var ay = (float)(y0 - a * mult);
-        //var bx = x0 - b * mult;
-        //var by = y0 + a * mult;
+        var d = r * r - c * c / m;
+        var mult = (float)Math.Sqrt(d / m);
+        var ax = x0 + b * mult;
+        var ay = y0 - a * mult;
 
         return _segmentChecker.IsPointInSegment(lineFrom, lineTo, new(ax + point.x, ay + point.y));
     }

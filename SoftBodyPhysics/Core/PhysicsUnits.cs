@@ -4,8 +4,6 @@ public interface IPhysicsUnits
 {
     float Mass { get; set; }
 
-    float MassPointRadius { get; }
-
     float Time { get; set; }
 
     float SpringStiffness { get; set; }
@@ -21,8 +19,6 @@ internal class PhysicsUnits : IPhysicsUnits
 {
     public float Mass { get; set; }
 
-    public float MassPointRadius { get; }
-
     public float Time { get; set; }
 
     public float SpringStiffness { get; set; }
@@ -36,7 +32,6 @@ internal class PhysicsUnits : IPhysicsUnits
     public PhysicsUnits()
     {
         Mass = Constants.Mass;
-        MassPointRadius = Constants.MassPointRadius;
         Time = Constants.Time;
         SpringStiffness = Constants.SpringStiffness;
         SpringDamper = Constants.SpringDamper;
