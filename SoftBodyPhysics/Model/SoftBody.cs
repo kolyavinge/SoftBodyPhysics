@@ -30,6 +30,8 @@ internal class SoftBody : ISoftBody
 
     public Spring[] SpringsToCheckCollisions;
 
+    public Spring[] Edges;
+
     public Borders Borders;
 
     public bool IsMoving;
@@ -45,7 +47,7 @@ internal class SoftBody : ISoftBody
 
     public void UpdateEdges()
     {
-        // сначала Edge, потом остальные
-        SpringsToCheckCollisions = Springs.OrderBy(x => x.IsEdge ? 0 : 1).ToArray();
+        SpringsToCheckCollisions = Springs.OrderBy(x => x.IsEdge ? 0 : 1).ToArray(); // сначала Edge, потом остальные
+        Edges = Springs.Where(x => x.IsEdge).ToArray();
     }
 }

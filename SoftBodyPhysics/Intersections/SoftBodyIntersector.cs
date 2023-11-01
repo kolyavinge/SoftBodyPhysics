@@ -36,7 +36,7 @@ internal class SoftBodyIntersector : ISoftBodyIntersector
     public IntersectResult? GetIntersectPoint(SoftBody softBody, Vector point)
     {
         if (softBody.Borders is null) return null;
-        if (!_polygonIntersector.IsPointInPolygon(softBody.SpringsToCheckCollisions, softBody.Borders, point)) return null;
+        if (!_polygonIntersector.IsPointInPolygon(softBody.Edges, softBody.Borders, point)) return null;
 
         var pointToList = new Vector[]
         {
@@ -50,7 +50,7 @@ internal class SoftBodyIntersector : ISoftBodyIntersector
 
         var minDistance = double.MaxValue;
 
-        foreach (var edge in softBody.SpringsToCheckCollisions)
+        foreach (var edge in softBody.Edges)
         {
             foreach (var pointTo in pointToList)
             {
