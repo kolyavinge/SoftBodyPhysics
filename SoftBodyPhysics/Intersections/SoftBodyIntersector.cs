@@ -22,21 +22,21 @@ internal interface ISoftBodyIntersector
 
 internal class SoftBodyIntersector : ISoftBodyIntersector
 {
-    private readonly IPolygonChecker _polygonChecker;
+    private readonly IPolygonIntersector _polygonIntersector;
     private readonly ISegmentIntersector _segmentIntersector;
 
     public SoftBodyIntersector(
-        IPolygonChecker polygonChecker,
+        IPolygonIntersector polygonIntersector,
         ISegmentIntersector segmentIntersector)
     {
-        _polygonChecker = polygonChecker;
+        _polygonIntersector = polygonIntersector;
         _segmentIntersector = segmentIntersector;
     }
 
     public IntersectResult? GetIntersectPoint(SoftBody softBody, Vector point)
     {
         if (softBody.Borders is null) return null;
-        if (!_polygonChecker.IsPointInPolygon(softBody.SpringsToCheckCollisions, softBody.Borders, point)) return null;
+        if (!_polygonIntersector.IsPointInPolygon(softBody.SpringsToCheckCollisions, softBody.Borders, point)) return null;
 
         var pointToList = new Vector[]
         {

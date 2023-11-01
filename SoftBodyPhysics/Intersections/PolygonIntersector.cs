@@ -4,24 +4,24 @@ using SoftBodyPhysics.Model;
 
 namespace SoftBodyPhysics.Intersections;
 
-internal interface IPolygonChecker
+internal interface IPolygonIntersector
 {
     bool IsPointInPolygon(IEnumerable<ISegment> polygonPoints, Borders borders, Vector point);
 }
 
-internal class PolygonChecker : IPolygonChecker
+internal class PolygonIntersector : IPolygonIntersector
 {
     private readonly ISegmentIntersector _segmentIntersector;
 
-    public PolygonChecker(ISegmentIntersector segmentIntersector)
+    public PolygonIntersector(ISegmentIntersector segmentIntersector)
     {
         _segmentIntersector = segmentIntersector;
     }
 
     public bool IsPointInPolygon(IEnumerable<ISegment> polygonPoints, Borders borders, Vector point)
     {
-        if (!IsPointIn(borders, point, 10.0)) return false;
-        var pointTo = new Vector(point.x, borders.MaxY + 1000.0f);
+        if (!IsPointIn(borders, point, 1.0f)) return false;
+        var pointTo = new Vector(point.x, 2.0f * borders.MaxY);
         int intersections = 0;
         foreach (var polygonPoint in polygonPoints)
         {
@@ -34,7 +34,7 @@ internal class PolygonChecker : IPolygonChecker
         return intersections % 2 != 0;
     }
 
-    private bool IsPointIn(Borders borders, Vector point, double delta)
+    private bool IsPointIn(Borders borders, Vector point, float delta)
     {
         return
             borders.MinX - delta <= point.x && point.x <= borders.MaxX + delta &&

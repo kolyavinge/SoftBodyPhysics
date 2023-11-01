@@ -11,14 +11,14 @@ internal interface IMassPointSpringsCollisionChecker
 
 internal class MassPointSpringsCollisionChecker : IMassPointSpringsCollisionChecker
 {
-    private readonly ISegmentIntersectDetector _segmentIntersectDetector;
+    private readonly ISegmentIntersector _segmentIntersector;
     private readonly IPhysicsUnits _physicsUnits;
 
     public MassPointSpringsCollisionChecker(
-        ISegmentIntersectDetector segmentIntersectDetector,
+        ISegmentIntersector segmentIntersector,
         IPhysicsUnits physicsUnits)
     {
-        _segmentIntersectDetector = segmentIntersectDetector;
+        _segmentIntersector = segmentIntersector;
         _physicsUnits = physicsUnits;
     }
 
@@ -27,7 +27,7 @@ internal class MassPointSpringsCollisionChecker : IMassPointSpringsCollisionChec
         for (var i = 0; i < springs.Length; i++)
         {
             var spring = springs[i];
-            if (!_segmentIntersectDetector.Intersected(spring.PointA.Position, spring.PointB.Position, massPoint.Position)) continue;
+            if (!_segmentIntersector.IsIntersected(spring.PointA.Position, spring.PointB.Position, massPoint.Position)) continue;
 
             var (massPointNewVelocity, springNewVelocity) = PhysCalcs.GetNewVelocityAfterCollision(
                 massPoint.Mass,

@@ -1,34 +1,101 @@
-﻿using SoftBodyPhysics.Calculations;
+﻿using System;
+using SoftBodyPhysics.Calculations;
+using SoftBodyPhysics.Core;
 
 namespace SoftBodyPhysics.Intersections;
 
 internal interface ISegmentIntersector
 {
-    Vector? GetIntersectPoint(Vector point1From, Vector point1To, Vector point2From, Vector point2To);
+    Vector? GetIntersectPoint(Vector segment1From, Vector segment1To, Vector segment2From, Vector segment2To);
+    bool IsIntersected(Vector segmentFrom, Vector segmentTo, Vector point);
 }
 
 internal class SegmentIntersector : ISegmentIntersector
 {
+    private const float _delta = 0.00001f;
     private readonly ILineIntersector _lineIntersector;
-    private readonly ISegmentChecker _segmentChecker;
 
-    public SegmentIntersector(ILineIntersector lineIntersector, ISegmentChecker segmentChecker)
+    public SegmentIntersector(ILineIntersector lineIntersector)
     {
         _lineIntersector = lineIntersector;
-        _segmentChecker = segmentChecker;
     }
 
-    public Vector? GetIntersectPoint(Vector line1From, Vector line1To, Vector line2From, Vector line2To)
+    public Vector? GetIntersectPoint(Vector segment1From, Vector segment1To, Vector segment2From, Vector segment2To)
     {
-        var point = _lineIntersector.GetIntersectPoint(line1From, line1To, line2From, line2To);
+        var point = _lineIntersector.GetIntersectPoint(segment1From, segment1To, segment2From, segment2To);
         if (point is null) return null;
-        if (_segmentChecker.IsPointInSegment(line1From, line1To, point) && _segmentChecker.IsPointInSegment(line2From, line2To, point))
+
+        return IsPointInSegment(segment1From, segment1To, point) && IsPointInSegment(segment2From, segment2To, point) ? point : null;
+    }
+
+    public bool IsIntersected(Vector segmentFrom, Vector segmentTo, Vector point)
+    {
+        // https://e-maxx.ru/algo/circle_line_intersection
+
+        // двигаем точку в начало координат
+        var lineFromX = segmentFrom.x - point.x;
+        var lineFromY = segmentFrom.y - point.y;
+        var lineToX = segmentTo.x - point.x;
+        var lineToY = segmentTo.y - point.y;
+
+        // уравнение прямой
+        var a = lineFromY - lineToY;
+        var b = lineToX - lineFromX;
+        var c = lineFromX * lineToY - lineToX * lineFromY;
+        var r = Constants.MassPointRadius;
+
+        var m = a * a + b * b;
+        var x0 = -a * c / m;
+        var y0 = -b * c / m;
+
+        if (c * c > r * r * m + _delta) return false;
+
+        if (Math.Abs(c * c - r * r * m) < _delta)
         {
-            return point;
+            return IsPointInSegment(segmentFrom, segmentTo, new(x0 + point.x, y0 + point.y));
+        }
+
+        var d = r * r - c * c / m;
+        var mult = (float)Math.Sqrt(d / m);
+        var ax = x0 + b * mult;
+        var ay = y0 - a * mult;
+
+        return IsPointInSegment(segmentFrom, segmentTo, new(ax + point.x, ay + point.y));
+    }
+
+    private bool IsPointInSegment(Vector segmentFrom, Vector segmentTo, Vector point)
+    {
+        float minX, maxX, minY, maxY;
+
+        if (segmentFrom.x < segmentTo.x)
+        {
+            minX = segmentFrom.x;
+            maxX = segmentTo.x;
         }
         else
         {
-            return null;
+            minX = segmentTo.x;
+            maxX = segmentFrom.x;
         }
+
+        if (segmentFrom.y < segmentTo.y)
+        {
+            minY = segmentFrom.y;
+            maxY = segmentTo.y;
+        }
+        else
+        {
+            minY = segmentTo.y;
+            maxY = segmentFrom.y;
+        }
+
+        minX -= _delta;
+        maxX += _delta;
+        minY -= _delta;
+        maxY += _delta;
+
+        return
+            minX <= point.x && point.x <= maxX &&
+            minY <= point.y && point.y <= maxY;
     }
 }

@@ -11,16 +11,16 @@ internal interface IMassPointEdgeCollisionChecker
 
 internal class MassPointEdgeCollisionChecker : IMassPointEdgeCollisionChecker
 {
-    private readonly ISegmentIntersectDetector _segmentIntersectDetector;
+    private readonly ISegmentIntersector _segmentIntersector;
     private readonly IVectorCalculator _vectorCalculator;
     private readonly IPhysicsUnits _physicsUnits;
 
     public MassPointEdgeCollisionChecker(
-        ISegmentIntersectDetector segmentIntersectDetector,
+        ISegmentIntersector segmentIntersector,
         IVectorCalculator vectorCalculator,
         IPhysicsUnits physicsUnits)
     {
-        _segmentIntersectDetector = segmentIntersectDetector;
+        _segmentIntersector = segmentIntersector;
         _vectorCalculator = vectorCalculator;
         _physicsUnits = physicsUnits;
     }
@@ -30,7 +30,7 @@ internal class MassPointEdgeCollisionChecker : IMassPointEdgeCollisionChecker
         for (var i = 0; i < edges.Length; i++)
         {
             var edge = edges[i];
-            if (!_segmentIntersectDetector.Intersected(edge.From, edge.To, massPoint.Position)) continue;
+            if (!_segmentIntersector.IsIntersected(edge.From, edge.To, massPoint.Position)) continue;
 
             var normal = _vectorCalculator.GetNormalVector(edge.From, edge.To);
 
