@@ -13,6 +13,7 @@ internal interface ISegmentIntersector
 internal class SegmentIntersector : ISegmentIntersector
 {
     private const float _delta = 0.00001f;
+    private const float _r = Constants.MassPointRadius;
     private readonly ILineIntersector _lineIntersector;
 
     public SegmentIntersector(ILineIntersector lineIntersector)
@@ -42,20 +43,14 @@ internal class SegmentIntersector : ISegmentIntersector
         var a = lineFromY - lineToY;
         var b = lineToX - lineFromX;
         var c = lineFromX * lineToY - lineToX * lineFromY;
-        var r = Constants.MassPointRadius;
 
         var m = a * a + b * b;
         var x0 = -a * c / m;
         var y0 = -b * c / m;
 
-        if (c * c > r * r * m + _delta) return false;
+        if (c * c > _r * _r * m + _delta) return false;
 
-        if (Math.Abs(c * c - r * r * m) < _delta)
-        {
-            return IsPointInSegment(segmentFrom, segmentTo, new(x0 + point.x, y0 + point.y));
-        }
-
-        var d = r * r - c * c / m;
+        var d = _r * _r - c * c / m;
         var mult = (float)Math.Sqrt(d / m);
         var ax = x0 + b * mult;
         var ay = y0 - a * mult;
