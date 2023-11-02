@@ -299,6 +299,7 @@ public static class Example
     {
         physicsWorld.Units.Sliding = 0.9f;
         physicsWorld.Units.SpringStiffness = 200;
+        physicsWorld.Units.SpringDamper = 5;
 
         var editor = physicsWorld.MakEditor();
 

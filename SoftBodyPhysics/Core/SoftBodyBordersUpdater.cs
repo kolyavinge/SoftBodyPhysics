@@ -25,8 +25,10 @@ internal class SoftBodyBordersUpdater : ISoftBodyBordersUpdater
 
     public void UpdateBorders()
     {
-        foreach (var softBody in _softBodiesCollection.SoftBodies)
+        var softBodies = _softBodiesCollection.SoftBodies;
+        for (var i = 0; i < softBodies.Length; i++)
         {
+            var softBody = softBodies[i];
             if (!softBody.IsMoving) continue;
             UpdateBorders(softBody);
         }

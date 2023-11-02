@@ -20,6 +20,8 @@ public class Vector : IEquatable<Vector?>
 
     public float Length => (float)Math.Sqrt(x * x + y * y);
 
+    internal float Length2 => x * x + y * y;
+
     public Vector Unit
     {
         get
