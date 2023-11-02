@@ -42,7 +42,7 @@ internal class SoftBodyBordersUpdater : ISoftBodyBordersUpdater
 
     public void UpdateBorders(SoftBody softBody)
     {
-        softBody.Borders = _bordersCalculator.GetBordersBySegments(softBody.SpringsToCheckCollisions) ??
+        softBody.Borders = _bordersCalculator.GetBordersBySegments(softBody.Edges) ??
                            _bordersCalculator.GetBordersByMassPoint(softBody.MassPoints[0].Position);
     }
 }

@@ -40,7 +40,7 @@ internal class SoftBodyCollisionChecker : ISoftBodyCollisionChecker
                 if (body2.Borders.MinX - _delta < massPoint.Position.x && massPoint.Position.x < body2.Borders.MaxX + _delta &&
                     body2.Borders.MinY - _delta < massPoint.Position.y && massPoint.Position.y < body2.Borders.MaxY + _delta)
                 {
-                    _collisionChecker.CheckMassPointAndSpringsCollision(massPoint, body2.SpringsToCheckCollisions);
+                    _collisionChecker.CheckMassPointAndSpringsCollision(massPoint, body2.Edges);
                 }
             }
 
@@ -51,7 +51,7 @@ internal class SoftBodyCollisionChecker : ISoftBodyCollisionChecker
                 if (body.Borders.MinX - _delta < massPoint.Position.x && massPoint.Position.x < body.Borders.MaxX + _delta &&
                     body.Borders.MinY - _delta < massPoint.Position.y && massPoint.Position.y < body.Borders.MaxY + _delta)
                 {
-                    _collisionChecker.CheckMassPointAndSpringsCollision(massPoint, body.SpringsToCheckCollisions);
+                    _collisionChecker.CheckMassPointAndSpringsCollision(massPoint, body.Edges);
                 }
             }
         }
