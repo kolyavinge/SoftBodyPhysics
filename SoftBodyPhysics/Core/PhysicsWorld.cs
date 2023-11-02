@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using SoftBodyPhysics.Ancillary;
+using SoftBodyPhysics.Calculations;
 using SoftBodyPhysics.Factories;
+using SoftBodyPhysics.Intersections;
 using SoftBodyPhysics.Model;
 
 namespace SoftBodyPhysics.Core;
@@ -16,6 +18,8 @@ public interface IPhysicsWorld
     IBodyEditor MakEditor();
 
     void Update();
+
+    IEnumerable<ISoftBody> GetSoftBodyByPosition(Vector point);
 }
 
 internal class PhysicsWorld : IPhysicsWorld
@@ -24,6 +28,7 @@ internal class PhysicsWorld : IPhysicsWorld
     private readonly IHardBodiesCollection _hardBodiesCollection;
     private readonly IBodyEditorFactory _bodyEditorFactory;
     private readonly IPhysicsWorldUpdater _updater;
+    private readonly ISoftBodyIntersector _softBodyIntersector;
 
     public IReadOnlyCollection<ISoftBody> SoftBodies => _softBodiesCollection.SoftBodies;
 
@@ -36,12 +41,14 @@ internal class PhysicsWorld : IPhysicsWorld
         IHardBodiesCollection hardBodiesCollection,
         IBodyEditorFactory bodyEditorFactory,
         IPhysicsWorldUpdater updater,
+        ISoftBodyIntersector softBodyIntersector,
         IPhysicsUnits physicsUnits)
     {
         _softBodiesCollection = softBodiesCollection;
         _hardBodiesCollection = hardBodiesCollection;
         _bodyEditorFactory = bodyEditorFactory;
         _updater = updater;
+        _softBodyIntersector = softBodyIntersector;
         Units = physicsUnits;
     }
 
@@ -53,5 +60,10 @@ internal class PhysicsWorld : IPhysicsWorld
     public void Update()
     {
         _updater.UpdateFrame();
+    }
+
+    public IEnumerable<ISoftBody> GetSoftBodyByPosition(Vector point)
+    {
+        return _softBodyIntersector.GetSoftBodyByPoint(point);
     }
 }
