@@ -3,17 +3,17 @@ using SoftBodyPhysics.Model;
 
 namespace SoftBodyPhysics.Core;
 
-internal interface IBordersCalculator
+internal interface IBordersUpdater
 {
-    Borders? GetBordersBySegments(ISegment[] segments);
-    Borders GetBordersByMassPoint(Vector massPointPosition);
+    void UpdateBordersBySegments(Borders borders, ISegment[] segments);
+    void UpdateBordersByMassPoint(Borders borders, Vector massPointPosition);
 }
 
-internal class BordersCalculator : IBordersCalculator
+internal class BordersUpdater : IBordersUpdater
 {
-    public Borders? GetBordersBySegments(ISegment[] segments)
+    public void UpdateBordersBySegments(Borders borders, ISegment[] segments)
     {
-        if (segments.Length == 0) return null;
+        if (segments.Length == 0) return;
 
         var first = segments[0];
 
@@ -45,16 +45,16 @@ internal class BordersCalculator : IBordersCalculator
             if (positionB.y > maxY) maxY = positionB.y;
         }
 
-        return new(minX, maxX, minY, maxY);
+        borders.Set(minX, maxX, minY, maxY);
     }
 
-    public Borders GetBordersByMassPoint(Vector massPointPosition)
+    public void UpdateBordersByMassPoint(Borders borders, Vector massPointPosition)
     {
         float minX = massPointPosition.x;
         float minY = massPointPosition.y;
         float maxX = massPointPosition.x + Constants.MassPointRadius;
         float maxY = massPointPosition.y + Constants.MassPointRadius;
 
-        return new(minX, maxX, minY, maxY);
+        borders.Set(minX, maxX, minY, maxY);
     }
 }

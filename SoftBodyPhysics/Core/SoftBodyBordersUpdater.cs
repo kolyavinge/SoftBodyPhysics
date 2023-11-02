@@ -13,14 +13,14 @@ internal interface ISoftBodyBordersUpdater
 internal class SoftBodyBordersUpdater : ISoftBodyBordersUpdater
 {
     private readonly ISoftBodiesCollection _softBodiesCollection;
-    private readonly IBordersCalculator _bordersCalculator;
+    private readonly IBordersUpdater _bordersUpdater;
 
     public SoftBodyBordersUpdater(
         ISoftBodiesCollection softBodiesCollection,
-        IBordersCalculator bordersCalculator)
+        IBordersUpdater bordersUpdater)
     {
         _softBodiesCollection = softBodiesCollection;
-        _bordersCalculator = bordersCalculator;
+        _bordersUpdater = bordersUpdater;
     }
 
     public void UpdateBorders()
@@ -42,7 +42,13 @@ internal class SoftBodyBordersUpdater : ISoftBodyBordersUpdater
 
     public void UpdateBorders(SoftBody softBody)
     {
-        softBody.Borders = _bordersCalculator.GetBordersBySegments(softBody.Edges) ??
-                           _bordersCalculator.GetBordersByMassPoint(softBody.MassPoints[0].Position);
+        if (softBody.Edges.Length > 0)
+        {
+            _bordersUpdater.UpdateBordersBySegments(softBody.Borders, softBody.Edges);
+        }
+        else
+        {
+            _bordersUpdater.UpdateBordersByMassPoint(softBody.Borders, softBody.MassPoints[0].Position);
+        }
     }
 }

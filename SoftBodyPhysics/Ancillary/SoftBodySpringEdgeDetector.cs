@@ -17,14 +17,14 @@ internal class SoftBodySpringEdgeDetector : ISoftBodySpringEdgeDetector
 {
     private const float _step = 0.1f;
     private readonly ISegmentIntersector _segmentIntersector;
-    private readonly IBordersCalculator _bordersCalculator;
+    private readonly IBordersUpdater _bordersUpdater;
 
     public SoftBodySpringEdgeDetector(
         ISegmentIntersector segmentIntersector,
-        IBordersCalculator bordersCalculator)
+        IBordersUpdater bordersUpdater)
     {
         _segmentIntersector = segmentIntersector;
-        _bordersCalculator = bordersCalculator;
+        _bordersUpdater = bordersUpdater;
     }
 
     public void DetectEdges(IReadOnlyCollection<SoftBody> softBodies)
@@ -34,11 +34,10 @@ internal class SoftBodySpringEdgeDetector : ISoftBodySpringEdgeDetector
 
     public void DetectEdges(SoftBody softBody)
     {
-        var borders = _bordersCalculator.GetBordersBySegments(softBody.Springs);
-        if (borders is null) return;
+        _bordersUpdater.UpdateBordersBySegments(softBody.Borders, softBody.Springs);
         softBody.Springs.Each(s => s.IsEdge = false);
-        DetectByVertical(softBody.Springs, borders);
-        DetectByHorizontal(softBody.Springs, borders);
+        DetectByVertical(softBody.Springs, softBody.Borders);
+        DetectByHorizontal(softBody.Springs, softBody.Borders);
         softBody.UpdateEdges();
     }
 

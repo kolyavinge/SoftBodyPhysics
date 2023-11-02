@@ -30,7 +30,7 @@ internal class SoftBody : ISoftBody
 
     public Spring[] Edges;
 
-    public Borders Borders;
+    public readonly Borders Borders;
 
     public bool IsMoving;
 
@@ -39,7 +39,7 @@ internal class SoftBody : ISoftBody
         MassPoints = Array.Empty<MassPoint>();
         Springs = Array.Empty<Spring>();
         Edges = Array.Empty<Spring>();
-        Borders = Borders.Default;
+        Borders = new();
         IsMoving = true;
     }
 

@@ -5,20 +5,18 @@ namespace SoftBodyPhysics.Model;
 
 internal class Borders
 {
-    public static readonly Borders Default = new(0, 0, 0, 0);
+    public float MinX;
+    public float MaxX;
+    public float MinY;
+    public float MaxY;
+    public float Width;
+    public float Height;
+    public float WidthHalf;
+    public float HeightHalf;
+    public float MiddleX;
+    public float MiddleY;
 
-    public readonly float MinX;
-    public readonly float MaxX;
-    public readonly float MinY;
-    public readonly float MaxY;
-    public readonly float Width;
-    public readonly float Height;
-    public readonly float WidthHalf;
-    public readonly float HeightHalf;
-    public readonly float MiddleX;
-    public readonly float MiddleY;
-
-    public Borders(float minX, float maxX, float minY, float maxY)
+    public void Set(float minX, float maxX, float minY, float maxY)
     {
         MinX = minX;
         MaxX = maxX;

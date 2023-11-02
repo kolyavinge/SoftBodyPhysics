@@ -16,11 +16,11 @@ internal class HardBody : IHardBody
 
     public Edge[] Edges;
 
-    public Borders Borders;
+    public readonly Borders Borders;
 
     public HardBody()
     {
         Edges = Array.Empty<Edge>();
-        Borders = Borders.Default;
+        Borders = new();
     }
 }
