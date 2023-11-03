@@ -22,11 +22,11 @@ internal class HardBodyCollisionChecker : IHardBodyCollisionChecker
 
     public void CheckCollisions(SoftBody softBody)
     {
+        var hardBodies = _hardBodiesCollection.HardBodies;
         var massPoints = softBody.EdgeMassPoints;
         for (var i = 0; i < massPoints.Length; i++)
         {
             var massPoint = massPoints[i];
-            var hardBodies = _hardBodiesCollection.HardBodies;
             for (var j = 0; j < hardBodies.Length; j++)
             {
                 var hardBody = hardBodies[j];

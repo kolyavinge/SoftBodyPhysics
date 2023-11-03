@@ -8,7 +8,7 @@ internal class MaxTimeProfile
 {
     public void Run()
     {
-        Update(8000, 5);
+        Update(8000, 4);
 
         Console.WriteLine("done.");
         Console.ReadKey();

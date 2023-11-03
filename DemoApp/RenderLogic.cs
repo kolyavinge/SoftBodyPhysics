@@ -80,7 +80,7 @@ internal class RenderLogic
                 if (showMassPointAddInfo)
                 {
                     dc.DrawText(
-                        new($"{massPoint.Position}\n{massPoint.Velocity}",
+                        new($"{massPoint.Velocity}",
                             CultureInfo.CurrentCulture,
                             FlowDirection.LeftToRight,
                             new Typeface(new FontFamily("Arial"), FontStyles.Normal, FontWeights.Normal, FontStretches.Normal),

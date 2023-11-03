@@ -7,7 +7,6 @@ internal interface IPhysicsWorldUpdater
 
 internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
 {
-    private readonly ISoftBodyBordersUpdater _softBodyBordersUpdater;
     private readonly ISoftBodyMovingDetector _softBodyMovingDetector;
     private readonly IPhysicsWorldFrameInitializer _frameInitializer;
     private readonly IGravityForceCalculator _gravityForceCalculator;
@@ -18,7 +17,6 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
     private readonly IPhysicsUnits _physicsUnits;
 
     public PhysicsWorldUpdater(
-        ISoftBodyBordersUpdater softBodyBordersUpdater,
         ISoftBodyMovingDetector softBodyMovingDetector,
         IPhysicsWorldFrameInitializer frameInitializer,
         IGravityForceCalculator gravityForceCalculator,
@@ -28,7 +26,6 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
         ICollisionChecker collisionChecker,
         IPhysicsUnits physicsUnits)
     {
-        _softBodyBordersUpdater = softBodyBordersUpdater;
         _softBodyMovingDetector = softBodyMovingDetector;
         _frameInitializer = frameInitializer;
         _gravityForceCalculator = gravityForceCalculator;
@@ -46,7 +43,6 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
         for (var time = 0.0f; time < _physicsUnits.Time; time += timeStep)
         {
             timeStep = _physicsUnits.Time;
-            _softBodyBordersUpdater.UpdateBorders();
             _gravityForceCalculator.InitGravityForce();
             _springForceCalculator.ApplySpringForce();
             _velocityCalculator.CalculatePositionStep(timeStep);
