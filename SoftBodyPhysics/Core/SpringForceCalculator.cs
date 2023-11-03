@@ -34,6 +34,7 @@ internal class SpringForceCalculator : ISpringForceCalculator
 
     private void ApplySpringForce(Spring[] springs)
     {
+        var springDamper = _physicsUnits.SpringDamper;
         for (int i = 0; i < springs.Length; i++)
         {
             var spring = springs[i];
@@ -55,7 +56,7 @@ internal class SpringForceCalculator : ISpringForceCalculator
 
             // damper force
             // SpringDamper * (B.Position - A.Position).Unit * (B.Velocity - A.Velocity)
-            var fd = _physicsUnits.SpringDamper * (positionDiffUnitX * velocityDiffX + positionDiffUnitY * velocityDiffY);
+            var fd = springDamper * (positionDiffUnitX * velocityDiffX + positionDiffUnitY * velocityDiffY);
 
             // total force
             var f = fs + fd;

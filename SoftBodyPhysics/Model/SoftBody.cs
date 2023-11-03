@@ -26,6 +26,8 @@ internal class SoftBody : ISoftBody
 
     public MassPoint[] MassPoints;
 
+    public MassPoint[] EdgeMassPoints;
+
     public Spring[] Springs;
 
     public Spring[] Edges;
@@ -37,6 +39,7 @@ internal class SoftBody : ISoftBody
     public SoftBody()
     {
         MassPoints = Array.Empty<MassPoint>();
+        EdgeMassPoints = Array.Empty<MassPoint>();
         Springs = Array.Empty<Spring>();
         Edges = Array.Empty<Spring>();
         Borders = new();
@@ -46,5 +49,6 @@ internal class SoftBody : ISoftBody
     public void UpdateEdges()
     {
         Edges = Springs.Where(x => x.IsEdge).ToArray();
+        EdgeMassPoints = Edges.Select(x => x.PointA).Union(Edges.Select(x => x.PointB)).ToArray();
     }
 }

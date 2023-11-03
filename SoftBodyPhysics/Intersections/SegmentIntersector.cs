@@ -47,10 +47,12 @@ internal class SegmentIntersector : ISegmentIntersector
         var m = a * a + b * b;
         var x0 = -a * c / m;
         var y0 = -b * c / m;
+        var c2 = c * c;
+        var r2 = _r * _r;
 
-        if (c * c > _r * _r * m + _delta) return false;
+        if (c2 > r2 * m + _delta) return false;
 
-        var d = _r * _r - c * c / m;
+        var d = r2 - c2 / m;
         var mult = (float)Math.Sqrt(d / m);
         var ax = x0 + b * mult;
         var ay = y0 - a * mult;

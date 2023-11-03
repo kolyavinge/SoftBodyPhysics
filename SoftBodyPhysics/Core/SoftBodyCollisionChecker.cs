@@ -33,7 +33,7 @@ internal class SoftBodyCollisionChecker : ISoftBodyCollisionChecker
             if (Math.Abs(body.Borders.MiddleX - body2.Borders.MiddleX) > body.Borders.Width + body2.Borders.Width) continue;
             if (Math.Abs(body.Borders.MiddleY - body2.Borders.MiddleY) > body.Borders.Height + body2.Borders.Height) continue;
 
-            var massPoints = body.MassPoints;
+            var massPoints = body.EdgeMassPoints;
             for (var j = 0; j < massPoints.Length; j++)
             {
                 var massPoint = massPoints[j];
@@ -44,7 +44,7 @@ internal class SoftBodyCollisionChecker : ISoftBodyCollisionChecker
                 }
             }
 
-            massPoints = body2.MassPoints;
+            massPoints = body2.EdgeMassPoints;
             for (var j = 0; j < massPoints.Length; j++)
             {
                 var massPoint = massPoints[j];
