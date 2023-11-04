@@ -27,19 +27,19 @@ internal class MassPoint : IMassPoint
 
     // поля для оптимизации
 
-    public Vector Force;
+    public readonly Vector Force;
 
     public Vector Velocity;
 
     public Vector Position;
 
-    public Vector PrevPosition;
+    public readonly Vector PrevPosition;
 
-    public Vector PositionStep;
+    public readonly Vector PositionStep;
 
-    public Vector PositionBeforeUpdate;
+    public readonly Vector PositionBeforeUpdate;
 
-    public Vector VelocityBeforeUpdate;
+    public readonly Vector VelocityBeforeUpdate;
 
     public float Mass;
 

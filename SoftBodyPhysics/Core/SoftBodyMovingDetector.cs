@@ -25,7 +25,7 @@ internal class SoftBodyMovingDetector : ISoftBodyMovingDetector
         for (int i = 0; i < softBodies.Length; i++)
         {
             var softBody = softBodies[i];
-            softBody.IsMoving = IsMoving(softBody.MassPoints);
+            softBody.IsMoving = IsMoving(softBody.EdgeMassPoints);
         }
     }
 

@@ -4,12 +4,12 @@ namespace SoftBodyPhysics.Intersections;
 
 internal interface ILineIntersector
 {
-    Vector? GetIntersectPoint(Vector line1From, Vector line1To, Vector line2From, Vector line2To);
+    bool GetIntersectPoint(Vector line1From, Vector line1To, Vector line2From, Vector line2To, Vector result);
 }
 
 internal class LineIntersector : ILineIntersector
 {
-    public Vector? GetIntersectPoint(Vector line1From, Vector line1To, Vector line2From, Vector line2To)
+    public bool GetIntersectPoint(Vector line1From, Vector line1To, Vector line2From, Vector line2To, Vector result)
     {
         var a1 = line1From.y - line1To.y;
         var b1 = line1To.x - line1From.x;
@@ -20,11 +20,11 @@ internal class LineIntersector : ILineIntersector
         var c2 = line2From.x * line2To.y - line2To.x * line2From.y;
 
         var denominator = a1 * b2 - a2 * b1;
-        if (denominator == 0) return null;
+        if (denominator == 0) return false;
 
-        var x = (b1 * c2 - b2 * c1) / denominator;
-        var y = (a2 * c1 - a1 * c2) / denominator;
+        result.x = (b1 * c2 - b2 * c1) / denominator;
+        result.y = (a2 * c1 - a1 * c2) / denominator;
 
-        return new(x, y);
+        return true;
     }
 }

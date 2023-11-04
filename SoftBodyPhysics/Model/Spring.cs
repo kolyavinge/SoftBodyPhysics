@@ -52,7 +52,7 @@ internal class Spring : ISpring
 
     public readonly MassPoint PointB;
 
-    public Vector Force;
+    public readonly Vector Force;
 
     public float Stiffness;
 

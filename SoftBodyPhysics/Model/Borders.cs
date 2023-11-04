@@ -11,8 +11,6 @@ internal class Borders
     public float MaxY;
     public float Width;
     public float Height;
-    public float WidthHalf;
-    public float HeightHalf;
     public float MiddleX;
     public float MiddleY;
 
@@ -24,10 +22,10 @@ internal class Borders
         MaxY = maxY;
         Width = maxX - minX;
         Height = maxY - minY;
-        WidthHalf = Width / 2.0f;
-        HeightHalf = Height / 2.0f;
-        MiddleX = minX + WidthHalf;
-        MiddleY = minY + HeightHalf;
+        var widthHalf = Width / 2.0f;
+        var heightHalf = Height / 2.0f;
+        MiddleX = minX + widthHalf;
+        MiddleY = minY + heightHalf;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

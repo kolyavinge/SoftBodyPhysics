@@ -6,7 +6,7 @@ namespace SoftBodyPhysics.Intersections;
 
 internal interface ISegmentIntersector
 {
-    Vector? GetIntersectPoint(Vector segment1From, Vector segment1To, Vector segment2From, Vector segment2To);
+    bool GetIntersectPoint(Vector segment1From, Vector segment1To, Vector segment2From, Vector segment2To, Vector outputResult);
     bool IsIntersected(Vector segmentFrom, Vector segmentTo, Vector point);
 }
 
@@ -21,12 +21,10 @@ internal class SegmentIntersector : ISegmentIntersector
         _lineIntersector = lineIntersector;
     }
 
-    public Vector? GetIntersectPoint(Vector segment1From, Vector segment1To, Vector segment2From, Vector segment2To)
+    public bool GetIntersectPoint(Vector segment1From, Vector segment1To, Vector segment2From, Vector segment2To, Vector outputResult)
     {
-        var point = _lineIntersector.GetIntersectPoint(segment1From, segment1To, segment2From, segment2To);
-        if (point is null) return null;
-
-        return IsPointInSegment(segment1From, segment1To, point) && IsPointInSegment(segment2From, segment2To, point) ? point : null;
+        if (!_lineIntersector.GetIntersectPoint(segment1From, segment1To, segment2From, segment2To, outputResult)) return false;
+        return IsPointInSegment(segment1From, segment1To, outputResult.x, outputResult.y) && IsPointInSegment(segment2From, segment2To, outputResult.x, outputResult.y);
     }
 
     public bool IsIntersected(Vector segmentFrom, Vector segmentTo, Vector point)
@@ -57,10 +55,10 @@ internal class SegmentIntersector : ISegmentIntersector
         var ax = x0 + b * mult;
         var ay = y0 - a * mult;
 
-        return IsPointInSegment(segmentFrom, segmentTo, new(ax + point.x, ay + point.y));
+        return IsPointInSegment(segmentFrom, segmentTo, ax + point.x, ay + point.y);
     }
 
-    private bool IsPointInSegment(Vector segmentFrom, Vector segmentTo, Vector point)
+    private bool IsPointInSegment(Vector segmentFrom, Vector segmentTo, float pointX, float pointY)
     {
         float minX, maxX, minY, maxY;
 
@@ -92,7 +90,7 @@ internal class SegmentIntersector : ISegmentIntersector
         maxY += _delta;
 
         return
-            minX <= point.x && point.x <= maxX &&
-            minY <= point.y && point.y <= maxY;
+            minX <= pointX && pointX <= maxX &&
+            minY <= pointY && pointY <= maxY;
     }
 }

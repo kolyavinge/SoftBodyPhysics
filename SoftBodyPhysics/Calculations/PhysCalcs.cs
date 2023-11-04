@@ -2,21 +2,23 @@
 
 internal static class PhysCalcs
 {
-    public static (Vector u1, Vector u2) GetNewVelocityAfterCollision(
-        float m1,
-        Vector v1,
-        float m2,
-        Vector v2)
+    public static (float u1x, float u1y, float u2x, float u2y) GetNewVelocityAfterCollision(
+        float mass1,
+        float velocity1x,
+        float velocity1y,
+        float mass2,
+        float velocity2x,
+        float velocity2y)
     {
-        float massSum = m1 + m2;
-        float massDiff = m1 - m2;
+        float massSum = mass1 + mass2;
+        float massDiff = mass1 - mass2;
 
-        float u1x = (massDiff * v1.x + 2.0f * m2 * v2.x) / massSum;
-        float u1y = (massDiff * v1.y + 2.0f * m2 * v2.y) / massSum;
+        float u1x = (massDiff * velocity1x + 2.0f * mass2 * velocity2x) / massSum;
+        float u1y = (massDiff * velocity1y + 2.0f * mass2 * velocity2y) / massSum;
 
-        float u2x = (-massDiff * v2.x + 2.0f * m1 * v1.x) / massSum;
-        float u2y = (-massDiff * v2.y + 2.0f * m1 * v1.y) / massSum;
+        float u2x = (-massDiff * velocity2x + 2.0f * mass1 * velocity1x) / massSum;
+        float u2y = (-massDiff * velocity2y + 2.0f * mass1 * velocity1y) / massSum;
 
-        return (new(u1x, u1y), new(u2x, u2y));
+        return (u1x, u1y, u2x, u2y);
     }
 }

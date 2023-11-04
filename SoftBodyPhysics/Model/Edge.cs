@@ -27,9 +27,9 @@ internal class Edge : IEdge
 
     // поля для оптимизации
 
-    public Vector From;
+    public readonly Vector From;
 
-    public Vector To;
+    public readonly Vector To;
 
     public readonly List<IMassPoint> Collisions;
 

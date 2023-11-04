@@ -4,7 +4,7 @@ namespace SoftBodyPhysics.Calculations;
 
 internal interface IVectorCalculator
 {
-    Vector GetNormalVector(Vector lineFrom, Vector lineTo);
+    void GetNormalVector(Vector lineFrom, Vector lineTo, Vector outputResult);
     void ReflectVector(Vector vector, Vector normal);
 }
 
@@ -13,25 +13,25 @@ internal class VectorCalculator : IVectorCalculator
     private const double _halfPI = Math.PI / 2.0;
     private const double _delta = 0.00001;
 
-    public Vector GetNormalVector(Vector lineFrom, Vector lineTo)
+    public void GetNormalVector(Vector lineFrom, Vector lineTo, Vector outputResult)
     {
         if (Math.Abs(lineFrom.y - lineTo.y) < _delta)
         {
-            return new(0, 1);
+            outputResult.x = 0;
+            outputResult.y = 1;
         }
         else if (Math.Abs(lineFrom.x - lineTo.x) < _delta)
         {
-            return new(1, 0);
+            outputResult.x = 1;
+            outputResult.y = 0;
         }
         else
         {
             var (sortedFrom, sortedTo) = lineFrom.x < lineTo.x ? (lineFrom, lineTo) : (lineTo, lineFrom);
             var alpha = Math.Abs(Math.Atan((sortedTo.y - sortedFrom.y) / (sortedTo.x - sortedFrom.x)));
             if (sortedTo.y < sortedFrom.y) alpha = -alpha;
-            var x = (float)Math.Cos(_halfPI + alpha);
-            var y = (float)Math.Sin(_halfPI + alpha);
-
-            return new(x, y);
+            outputResult.x = (float)Math.Cos(_halfPI + alpha);
+            outputResult.y = (float)Math.Sin(_halfPI + alpha);
         }
     }
 

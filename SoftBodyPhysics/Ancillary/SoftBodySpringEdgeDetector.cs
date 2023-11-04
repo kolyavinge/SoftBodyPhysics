@@ -18,6 +18,7 @@ internal class SoftBodySpringEdgeDetector : ISoftBodySpringEdgeDetector
     private const float _step = 0.1f;
     private readonly ISegmentIntersector _segmentIntersector;
     private readonly IBordersUpdater _bordersUpdater;
+    private readonly Vector _intersectPoint;
 
     public SoftBodySpringEdgeDetector(
         ISegmentIntersector segmentIntersector,
@@ -25,6 +26,7 @@ internal class SoftBodySpringEdgeDetector : ISoftBodySpringEdgeDetector
     {
         _segmentIntersector = segmentIntersector;
         _bordersUpdater = bordersUpdater;
+        _intersectPoint = new Vector(0, 0);
     }
 
     public void DetectEdges(IReadOnlyCollection<SoftBody> softBodies)
@@ -43,26 +45,29 @@ internal class SoftBodySpringEdgeDetector : ISoftBodySpringEdgeDetector
 
     private void DetectByVertical(IEnumerable<Spring> springs, Borders borders)
     {
+        var lineFrom = new Vector(0, 0);
+        var lineTo = new Vector(0, 0);
         for (var x = borders.MinX; x <= borders.MaxX; x += _step)
         {
-            var lineFrom = new Vector(x, borders.MinY);
-            var lineTo = new Vector(x, borders.MaxY);
+            lineFrom.x = x;
+            lineFrom.y = borders.MinY;
+            lineTo.x = x;
+            lineTo.y = borders.MaxY;
             var minY = borders.MaxY;
             var maxY = borders.MinY;
             Spring? minSpring = null, maxSpring = null;
             foreach (var spring in springs)
             {
-                var p = _segmentIntersector.GetIntersectPoint(spring.PointA.Position, spring.PointB.Position, lineFrom, lineTo);
-                if (p is not null)
+                if (_segmentIntersector.GetIntersectPoint(spring.PointA.Position, spring.PointB.Position, lineFrom, lineTo, _intersectPoint))
                 {
-                    if (p.y < minY)
+                    if (_intersectPoint.y < minY)
                     {
-                        minY = p.y;
+                        minY = _intersectPoint.y;
                         minSpring = spring;
                     }
-                    if (p.y > maxY)
+                    if (_intersectPoint.y > maxY)
                     {
-                        maxY = p.y;
+                        maxY = _intersectPoint.y;
                         maxSpring = spring;
                     }
                 }
@@ -77,26 +82,29 @@ internal class SoftBodySpringEdgeDetector : ISoftBodySpringEdgeDetector
 
     private void DetectByHorizontal(IEnumerable<Spring> springs, Borders borders)
     {
+        var lineFrom = new Vector(0, 0);
+        var lineTo = new Vector(0, 0);
         for (var y = borders.MinY; y <= borders.MaxY; y += _step)
         {
-            var lineFrom = new Vector(borders.MinX, y);
-            var lineTo = new Vector(borders.MaxX, y);
+            lineFrom.x = borders.MinX;
+            lineFrom.y = y;
+            lineTo.x = borders.MaxX;
+            lineTo.y = y;
             var minX = borders.MaxX;
             var maxX = borders.MinX;
             Spring? minSpring = null, maxSpring = null;
             foreach (var spring in springs)
             {
-                var p = _segmentIntersector.GetIntersectPoint(spring.PointA.Position, spring.PointB.Position, lineFrom, lineTo);
-                if (p is not null)
+                if (_segmentIntersector.GetIntersectPoint(spring.PointA.Position, spring.PointB.Position, lineFrom, lineTo, _intersectPoint))
                 {
-                    if (p.x < minX)
+                    if (_intersectPoint.x < minX)
                     {
-                        minX = p.x;
+                        minX = _intersectPoint.x;
                         minSpring = spring;
                     }
-                    if (p.x > maxX)
+                    if (_intersectPoint.x > maxX)
                     {
-                        maxX = p.x;
+                        maxX = _intersectPoint.x;
                         maxSpring = spring;
                     }
                 }

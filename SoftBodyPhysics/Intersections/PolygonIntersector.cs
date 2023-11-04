@@ -12,10 +12,12 @@ internal interface IPolygonIntersector
 internal class PolygonIntersector : IPolygonIntersector
 {
     private readonly ISegmentIntersector _segmentIntersector;
+    private readonly Vector _dummy;
 
     public PolygonIntersector(ISegmentIntersector segmentIntersector)
     {
         _segmentIntersector = segmentIntersector;
+        _dummy = new(0, 0);
     }
 
     public bool IsPointInPolygon(IEnumerable<ISegment> polygonPoints, Borders borders, Vector point)
@@ -25,7 +27,7 @@ internal class PolygonIntersector : IPolygonIntersector
         int intersections = 0;
         foreach (var polygonPoint in polygonPoints)
         {
-            if (_segmentIntersector.GetIntersectPoint(polygonPoint.FromPosition, polygonPoint.ToPosition, point, pointTo) is not null)
+            if (_segmentIntersector.GetIntersectPoint(polygonPoint.FromPosition, polygonPoint.ToPosition, point, pointTo, _dummy))
             {
                 intersections++;
             }
