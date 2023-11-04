@@ -15,34 +15,30 @@ internal class BordersUpdater : IBordersUpdater
     {
         if (segments.Length == 0) return;
 
-        var first = segments[0];
+        Vector from = segments[0].FromPosition;
+        Vector to = segments[0].ToPosition;
 
-        Vector positionA = first.FromPosition;
-        Vector positionB = first.ToPosition;
-
-        float minX = positionA.x;
-        float minY = positionA.y;
-        float maxX = positionB.x;
-        float maxY = positionB.y;
+        float minX = from.x;
+        float minY = from.y;
+        float maxX = to.x;
+        float maxY = to.y;
 
         for (int i = 1; i < segments.Length; i++)
         {
-            var edge = segments[i];
+            from = segments[i].FromPosition;
+            to = segments[i].ToPosition;
 
-            positionA = edge.FromPosition;
-            positionB = edge.ToPosition;
+            if (from.x < minX) minX = from.x;
+            else if (from.x > maxX) maxX = from.x;
 
-            if (positionA.x < minX) minX = positionA.x;
-            if (positionB.x < minX) minX = positionB.x;
+            if (to.x < minX) minX = to.x;
+            else if (to.x > maxX) maxX = to.x;
 
-            if (positionA.x > maxX) maxX = positionA.x;
-            if (positionB.x > maxX) maxX = positionB.x;
+            if (from.y < minY) minY = from.y;
+            else if (from.y > maxY) maxY = from.y;
 
-            if (positionA.y < minY) minY = positionA.y;
-            if (positionB.y < minY) minY = positionB.y;
-
-            if (positionA.y > maxY) maxY = positionA.y;
-            if (positionB.y > maxY) maxY = positionB.y;
+            if (to.y < minY) minY = to.y;
+            else if (to.y > maxY) maxY = to.y;
         }
 
         borders.Set(minX, maxX, minY, maxY);
