@@ -3,19 +3,20 @@ using SoftBodyPhysics.Model;
 
 namespace SoftBodyPhysics.Core;
 
-internal interface ISoftBodyBordersUpdater
+internal interface IBodyBordersUpdater
 {
-    void UpdateBorders();
+    void UpdateBordersAllSoftBodies();
     void UpdateBorders(IEnumerable<SoftBody> softBodies);
     void UpdateBorders(SoftBody softBody);
+    void UpdateBorders(IEnumerable<HardBody> hardBodies);
 }
 
-internal class SoftBodyBordersUpdater : ISoftBodyBordersUpdater
+internal class BodyBordersUpdater : IBodyBordersUpdater
 {
     private readonly ISoftBodiesCollection _softBodiesCollection;
     private readonly IBordersUpdater _bordersUpdater;
 
-    public SoftBodyBordersUpdater(
+    public BodyBordersUpdater(
         ISoftBodiesCollection softBodiesCollection,
         IBordersUpdater bordersUpdater)
     {
@@ -23,7 +24,7 @@ internal class SoftBodyBordersUpdater : ISoftBodyBordersUpdater
         _bordersUpdater = bordersUpdater;
     }
 
-    public void UpdateBorders()
+    public void UpdateBordersAllSoftBodies()
     {
         var softBodies = _softBodiesCollection.SoftBodies;
         for (var i = 0; i < softBodies.Length; i++)
@@ -51,6 +52,14 @@ internal class SoftBodyBordersUpdater : ISoftBodyBordersUpdater
         else
         {
             _bordersUpdater.UpdateBordersByMassPoint(softBody.Borders, softBody.MassPoints[0].Position);
+        }
+    }
+
+    public void UpdateBorders(IEnumerable<HardBody> hardBodies)
+    {
+        foreach (var hardBody in hardBodies)
+        {
+            _bordersUpdater.UpdateBordersBySegments(hardBody.Borders, hardBody.Edges);
         }
     }
 }

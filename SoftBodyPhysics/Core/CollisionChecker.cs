@@ -9,18 +9,18 @@ internal interface ICollisionChecker
 
 internal class CollisionChecker : ICollisionChecker
 {
-    private readonly ISoftBodyBordersUpdater _softBodyBordersUpdater;
+    private readonly IBodyBordersUpdater _bodyBordersUpdater;
     private readonly ISoftBodiesCollection _softBodiesCollection;
     private readonly ISoftBodyCollisionChecker _softBodyCollisionChecker;
     private readonly IHardBodyCollisionChecker _hardBodyCollisionChecker;
 
     public CollisionChecker(
-        ISoftBodyBordersUpdater softBodyBordersUpdater,
+        IBodyBordersUpdater bodyBordersUpdater,
         ISoftBodiesCollection softBodiesCollection,
         ISoftBodyCollisionChecker softBodyCollisionChecker,
         IHardBodyCollisionChecker hardBodyCollisionChecker)
     {
-        _softBodyBordersUpdater = softBodyBordersUpdater;
+        _bodyBordersUpdater = bodyBordersUpdater;
         _softBodiesCollection = softBodiesCollection;
         _softBodyCollisionChecker = softBodyCollisionChecker;
         _hardBodyCollisionChecker = hardBodyCollisionChecker;
@@ -30,7 +30,7 @@ internal class CollisionChecker : ICollisionChecker
     {
         var softBodies = _softBodiesCollection.SoftBodies;
         ApplyPositionStepAndCheckHardBodyCollisions(softBodies);
-        _softBodyBordersUpdater.UpdateBorders();
+        _bodyBordersUpdater.UpdateBordersAllSoftBodies();
         CheckCollisions(softBodies);
         SavePositions(softBodies);
     }
