@@ -27,7 +27,7 @@ internal class CollisionChecker : ICollisionChecker
     public void CheckCollisions()
     {
         ApplyPositionStepCheckHardBodyCollisionsUpdateBorders();
-        CheckCollisions1();
+        CheckCollisionsAllBodies();
         SavePositions();
     }
 
@@ -50,7 +50,7 @@ internal class CollisionChecker : ICollisionChecker
         }
     }
 
-    private void CheckCollisions1()
+    private void CheckCollisionsAllBodies()
     {
         var softBodies = _softBodiesCollection.SoftBodies;
         for (var i = 0; i < softBodies.Length - 1; i++)

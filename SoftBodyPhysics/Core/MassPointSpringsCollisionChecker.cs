@@ -27,6 +27,7 @@ internal class MassPointSpringsCollisionChecker : IMassPointSpringsCollisionChec
         for (var i = 0; i < springs.Length; i++)
         {
             var spring = springs[i];
+
             if (!_segmentIntersector.IsIntersected(spring.PointA.Position, spring.PointB.Position, massPoint.Position)) continue;
 
             var (massPointNewVelocityX, massPointNewVelocityY, springNewVelocityX, springNewVelocityY) =
@@ -34,12 +35,13 @@ internal class MassPointSpringsCollisionChecker : IMassPointSpringsCollisionChec
                     massPoint.Mass,
                     massPoint.Velocity.x,
                     massPoint.Velocity.y,
-                    0.5f * (spring.PointA.Mass + spring.PointB.Mass),
-                    0.5f * (spring.PointA.Velocity.x + spring.PointB.Velocity.x),
-                    0.5f * (spring.PointA.Velocity.y + spring.PointB.Velocity.y));
+                    (spring.PointA.Mass + spring.PointB.Mass) / 2.0f,
+                    (spring.PointA.Velocity.x + spring.PointB.Velocity.x) / 2.0f,
+                    (spring.PointA.Velocity.y + spring.PointB.Velocity.y) / 2.0f);
 
             spring.Collisions.Add(massPoint);
             massPoint.Collision = spring;
+
             ApplyPositionAndVelocity(spring, springNewVelocityX, springNewVelocityY);
             ApplyPositionAndVelocity(massPoint, massPointNewVelocityX, massPointNewVelocityY);
 
