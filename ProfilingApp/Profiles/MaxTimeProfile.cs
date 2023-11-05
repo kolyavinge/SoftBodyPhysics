@@ -32,11 +32,12 @@ internal class MaxTimeProfile
             }
         }
 
+        Console.WriteLine($"Count: {result.Count}");
         result = result.OrderByDescending(x => x.Time).ToList();
         if (result.Count > 100) result = result.Take(100).ToList();
         foreach (var item in result)
         {
-            Console.WriteLine($"Time: {item.Time:F5}\tFrame: {item.Frame}");
+            Console.WriteLine($"Time: {item.Time:F2}\tFrame: {item.Frame}");
         }
     }
 

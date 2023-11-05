@@ -13,13 +13,16 @@ internal interface ISoftBodyIntersector
 internal class SoftBodyIntersector : ISoftBodyIntersector
 {
     private readonly ISoftBodiesCollection _softBodiesCollection;
+    private readonly ISegmentIntersector _segmentIntersector;
     private readonly IPolygonIntersector _polygonIntersector;
 
     public SoftBodyIntersector(
         ISoftBodiesCollection softBodiesCollection,
+        ISegmentIntersector segmentIntersector,
         IPolygonIntersector polygonIntersector)
     {
         _softBodiesCollection = softBodiesCollection;
+        _segmentIntersector = segmentIntersector;
         _polygonIntersector = polygonIntersector;
     }
 
@@ -29,10 +32,32 @@ internal class SoftBodyIntersector : ISoftBodyIntersector
         for (int i = 0; i < softBodies.Length; i++)
         {
             var softBody = softBodies[i];
-            if (_polygonIntersector.IsPointInPolygon(softBody.Edges, softBody.Borders, point))
+            if (CheckSegmentIntersection(softBody, point))
             {
                 yield return softBody;
             }
+            else
+            {
+                if (_polygonIntersector.IsPointInPolygon(softBody.Edges, softBody.Borders, point))
+                {
+                    yield return softBody;
+                }
+            }
         }
+    }
+
+    private bool CheckSegmentIntersection(SoftBody softBody, Vector point)
+    {
+        var springs = softBody.Springs;
+        for (var j = 0; j < springs.Length; j++)
+        {
+            var spring = springs[j];
+            if (_segmentIntersector.IsIntersected(spring.PointA.Position, spring.PointB.Position, point))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

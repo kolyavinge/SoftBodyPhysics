@@ -42,10 +42,10 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
     public void UpdateFrame()
     {
         _frameInitializer.Init();
-        float timeStep;
-        for (var time = 0.0f; time < _physicsUnits.Time; time += timeStep)
+        float timeStep, time = _physicsUnits.Time;
+        for (var currentTime = 0.0f; currentTime < _physicsUnits.Time; currentTime += timeStep)
         {
-            timeStep = _physicsUnits.Time;
+            timeStep = time;
             _gravityForceCalculator.InitGravityForce();
             _springForceCalculator.ApplySpringForce();
             _velocityCalculator.CalculatePositionStep(timeStep);
