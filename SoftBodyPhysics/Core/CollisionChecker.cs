@@ -1,6 +1,4 @@
-﻿using SoftBodyPhysics.Model;
-
-namespace SoftBodyPhysics.Core;
+﻿namespace SoftBodyPhysics.Core;
 
 internal interface ICollisionChecker
 {
@@ -28,18 +26,18 @@ internal class CollisionChecker : ICollisionChecker
 
     public void CheckCollisions()
     {
-        var softBodies = _softBodiesCollection.SoftBodies;
-        ApplyPositionStepCheckHardBodyCollisionsUpdateBorders(softBodies);
-        CheckCollisions(softBodies);
-        SavePositions(softBodies);
+        ApplyPositionStepCheckHardBodyCollisionsUpdateBorders();
+        CheckCollisions1();
+        SavePositions();
     }
 
-    private void ApplyPositionStepCheckHardBodyCollisionsUpdateBorders(SoftBody[] softBodies)
+    private void ApplyPositionStepCheckHardBodyCollisionsUpdateBorders()
     {
-        for (var i = 0; i < softBodies.Length; i++)
+        var softBodies = _softBodiesCollection.ActivatedSoftBodies;
+        var count = _softBodiesCollection.ActivatedSoftBodiesCount;
+        for (var i = 0; i < count; i++)
         {
             var softBody = softBodies[i];
-            if (!softBody.IsActive) continue;
             var massPoints = softBody.MassPoints;
             for (var j = 0; j < massPoints.Length; j++)
             {
@@ -52,8 +50,9 @@ internal class CollisionChecker : ICollisionChecker
         }
     }
 
-    private void CheckCollisions(SoftBody[] softBodies)
+    private void CheckCollisions1()
     {
+        var softBodies = _softBodiesCollection.SoftBodies;
         for (var i = 0; i < softBodies.Length - 1; i++)
         {
             var softBody1 = softBodies[i];
@@ -66,12 +65,13 @@ internal class CollisionChecker : ICollisionChecker
         }
     }
 
-    private static void SavePositions(SoftBody[] softBodies)
+    private void SavePositions()
     {
-        for (var i = 0; i < softBodies.Length; i++)
+        var softBodies = _softBodiesCollection.ActivatedSoftBodies;
+        var count = _softBodiesCollection.ActivatedSoftBodiesCount;
+        for (var i = 0; i < count; i++)
         {
             var softBody = softBodies[i];
-            if (!softBody.IsActive) continue;
             var massPoints = softBody.MassPoints;
             for (var j = 0; j < massPoints.Length; j++)
             {

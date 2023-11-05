@@ -21,11 +21,11 @@ internal class GravityForceCalculator : IGravityForceCalculator
     public void InitGravityForce()
     {
         var gravityAcceleration = -_physicsUnits.GravityAcceleration;
-        var softBodies = _softBodiesCollection.SoftBodies;
-        for (int i = 0; i < softBodies.Length; i++)
+        var softBodies = _softBodiesCollection.ActivatedSoftBodies;
+        var count = _softBodiesCollection.ActivatedSoftBodiesCount;
+        for (int i = 0; i < count; i++)
         {
             var softBody = softBodies[i];
-            if (!softBody.IsActive) continue;
             for (int j = 0; j < softBody.MassPoints.Length; j++)
             {
                 var massPoint = softBody.MassPoints[j];

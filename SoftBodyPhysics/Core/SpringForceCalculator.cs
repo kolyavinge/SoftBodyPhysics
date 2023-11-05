@@ -23,11 +23,11 @@ internal class SpringForceCalculator : ISpringForceCalculator
 
     public void ApplySpringForce()
     {
-        var softBodies = _softBodiesCollection.SoftBodies;
-        for (int i = 0; i < softBodies.Length; i++)
+        var softBodies = _softBodiesCollection.ActivatedSoftBodies;
+        var count = _softBodiesCollection.ActivatedSoftBodiesCount;
+        for (int i = 0; i < count; i++)
         {
             var softBody = softBodies[i];
-            if (!softBody.IsActive) continue;
             ApplySpringForce(softBody.Springs);
         }
     }

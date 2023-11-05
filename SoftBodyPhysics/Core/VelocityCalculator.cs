@@ -17,12 +17,11 @@ internal class VelocityCalculator : IVelocityCalculator
 
     public void CalculatePositionStep(float timeStep)
     {
-        var softBodies = _softBodiesCollection.SoftBodies;
-        for (int i = 0; i < softBodies.Length; i++)
+        var softBodies = _softBodiesCollection.ActivatedSoftBodies;
+        var count = _softBodiesCollection.ActivatedSoftBodiesCount;
+        for (int i = 0; i < count; i++)
         {
             var softBody = softBodies[i];
-
-            if (!softBody.IsActive) continue;
 
             for (var j = 0; j < softBody.MassPoints.Length; j++)
             {
@@ -41,12 +40,11 @@ internal class VelocityCalculator : IVelocityCalculator
 
     public void ApplyVelocity(float timeStep)
     {
-        var softBodies = _softBodiesCollection.SoftBodies;
-        for (int i = 0; i < softBodies.Length; i++)
+        var softBodies = _softBodiesCollection.ActivatedSoftBodies;
+        var count = _softBodiesCollection.ActivatedSoftBodiesCount;
+        for (int i = 0; i < count; i++)
         {
             var softBody = softBodies[i];
-
-            if (!softBody.IsActive) continue;
 
             for (var j = 0; j < softBody.MassPoints.Length; j++)
             {

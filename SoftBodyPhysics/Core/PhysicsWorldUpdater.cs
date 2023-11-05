@@ -14,6 +14,7 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
     private readonly IVelocityCalculator _velocityCalculator;
     private readonly ITimeStepCalculator _timeStepCalculator;
     private readonly ICollisionChecker _collisionChecker;
+    private readonly ISoftBodiesCollection _softBodiesCollection;
     private readonly IPhysicsUnits _physicsUnits;
 
     public PhysicsWorldUpdater(
@@ -24,6 +25,7 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
         IVelocityCalculator velocityCalculator,
         ITimeStepCalculator timeStepCalculator,
         ICollisionChecker collisionChecker,
+        ISoftBodiesCollection softBodiesCollection,
         IPhysicsUnits physicsUnits)
     {
         _softBodyActivator = softBodyActivator;
@@ -33,6 +35,7 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
         _velocityCalculator = velocityCalculator;
         _timeStepCalculator = timeStepCalculator;
         _collisionChecker = collisionChecker;
+        _softBodiesCollection = softBodiesCollection;
         _physicsUnits = physicsUnits;
     }
 
@@ -51,5 +54,6 @@ internal class PhysicsWorldUpdater : IPhysicsWorldUpdater
             _collisionChecker.CheckCollisions();
         }
         _softBodyActivator.Activate();
+        _softBodiesCollection.UpdateActivatedSoftBodies();
     }
 }

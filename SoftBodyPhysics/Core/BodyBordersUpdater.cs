@@ -26,11 +26,11 @@ internal class BodyBordersUpdater : IBodyBordersUpdater
 
     public void UpdateBordersAllSoftBodies()
     {
-        var softBodies = _softBodiesCollection.SoftBodies;
-        for (var i = 0; i < softBodies.Length; i++)
+        var softBodies = _softBodiesCollection.ActivatedSoftBodies;
+        var count = _softBodiesCollection.ActivatedSoftBodiesCount;
+        for (var i = 0; i < count; i++)
         {
             var softBody = softBodies[i];
-            if (!softBody.IsActive) continue;
             UpdateBorders(softBody);
         }
     }
