@@ -30,7 +30,7 @@ internal class BodyBordersUpdater : IBodyBordersUpdater
         for (var i = 0; i < softBodies.Length; i++)
         {
             var softBody = softBodies[i];
-            if (!softBody.IsMoving) continue;
+            if (!softBody.IsActive) continue;
             UpdateBorders(softBody);
         }
     }

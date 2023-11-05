@@ -27,7 +27,7 @@ internal class SpringForceCalculator : ISpringForceCalculator
         for (int i = 0; i < softBodies.Length; i++)
         {
             var softBody = softBodies[i];
-            if (!softBody.IsMoving) continue;
+            if (!softBody.IsActive) continue;
             ApplySpringForce(softBody.Springs);
         }
     }

@@ -3,33 +3,33 @@ using SoftBodyPhysics.Model;
 
 namespace SoftBodyPhysics.Core;
 
-internal interface ISoftBodyMovingDetector
+internal interface ISoftBodyActivator
 {
-    void DetectMoving();
+    void Activate();
 }
 
-internal class SoftBodyMovingDetector : ISoftBodyMovingDetector
+internal class SoftBodyActivator : ISoftBodyActivator
 {
     private const float _delta = 0.5f;
     private readonly ISoftBodiesCollection _softBodiesCollection;
 
-    public SoftBodyMovingDetector(
+    public SoftBodyActivator(
         ISoftBodiesCollection softBodiesCollection)
     {
         _softBodiesCollection = softBodiesCollection;
     }
 
-    public void DetectMoving()
+    public void Activate()
     {
         var softBodies = _softBodiesCollection.SoftBodies;
         for (int i = 0; i < softBodies.Length; i++)
         {
             var softBody = softBodies[i];
-            softBody.IsMoving = IsMoving(softBody.EdgeMassPoints);
+            softBody.IsActive = IsActive(softBody.EdgeMassPoints);
         }
     }
 
-    private bool IsMoving(MassPoint[] massPoints)
+    private bool IsActive(MassPoint[] massPoints)
     {
         for (int i = 0; i < massPoints.Length; i++)
         {

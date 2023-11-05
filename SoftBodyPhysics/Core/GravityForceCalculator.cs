@@ -25,7 +25,7 @@ internal class GravityForceCalculator : IGravityForceCalculator
         for (int i = 0; i < softBodies.Length; i++)
         {
             var softBody = softBodies[i];
-            if (!softBody.IsMoving) continue;
+            if (!softBody.IsActive) continue;
             for (int j = 0; j < softBody.MassPoints.Length; j++)
             {
                 var massPoint = softBody.MassPoints[j];

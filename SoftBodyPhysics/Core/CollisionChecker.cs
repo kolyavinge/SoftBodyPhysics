@@ -39,7 +39,7 @@ internal class CollisionChecker : ICollisionChecker
         for (var i = 0; i < softBodies.Length; i++)
         {
             var softBody = softBodies[i];
-            if (!softBody.IsMoving) continue;
+            if (!softBody.IsActive) continue;
             var massPoints = softBody.MassPoints;
             for (var j = 0; j < massPoints.Length; j++)
             {
@@ -60,7 +60,7 @@ internal class CollisionChecker : ICollisionChecker
             for (int j = i + 1; j < softBodies.Length; j++)
             {
                 var softBody2 = softBodies[j];
-                if (!softBody1.IsMoving && !softBody2.IsMoving) continue;
+                if (!softBody1.IsActive && !softBody2.IsActive) continue;
                 _softBodyCollisionChecker.CheckCollisions(softBody1, softBody2);
             }
         }
@@ -71,7 +71,7 @@ internal class CollisionChecker : ICollisionChecker
         for (var i = 0; i < softBodies.Length; i++)
         {
             var softBody = softBodies[i];
-            if (!softBody.IsMoving) continue;
+            if (!softBody.IsActive) continue;
             var massPoints = softBody.MassPoints;
             for (var j = 0; j < massPoints.Length; j++)
             {

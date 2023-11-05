@@ -22,7 +22,7 @@ internal class VelocityCalculator : IVelocityCalculator
         {
             var softBody = softBodies[i];
 
-            if (!softBody.IsMoving) continue;
+            if (!softBody.IsActive) continue;
 
             for (var j = 0; j < softBody.MassPoints.Length; j++)
             {
@@ -46,7 +46,7 @@ internal class VelocityCalculator : IVelocityCalculator
         {
             var softBody = softBodies[i];
 
-            if (!softBody.IsMoving) continue;
+            if (!softBody.IsActive) continue;
 
             for (var j = 0; j < softBody.MassPoints.Length; j++)
             {

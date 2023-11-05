@@ -34,7 +34,7 @@ internal class SoftBody : ISoftBody
 
     public readonly Borders Borders;
 
-    public bool IsMoving;
+    public bool IsActive;
 
     public SoftBody()
     {
@@ -43,7 +43,7 @@ internal class SoftBody : ISoftBody
         Springs = Array.Empty<Spring>();
         Edges = Array.Empty<Spring>();
         Borders = new();
-        IsMoving = true;
+        IsActive = true;
     }
 
     public void UpdateEdges()
