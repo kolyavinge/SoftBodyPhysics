@@ -35,8 +35,6 @@ internal class MassPoint : IMassPoint
 
     public readonly Vector PrevPosition;
 
-    public readonly Vector PositionStep;
-
     public readonly Vector PositionBeforeUpdate;
 
     public readonly Vector VelocityBeforeUpdate;
@@ -51,7 +49,6 @@ internal class MassPoint : IMassPoint
         Velocity = new Vector(0, 0);
         Position = new(position.x, position.y);
         PrevPosition = new(position.x, position.y);
-        PositionStep = new Vector(0, 0);
         PositionBeforeUpdate = new Vector(0, 0);
         VelocityBeforeUpdate = new Vector(0, 0);
     }

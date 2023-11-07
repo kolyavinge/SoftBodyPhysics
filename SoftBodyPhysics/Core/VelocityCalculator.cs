@@ -62,8 +62,8 @@ internal class VelocityCalculator : IVelocityCalculator
                 massPoint.Velocity.x += massPoint.Force.x * tsd;
                 massPoint.Velocity.y += massPoint.Force.y * tsd;
 
-                massPoint.PositionStep.x = massPoint.Velocity.x * timeStep;
-                massPoint.PositionStep.y = massPoint.Velocity.y * timeStep;
+                massPoint.Position.x += massPoint.Velocity.x * timeStep;
+                massPoint.Position.y += massPoint.Velocity.y * timeStep;
             }
         }
     }

@@ -26,27 +26,9 @@ internal class CollisionChecker : ICollisionChecker
 
     public void CheckCollisions()
     {
-        ApplyPositionStep();
         CheckHardBodyCollisionsUpdateBorders();
         CheckCollisionsAllBodies();
         SavePositions();
-    }
-
-    private void ApplyPositionStep()
-    {
-        var softBodies = _softBodiesCollection.ActivatedSoftBodies;
-        var count = _softBodiesCollection.ActivatedSoftBodiesCount;
-        for (var i = 0; i < count; i++)
-        {
-            var softBody = softBodies[i];
-            var massPoints = softBody.MassPoints;
-            for (var j = 0; j < massPoints.Length; j++)
-            {
-                var massPoint = massPoints[j];
-                massPoint.Position.x += massPoint.PositionStep.x;
-                massPoint.Position.y += massPoint.PositionStep.y;
-            }
-        }
     }
 
     private void CheckHardBodyCollisionsUpdateBorders()
