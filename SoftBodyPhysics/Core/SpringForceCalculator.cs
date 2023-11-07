@@ -44,7 +44,7 @@ internal class SpringForceCalculator : ISpringForceCalculator
             var positionDiffX = b.Position.x - a.Position.x;
             var positionDiffY = b.Position.y - a.Position.y;
 
-            var positionDiffLength = (float)Math.Sqrt(positionDiffX * positionDiffX + positionDiffY * positionDiffY);
+            var positionDiffLength = MathF.Sqrt(positionDiffX * positionDiffX + positionDiffY * positionDiffY);
             var positionDiffUnitX = positionDiffX / positionDiffLength;
             var positionDiffUnitY = positionDiffY / positionDiffLength;
 

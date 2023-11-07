@@ -18,7 +18,7 @@ public class Vector : IEquatable<Vector?>
         this.y = y;
     }
 
-    public float Length => (float)Math.Sqrt(x * x + y * y);
+    public float Length => MathF.Sqrt(x * x + y * y);
 
     internal float Length2 => x * x + y * y;
 
@@ -78,7 +78,7 @@ public class Vector : IEquatable<Vector?>
     {
         var dx = a.x - b.x;
         var dy = a.y - b.y;
-        var distance = (float)Math.Sqrt(dx * dx + dy * dy);
+        var distance = MathF.Sqrt(dx * dx + dy * dy);
 
         return distance;
     }

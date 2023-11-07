@@ -6,6 +6,8 @@ internal class Borders
     public float MaxX;
     public float MinY;
     public float MaxY;
+    public float HalfWidth;
+    public float HalfHeight;
     public float Width;
     public float Height;
     public float MiddleX;
@@ -19,7 +21,9 @@ internal class Borders
         MaxY = maxY;
         Width = maxX - minX;
         Height = maxY - minY;
-        MiddleX = minX + Width / 2.0f;
-        MiddleY = minY + Height / 2.0f;
+        HalfWidth = Width / 2.0f;
+        HalfHeight = Height / 2.0f;
+        MiddleX = minX + HalfWidth;
+        MiddleY = minY + HalfHeight;
     }
 }

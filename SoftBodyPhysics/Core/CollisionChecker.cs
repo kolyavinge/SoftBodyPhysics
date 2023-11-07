@@ -26,12 +26,13 @@ internal class CollisionChecker : ICollisionChecker
 
     public void CheckCollisions()
     {
-        ApplyPositionStepCheckHardBodyCollisionsUpdateBorders();
+        ApplyPositionStep();
+        CheckHardBodyCollisionsUpdateBorders();
         CheckCollisionsAllBodies();
         SavePositions();
     }
 
-    private void ApplyPositionStepCheckHardBodyCollisionsUpdateBorders()
+    private void ApplyPositionStep()
     {
         var softBodies = _softBodiesCollection.ActivatedSoftBodies;
         var count = _softBodiesCollection.ActivatedSoftBodiesCount;
@@ -45,6 +46,16 @@ internal class CollisionChecker : ICollisionChecker
                 massPoint.Position.x += massPoint.PositionStep.x;
                 massPoint.Position.y += massPoint.PositionStep.y;
             }
+        }
+    }
+
+    private void CheckHardBodyCollisionsUpdateBorders()
+    {
+        var softBodies = _softBodiesCollection.ActivatedSoftBodies;
+        var count = _softBodiesCollection.ActivatedSoftBodiesCount;
+        for (var i = 0; i < count; i++)
+        {
+            var softBody = softBodies[i];
             _hardBodyCollisionChecker.CheckCollisions(softBody);
             _bodyBordersUpdater.UpdateBorders(softBody);
         }

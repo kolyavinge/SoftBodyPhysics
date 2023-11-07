@@ -1,8 +1,10 @@
-﻿namespace SoftBodyPhysics.Core;
+﻿using System;
+
+namespace SoftBodyPhysics.Core;
 
 internal interface IVelocityCalculator
 {
-    void CalculatePositionStep(float timeStep);
+    float GetMaxPositionStep(float timeStep);
     void ApplyVelocity(float timeStep);
 }
 
@@ -15,8 +17,9 @@ internal class VelocityCalculator : IVelocityCalculator
         _softBodiesCollection = softBodiesCollection;
     }
 
-    public void CalculatePositionStep(float timeStep)
+    public float GetMaxPositionStep(float timeStep)
     {
+        var maxPositionStepLengthSquared = 0.0f;
         var softBodies = _softBodiesCollection.ActivatedSoftBodies;
         var count = _softBodiesCollection.ActivatedSoftBodiesCount;
         for (int i = 0; i < count; i++)
@@ -32,10 +35,14 @@ internal class VelocityCalculator : IVelocityCalculator
                 var newVelocityX = massPoint.Velocity.x + massPoint.Force.x * tsd;
                 var newVelocityY = massPoint.Velocity.y + massPoint.Force.y * tsd;
 
-                massPoint.PositionStep.x = newVelocityX * timeStep;
-                massPoint.PositionStep.y = newVelocityY * timeStep;
+                var positionStepX = newVelocityX * timeStep;
+                var positionStepY = newVelocityY * timeStep;
+                var positionStepLengthSquared = positionStepX * positionStepX + positionStepY * positionStepY;
+                if (positionStepLengthSquared > maxPositionStepLengthSquared) maxPositionStepLengthSquared = positionStepLengthSquared;
             }
         }
+
+        return MathF.Sqrt(maxPositionStepLengthSquared);
     }
 
     public void ApplyVelocity(float timeStep)

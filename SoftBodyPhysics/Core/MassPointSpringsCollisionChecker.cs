@@ -56,15 +56,10 @@ internal class MassPointSpringsCollisionChecker : IMassPointSpringsCollisionChec
         spring.PointB.Position.x = spring.PointB.PrevPosition.x;
         spring.PointB.Position.y = spring.PointB.PrevPosition.y;
 
-        spring.PointA.Velocity.x = springNewVelocityX;
-        spring.PointA.Velocity.y = springNewVelocityY;
-        spring.PointB.Velocity.x = springNewVelocityX;
-        spring.PointB.Velocity.y = springNewVelocityY;
-
-        spring.PointA.Velocity.x *= _physicsUnits.Sliding;
-        spring.PointA.Velocity.y *= _physicsUnits.Sliding;
-        spring.PointB.Velocity.x *= _physicsUnits.Sliding;
-        spring.PointB.Velocity.y *= _physicsUnits.Sliding;
+        spring.PointA.Velocity.x = springNewVelocityX * _physicsUnits.Sliding;
+        spring.PointA.Velocity.y = springNewVelocityY * _physicsUnits.Sliding;
+        spring.PointB.Velocity.x = springNewVelocityX * _physicsUnits.Sliding;
+        spring.PointB.Velocity.y = springNewVelocityY * _physicsUnits.Sliding;
     }
 
     private void ApplyPositionAndVelocity(MassPoint massPoint, float massPointNewVelocityX, float massPointNewVelocityY)
@@ -72,10 +67,7 @@ internal class MassPointSpringsCollisionChecker : IMassPointSpringsCollisionChec
         massPoint.Position.x = massPoint.PrevPosition.x;
         massPoint.Position.y = massPoint.PrevPosition.y;
 
-        massPoint.Velocity.x = massPointNewVelocityX;
-        massPoint.Velocity.y = massPointNewVelocityY;
-
-        massPoint.Velocity.x *= _physicsUnits.Sliding;
-        massPoint.Velocity.y *= _physicsUnits.Sliding;
+        massPoint.Velocity.x = massPointNewVelocityX * _physicsUnits.Sliding;
+        massPoint.Velocity.y = massPointNewVelocityY * _physicsUnits.Sliding;
     }
 }
