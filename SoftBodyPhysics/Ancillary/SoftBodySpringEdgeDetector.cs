@@ -36,7 +36,7 @@ internal class SoftBodySpringEdgeDetector : ISoftBodySpringEdgeDetector
 
     public void DetectEdges(SoftBody softBody)
     {
-        _bordersUpdater.UpdateBordersBySegments(softBody.Borders, softBody.Springs);
+        _bordersUpdater.UpdateBorders(softBody.Borders, softBody.Springs);
         softBody.Springs.Each(s => s.IsEdge = false);
         DetectByVertical(softBody.Springs, softBody.Borders);
         DetectByHorizontal(softBody.Springs, softBody.Borders);

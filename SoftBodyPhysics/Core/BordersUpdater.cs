@@ -5,13 +5,37 @@ namespace SoftBodyPhysics.Core;
 
 internal interface IBordersUpdater
 {
-    void UpdateBordersBySegments(Borders borders, ISegment[] segments);
+    void UpdateBorders(Borders borders, MassPoint[] edgeMassPoints);
+    void UpdateBorders(Borders borders, ISegment[] segments);
     void UpdateBordersByMassPoint(Borders borders, Vector massPointPosition);
 }
 
 internal class BordersUpdater : IBordersUpdater
 {
-    public void UpdateBordersBySegments(Borders borders, ISegment[] segments)
+    public void UpdateBorders(Borders borders, MassPoint[] edgeMassPoints)
+    {
+        if (edgeMassPoints.Length == 0) return;
+
+        float minX = edgeMassPoints[0].Position.x;
+        float minY = edgeMassPoints[0].Position.y;
+        float maxX = edgeMassPoints[0].Position.x;
+        float maxY = edgeMassPoints[0].Position.y;
+
+        for (int i = 1; i < edgeMassPoints.Length; i++)
+        {
+            var pos = edgeMassPoints[i].Position;
+
+            if (pos.x < minX) minX = pos.x;
+            else if (pos.x > maxX) maxX = pos.x;
+
+            if (pos.y < minY) minY = pos.y;
+            else if (pos.y > maxY) maxY = pos.y;
+        }
+
+        borders.Set(minX, maxX, minY, maxY);
+    }
+
+    public void UpdateBorders(Borders borders, ISegment[] segments)
     {
         if (segments.Length == 0) return;
 

@@ -12,6 +12,7 @@ internal class SpringForceCalculator : ISpringForceCalculator
 {
     private readonly ISoftBodiesCollection _softBodiesCollection;
     private readonly IPhysicsUnits _physicsUnits;
+    private float _springDamper;
 
     public SpringForceCalculator(
         ISoftBodiesCollection softBodiesCollection,
@@ -23,18 +24,17 @@ internal class SpringForceCalculator : ISpringForceCalculator
 
     public void ApplySpringForce()
     {
+        _springDamper = _physicsUnits.SpringDamper;
         var softBodies = _softBodiesCollection.ActivatedSoftBodies;
         var count = _softBodiesCollection.ActivatedSoftBodiesCount;
         for (int i = 0; i < count; i++)
         {
-            var softBody = softBodies[i];
-            ApplySpringForce(softBody.Springs);
+            ApplySpringForce(softBodies[i].Springs);
         }
     }
 
     private void ApplySpringForce(Spring[] springs)
     {
-        var springDamper = _physicsUnits.SpringDamper;
         for (int i = 0; i < springs.Length; i++)
         {
             var spring = springs[i];
@@ -56,7 +56,7 @@ internal class SpringForceCalculator : ISpringForceCalculator
 
             // damper force
             // SpringDamper * (B.Position - A.Position).Unit * (B.Velocity - A.Velocity)
-            var fd = springDamper * (positionDiffUnitX * velocityDiffX + positionDiffUnitY * velocityDiffY);
+            var fd = _springDamper * (positionDiffUnitX * velocityDiffX + positionDiffUnitY * velocityDiffY);
 
             // total force
             var f = fs + fd;

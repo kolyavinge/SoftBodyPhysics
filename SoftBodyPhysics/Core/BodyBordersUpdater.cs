@@ -47,7 +47,7 @@ internal class BodyBordersUpdater : IBodyBordersUpdater
     {
         if (softBody.Edges.Length > 0)
         {
-            _bordersUpdater.UpdateBordersBySegments(softBody.Borders, softBody.Edges);
+            _bordersUpdater.UpdateBorders(softBody.Borders, softBody.EdgeMassPoints);
         }
         else
         {
@@ -59,7 +59,7 @@ internal class BodyBordersUpdater : IBodyBordersUpdater
     {
         foreach (var hardBody in hardBodies)
         {
-            _bordersUpdater.UpdateBordersBySegments(hardBody.Borders, hardBody.Edges);
+            _bordersUpdater.UpdateBorders(hardBody.Borders, hardBody.Edges);
         }
     }
 }
