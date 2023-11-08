@@ -36,6 +36,7 @@ internal interface ISoftBodiesCollection
 
 internal class SoftBodiesCollection : ISoftBodiesCollection
 {
+    private readonly IBodyCollisionCollection _bodyCollisionCollection;
     private readonly List<SoftBody> _softBodies;
 
     public SoftBody[] SoftBodies { get; private set; }
@@ -48,8 +49,10 @@ internal class SoftBodiesCollection : ISoftBodiesCollection
 
     public Spring[] AllSprings { get; private set; }
 
-    public SoftBodiesCollection()
+    public SoftBodiesCollection(
+        IBodyCollisionCollection bodyCollisionCollection)
     {
+        _bodyCollisionCollection = bodyCollisionCollection;
         _softBodies = new List<SoftBody>();
         SoftBodies = Array.Empty<SoftBody>();
         ActivatedSoftBodies = Array.Empty<SoftBody>();
@@ -60,11 +63,14 @@ internal class SoftBodiesCollection : ISoftBodiesCollection
     public void AddSoftBodies(IEnumerable<SoftBody> softBodies)
     {
         _softBodies.AddRange(softBodies);
+        var oldSoftBodies = SoftBodies;
         SoftBodies = _softBodies.ToArray();
+        for (int i = 0; i < SoftBodies.Length; i++) SoftBodies[i].Index = i;
         AllMassPoints = _softBodies.SelectMany(x => x.MassPoints).ToArray();
         AllSprings = _softBodies.SelectMany(x => x.Springs).ToArray();
         ActivatedSoftBodies = new SoftBody[_softBodies.Count];
         UpdateActivatedSoftBodies();
+        _bodyCollisionCollection.UpdateForSoftBodies(oldSoftBodies, SoftBodies);
     }
 
     public void UpdateActivatedSoftBodies()

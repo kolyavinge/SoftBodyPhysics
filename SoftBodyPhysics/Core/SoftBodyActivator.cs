@@ -10,7 +10,8 @@ internal interface ISoftBodyActivator
 
 internal class SoftBodyActivator : ISoftBodyActivator
 {
-    private const float _delta = 0.25f;
+    private const float _positionDelta = 0.1f;
+    private const float _velocityDelta = 0.2f;
     private readonly ISoftBodiesCollection _softBodiesCollection;
 
     public SoftBodyActivator(
@@ -34,10 +35,10 @@ internal class SoftBodyActivator : ISoftBodyActivator
         for (int i = 0; i < massPoints.Length; i++)
         {
             var massPoint = massPoints[i];
-            if (Math.Abs(massPoint.Position.x - massPoint.PositionBeforeUpdate.x) >= _delta) return true;
-            if (Math.Abs(massPoint.Position.y - massPoint.PositionBeforeUpdate.y) >= _delta) return true;
-            if (Math.Abs(massPoint.Velocity.x - massPoint.VelocityBeforeUpdate.x) >= _delta) return true;
-            if (Math.Abs(massPoint.Velocity.y - massPoint.VelocityBeforeUpdate.y) >= _delta) return true;
+            if (Math.Abs(massPoint.Position.x - massPoint.PositionBeforeUpdate.x) >= _positionDelta) return true;
+            if (Math.Abs(massPoint.Position.y - massPoint.PositionBeforeUpdate.y) >= _positionDelta) return true;
+            if (Math.Abs(massPoint.Velocity.x - massPoint.VelocityBeforeUpdate.x) >= _velocityDelta) return true;
+            if (Math.Abs(massPoint.Velocity.y - massPoint.VelocityBeforeUpdate.y) >= _velocityDelta) return true;
         }
 
         return false;

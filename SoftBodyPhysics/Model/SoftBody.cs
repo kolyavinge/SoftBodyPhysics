@@ -5,7 +5,7 @@ using SoftBodyPhysics.Calculations;
 
 namespace SoftBodyPhysics.Model;
 
-public interface ISoftBody
+public interface ISoftBody : IBody
 {
     IReadOnlyCollection<IMassPoint> MassPoints { get; }
 
@@ -23,6 +23,8 @@ internal class SoftBody : ISoftBody
     #endregion
 
     // массивы а не списки для оптимизации
+
+    public int Index;
 
     public MassPoint[] MassPoints;
 

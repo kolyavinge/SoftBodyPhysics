@@ -6,7 +6,7 @@ internal static class Constants
 
     public const float Mass = 1.0f;
 
-    public const float MassPointRadius = 0.5f;
+    public const float MassPointRadius = 0.1f;
 
     public const float SpringStiffness = 1.0f;
 

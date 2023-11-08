@@ -8,14 +8,14 @@ internal interface IPhysicsWorldFrameInitializer
 internal class PhysicsWorldFrameInitializer : IPhysicsWorldFrameInitializer
 {
     private readonly ISoftBodiesCollection _softBodiesCollection;
-    private readonly IHardBodiesCollection _hardBodiesCollection;
+    private readonly IBodyCollisionCollection _bodyCollisionCollection;
 
     public PhysicsWorldFrameInitializer(
         ISoftBodiesCollection softBodiesCollection,
-        IHardBodiesCollection hardBodiesCollection)
+        IBodyCollisionCollection bodyCollisionCollection)
     {
         _softBodiesCollection = softBodiesCollection;
-        _hardBodiesCollection = hardBodiesCollection;
+        _bodyCollisionCollection = bodyCollisionCollection;
     }
 
     public void Init()
@@ -24,18 +24,18 @@ internal class PhysicsWorldFrameInitializer : IPhysicsWorldFrameInitializer
         for (var i = 0; i < allMassPoints.Length; i++)
         {
             var massPoint = allMassPoints[i];
-            massPoint.Collision = null;
             massPoint.PositionBeforeUpdate.x = massPoint.Position.x;
             massPoint.PositionBeforeUpdate.y = massPoint.Position.y;
             massPoint.VelocityBeforeUpdate.x = massPoint.Velocity.x;
             massPoint.VelocityBeforeUpdate.y = massPoint.Velocity.y;
         }
 
-        var allEdges = _hardBodiesCollection.AllEdges;
-        for (var i = 0; i < allEdges.Length; i++)
+        var softBodies = _softBodiesCollection.ActivatedSoftBodies;
+        var count = _softBodiesCollection.ActivatedSoftBodiesCount;
+        for (var i = 0; i < count; i++)
         {
-            var edge = allEdges[i];
-            edge.Collisions.Clear();
+            var softBody = softBodies[i];
+            _bodyCollisionCollection.ResetFor(softBody);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace SoftBodyPhysics.Core;
 
 internal interface IMassPointSpringsCollisionChecker
 {
-    void CheckMassPointAndSpringsCollision(MassPoint massPoint, Spring[] springs);
+    bool CheckMassPointAndSpringsCollision(MassPoint massPoint, Spring[] springs);
 }
 
 internal class MassPointSpringsCollisionChecker : IMassPointSpringsCollisionChecker
@@ -22,7 +22,7 @@ internal class MassPointSpringsCollisionChecker : IMassPointSpringsCollisionChec
         _physicsUnits = physicsUnits;
     }
 
-    public void CheckMassPointAndSpringsCollision(MassPoint massPoint, Spring[] springs)
+    public bool CheckMassPointAndSpringsCollision(MassPoint massPoint, Spring[] springs)
     {
         for (var i = 0; i < springs.Length; i++)
         {
@@ -39,14 +39,13 @@ internal class MassPointSpringsCollisionChecker : IMassPointSpringsCollisionChec
                     (spring.PointA.Velocity.x + spring.PointB.Velocity.x) / 2.0f,
                     (spring.PointA.Velocity.y + spring.PointB.Velocity.y) / 2.0f);
 
-            spring.Collisions.Add(massPoint);
-            massPoint.Collision = spring;
-
             ApplyPositionAndVelocity(spring, springNewVelocityX, springNewVelocityY);
             ApplyPositionAndVelocity(massPoint, massPointNewVelocityX, massPointNewVelocityY);
 
-            return;
+            return true;
         }
+
+        return false;
     }
 
     private void ApplyPositionAndVelocity(Spring spring, float springNewVelocityX, float springNewVelocityY)

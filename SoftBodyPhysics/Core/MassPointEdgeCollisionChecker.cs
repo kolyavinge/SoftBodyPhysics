@@ -36,9 +36,6 @@ internal class MassPointEdgeCollisionChecker : IMassPointEdgeCollisionChecker
 
             _vectorCalculator.GetNormalVector(edge.From, edge.To, _normal);
 
-            edge.Collisions.Add(massPoint);
-
-            massPoint.Collision = edge;
             massPoint.Position.x = massPoint.PrevPosition.x;
             massPoint.Position.y = massPoint.PrevPosition.y;
 

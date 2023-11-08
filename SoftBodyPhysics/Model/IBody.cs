@@ -1,5 +1,5 @@
 ﻿namespace SoftBodyPhysics.Model;
 
-public interface IBarrier
+public interface IBody
 {
 }

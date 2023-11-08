@@ -1,15 +1,12 @@
-﻿using System.Collections.Generic;
-using SoftBodyPhysics.Calculations;
+﻿using SoftBodyPhysics.Calculations;
 
 namespace SoftBodyPhysics.Model;
 
-public interface IEdge : ISegment, IBarrier
+public interface IEdge : ISegment
 {
     Vector From { get; }
 
     Vector To { get; }
-
-    IReadOnlyCollection<IMassPoint> Collisions { get; }
 
     object? Tag { get; set; }
 }
@@ -21,7 +18,6 @@ internal class Edge : IEdge
     public Vector ToPosition => To;
     Vector IEdge.From => From;
     Vector IEdge.To => To;
-    IReadOnlyCollection<IMassPoint> IEdge.Collisions => Collisions;
     public object? Tag { get; set; }
     #endregion
 
@@ -31,12 +27,9 @@ internal class Edge : IEdge
 
     public readonly Vector To;
 
-    public readonly List<IMassPoint> Collisions;
-
     public Edge(Vector from, Vector to)
     {
         From = from;
         To = to;
-        Collisions = new List<IMassPoint>();
     }
 }

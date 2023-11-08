@@ -34,6 +34,7 @@ internal class MainInjectModule : InjectModule
         bindingProvider.Bind<ISpringForceCalculator, SpringForceCalculator>().ToSingleton();
         bindingProvider.Bind<IVelocityCalculator, VelocityCalculator>().ToSingleton();
         bindingProvider.Bind<ITimeStepCalculator, TimeStepCalculator>().ToSingleton();
+        bindingProvider.Bind<IBodyCollisionCollection, BodyCollisionCollection>().ToSingleton();
         bindingProvider.Bind<IMassPointSpringsCollisionChecker, MassPointSpringsCollisionChecker>().ToSingleton();
         bindingProvider.Bind<IMassPointEdgeCollisionChecker, MassPointEdgeCollisionChecker>().ToSingleton();
         bindingProvider.Bind<ISoftBodyCollisionChecker, SoftBodyCollisionChecker>().ToSingleton();

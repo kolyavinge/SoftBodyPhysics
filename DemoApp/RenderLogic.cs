@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using SoftBodyPhysics.Core;
@@ -14,6 +13,8 @@ internal class RenderLogic
     private readonly Pen _hardBodyCollisionPen = new Pen(Brushes.Red, 2.0);
     private readonly Pen _springEdgePen = new Pen(Brushes.Blue, 1.0);
     private readonly Pen _springPen = new Pen(Brushes.CornflowerBlue, 1.0);
+    private readonly Brush _massPointBrush = Brushes.DarkRed;
+    private readonly Brush _massPointCollisionBrush = Brushes.OrangeRed;
 
     public void OnRender(
         IPhysicsWorld physicsWorld, DrawingContext dc, double actualWidth, double actualHeight, bool showMassPointAddInfo, bool showGrid)
@@ -35,16 +36,11 @@ internal class RenderLogic
 
         foreach (var hardBody in physicsWorld.HardBodies)
         {
+            var hasCollided = physicsWorld.IsCollidedToAnySoftBody(hardBody);
+            var pen = hasCollided ? _hardBodyCollisionPen : _hardBodyPen;
             foreach (var edge in hardBody.Edges)
             {
-                if (!edge.Collisions.Any())
-                {
-                    dc.DrawLine(_hardBodyPen, new(edge.From.X, yoffset - edge.From.Y), new(edge.To.X, yoffset - edge.To.Y));
-                }
-                else
-                {
-                    dc.DrawLine(_hardBodyCollisionPen, new(edge.From.X, yoffset - edge.From.Y), new(edge.To.X, yoffset - edge.To.Y));
-                }
+                dc.DrawLine(pen, new(edge.From.X, yoffset - edge.From.Y), new(edge.To.X, yoffset - edge.To.Y));
             }
         }
 
@@ -65,17 +61,13 @@ internal class RenderLogic
                 }
             }
 
+            var hasCollided = physicsWorld.IsCollidedToAnySoftBody(softBody) || physicsWorld.IsCollidedToAnyHardBody(softBody);
+            var brush = hasCollided ? _massPointCollisionBrush : _massPointBrush;
+
             foreach (var massPoint in softBody.MassPoints)
             {
                 var pos = massPoint.Position;
-                if (massPoint.Collision is null)
-                {
-                    dc.DrawEllipse(Brushes.DarkRed, null, new(pos.X, yoffset - pos.Y), _massPointRadius, _massPointRadius);
-                }
-                else
-                {
-                    dc.DrawEllipse(Brushes.OrangeRed, null, new(pos.X, yoffset - pos.Y), _massPointRadius, _massPointRadius);
-                }
+                dc.DrawEllipse(brush, null, new(pos.X, yoffset - pos.Y), _massPointRadius, _massPointRadius);
 
                 if (showMassPointAddInfo)
                 {

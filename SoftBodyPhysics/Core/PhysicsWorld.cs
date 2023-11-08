@@ -19,6 +19,14 @@ public interface IPhysicsWorld
 
     void Update();
 
+    IEnumerable<ISoftBody> GetCollidedSoftBodies(IBody body);
+
+    IEnumerable<IHardBody> GetCollidedHardBodies(ISoftBody softBody);
+
+    bool IsCollidedToAnySoftBody(IBody body);
+
+    bool IsCollidedToAnyHardBody(ISoftBody softBody);
+
     IEnumerable<ISoftBody> GetSoftBodyByPosition(Vector point);
 }
 
@@ -29,6 +37,7 @@ internal class PhysicsWorld : IPhysicsWorld
     private readonly IBodyEditorFactory _bodyEditorFactory;
     private readonly IPhysicsWorldUpdater _updater;
     private readonly ISoftBodyIntersector _softBodyIntersector;
+    private readonly IBodyCollisionCollection _bodyCollisionCollection;
 
     public IReadOnlyCollection<ISoftBody> SoftBodies => _softBodiesCollection.SoftBodies;
 
@@ -42,6 +51,7 @@ internal class PhysicsWorld : IPhysicsWorld
         IBodyEditorFactory bodyEditorFactory,
         IPhysicsWorldUpdater updater,
         ISoftBodyIntersector softBodyIntersector,
+        IBodyCollisionCollection bodyCollisionCollection,
         IPhysicsUnits physicsUnits)
     {
         _softBodiesCollection = softBodiesCollection;
@@ -49,6 +59,7 @@ internal class PhysicsWorld : IPhysicsWorld
         _bodyEditorFactory = bodyEditorFactory;
         _updater = updater;
         _softBodyIntersector = softBodyIntersector;
+        _bodyCollisionCollection = bodyCollisionCollection;
         Units = physicsUnits;
     }
 
@@ -60,6 +71,32 @@ internal class PhysicsWorld : IPhysicsWorld
     public void Update()
     {
         _updater.UpdateFrame();
+    }
+
+    public IEnumerable<ISoftBody> GetCollidedSoftBodies(IBody body)
+    {
+        foreach (var index in _bodyCollisionCollection.GetCollidedSoftBodyIndexes(body))
+        {
+            yield return _softBodiesCollection.SoftBodies[index];
+        }
+    }
+
+    public IEnumerable<IHardBody> GetCollidedHardBodies(ISoftBody softBody)
+    {
+        foreach (var index in _bodyCollisionCollection.GetCollidedHardBodyIndexes(softBody))
+        {
+            yield return _hardBodiesCollection.HardBodies[index];
+        }
+    }
+
+    public bool IsCollidedToAnySoftBody(IBody body)
+    {
+        return _bodyCollisionCollection.IsCollidedToAnySoftBody(body);
+    }
+
+    public bool IsCollidedToAnyHardBody(ISoftBody softBody)
+    {
+        return _bodyCollisionCollection.IsCollidedToAnyHardBody(softBody);
     }
 
     public IEnumerable<ISoftBody> GetSoftBodyByPosition(Vector point)

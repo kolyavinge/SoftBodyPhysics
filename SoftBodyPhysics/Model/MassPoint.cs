@@ -10,8 +10,6 @@ public interface IMassPoint
 
     float Mass { get; set; }
 
-    IBarrier? Collision { get; }
-
     object? Tag { get; set; }
 }
 
@@ -21,7 +19,6 @@ internal class MassPoint : IMassPoint
     Vector IMassPoint.Velocity { get => Velocity; set => Velocity = value; }
     Vector IMassPoint.Position { get => Position; set => Position = value; }
     float IMassPoint.Mass { get => Mass; set => Mass = value; }
-    IBarrier? IMassPoint.Collision => Collision;
     public object? Tag { get; set; }
     #endregion
 
@@ -40,8 +37,6 @@ internal class MassPoint : IMassPoint
     public readonly Vector VelocityBeforeUpdate;
 
     public float Mass;
-
-    public IBarrier? Collision;
 
     public MassPoint(Vector position)
     {

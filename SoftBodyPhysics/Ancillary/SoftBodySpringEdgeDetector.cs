@@ -43,7 +43,7 @@ internal class SoftBodySpringEdgeDetector : ISoftBodySpringEdgeDetector
         softBody.UpdateEdges();
     }
 
-    private void DetectByVertical(IEnumerable<Spring> springs, Borders borders)
+    private void DetectByVertical(Spring[] springs, Borders borders)
     {
         var lineFrom = new Vector(0, 0);
         var lineTo = new Vector(0, 0);
@@ -56,8 +56,9 @@ internal class SoftBodySpringEdgeDetector : ISoftBodySpringEdgeDetector
             var minY = borders.MaxY;
             var maxY = borders.MinY;
             Spring? minSpring = null, maxSpring = null;
-            foreach (var spring in springs)
+            for (var i = 0; i < springs.Length; i++)
             {
+                var spring = springs[i];
                 if (_segmentIntersector.GetIntersectPoint(spring.PointA.Position, spring.PointB.Position, lineFrom, lineTo, _intersectPoint))
                 {
                     if (_intersectPoint.y < minY)
@@ -80,7 +81,7 @@ internal class SoftBodySpringEdgeDetector : ISoftBodySpringEdgeDetector
         }
     }
 
-    private void DetectByHorizontal(IEnumerable<Spring> springs, Borders borders)
+    private void DetectByHorizontal(Spring[] springs, Borders borders)
     {
         var lineFrom = new Vector(0, 0);
         var lineTo = new Vector(0, 0);
@@ -93,8 +94,9 @@ internal class SoftBodySpringEdgeDetector : ISoftBodySpringEdgeDetector
             var minX = borders.MaxX;
             var maxX = borders.MinX;
             Spring? minSpring = null, maxSpring = null;
-            foreach (var spring in springs)
+            for (var i = 0; i < springs.Length; i++)
             {
+                var spring = springs[i];
                 if (_segmentIntersector.GetIntersectPoint(spring.PointA.Position, spring.PointB.Position, lineFrom, lineTo, _intersectPoint))
                 {
                     if (_intersectPoint.x < minX)

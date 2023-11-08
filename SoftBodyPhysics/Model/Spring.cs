@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using SoftBodyPhysics.Calculations;
+﻿using SoftBodyPhysics.Calculations;
 
 namespace SoftBodyPhysics.Model;
 
@@ -10,7 +9,7 @@ public interface ISegment
     Vector ToPosition { get; }
 }
 
-public interface ISpring : ISegment, IBarrier
+public interface ISpring : ISegment
 {
     bool IsEdge { get; }
 
@@ -23,8 +22,6 @@ public interface ISpring : ISegment, IBarrier
     float Stiffness { get; set; }
 
     float RestLength { get; }
-
-    IReadOnlyCollection<IMassPoint> Collisions { get; }
 
     object? Tag { get; set; }
 }
@@ -40,7 +37,6 @@ internal class Spring : ISpring
     Vector ISpring.Force => Force;
     float ISpring.RestLength => RestLength;
     float ISpring.Stiffness { get => Stiffness; set => Stiffness = value; }
-    IReadOnlyCollection<IMassPoint> ISpring.Collisions => Collisions;
     public object? Tag { get; set; }
     #endregion
 
@@ -58,14 +54,11 @@ internal class Spring : ISpring
 
     public readonly float RestLength;
 
-    public readonly List<IMassPoint> Collisions;
-
     public Spring(MassPoint a, MassPoint b)
     {
         PointA = a;
         PointB = b;
         RestLength = Vector.GetDistanceBetween(a.Position, b.Position);
         Force = new Vector(0, 0);
-        Collisions = new List<IMassPoint>();
     }
 }
