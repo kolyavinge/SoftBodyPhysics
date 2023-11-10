@@ -24,8 +24,8 @@ internal class SoftBodyCollisionChecker : ISoftBodyCollisionChecker
 
     public void CheckCollisions(SoftBody body1, SoftBody body2)
     {
-        if (Math.Abs(body1.Borders.MiddleX - body2.Borders.MiddleX) > body1.Borders.HalfWidth + body2.Borders.HalfWidth + _delta) return;
-        if (Math.Abs(body1.Borders.MiddleY - body2.Borders.MiddleY) > body1.Borders.HalfHeight + body2.Borders.HalfHeight + _delta) return;
+        if (MathF.Abs(body1.Borders.MiddleX - body2.Borders.MiddleX) > body1.Borders.HalfWidth + body2.Borders.HalfWidth + _delta) return;
+        if (MathF.Abs(body1.Borders.MiddleY - body2.Borders.MiddleY) > body1.Borders.HalfHeight + body2.Borders.HalfHeight + _delta) return;
 
         var hasCollisions = false;
 

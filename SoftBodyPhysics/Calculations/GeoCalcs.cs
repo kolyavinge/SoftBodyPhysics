@@ -20,11 +20,11 @@ public static class GeoCalcs
         float pivotY,
         float angleRadian)
     {
-        double cosAlpha = Math.Cos(angleRadian);
-        double sinAlpha = Math.Sin(angleRadian);
-        double x = cosAlpha * (pointX - pivotX) - sinAlpha * (pointY - pivotY) + pivotX;
-        double y = sinAlpha * (pointX - pivotX) + cosAlpha * (pointY - pivotY) + pivotY;
+        var cosAlpha = MathF.Cos(angleRadian);
+        var sinAlpha = MathF.Sin(angleRadian);
+        var x = cosAlpha * (pointX - pivotX) - sinAlpha * (pointY - pivotY) + pivotX;
+        var y = sinAlpha * (pointX - pivotX) + cosAlpha * (pointY - pivotY) + pivotY;
 
-        return ((float)x, (float)y);
+        return (x, y);
     }
 }

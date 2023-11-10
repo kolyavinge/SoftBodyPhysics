@@ -35,10 +35,10 @@ internal class SoftBodyActivator : ISoftBodyActivator
         for (int i = 0; i < massPoints.Length; i++)
         {
             var massPoint = massPoints[i];
-            if (Math.Abs(massPoint.Position.x - massPoint.PositionBeforeUpdate.x) >= _positionDelta) return true;
-            if (Math.Abs(massPoint.Position.y - massPoint.PositionBeforeUpdate.y) >= _positionDelta) return true;
-            if (Math.Abs(massPoint.Velocity.x - massPoint.VelocityBeforeUpdate.x) >= _velocityDelta) return true;
-            if (Math.Abs(massPoint.Velocity.y - massPoint.VelocityBeforeUpdate.y) >= _velocityDelta) return true;
+            if (MathF.Abs(massPoint.Position.x - massPoint.PositionBeforeUpdate.x) >= _positionDelta) return true;
+            if (MathF.Abs(massPoint.Position.y - massPoint.PositionBeforeUpdate.y) >= _positionDelta) return true;
+            if (MathF.Abs(massPoint.Velocity.x - massPoint.VelocityBeforeUpdate.x) >= _velocityDelta) return true;
+            if (MathF.Abs(massPoint.Velocity.y - massPoint.VelocityBeforeUpdate.y) >= _velocityDelta) return true;
         }
 
         return false;

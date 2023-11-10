@@ -12,7 +12,7 @@ internal static class Vectors
         var result = vectors[0].x;
         for (int i = 1; i < vectors.Length; i++)
         {
-            result = Math.Min(result, vectors[i].x);
+            result = MathF.Min(result, vectors[i].x);
         }
 
         return result;
@@ -25,7 +25,7 @@ internal static class Vectors
         var result = vectors[0].x;
         for (int i = 1; i < vectors.Length; i++)
         {
-            result = Math.Max(result, vectors[i].x);
+            result = MathF.Max(result, vectors[i].x);
         }
 
         return result;
@@ -38,7 +38,7 @@ internal static class Vectors
         var result = vectors[0].y;
         for (int i = 1; i < vectors.Length; i++)
         {
-            result = Math.Min(result, vectors[i].y);
+            result = MathF.Min(result, vectors[i].y);
         }
 
         return result;
@@ -51,7 +51,7 @@ internal static class Vectors
         var result = vectors[0].y;
         for (int i = 1; i < vectors.Length; i++)
         {
-            result = Math.Max(result, vectors[i].y);
+            result = MathF.Max(result, vectors[i].y);
         }
 
         return result;
