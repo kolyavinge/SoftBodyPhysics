@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using SoftBodyPhysics.Model;
 using System.Linq;
+using SoftBodyPhysics.Model;
 
 namespace SoftBodyPhysics.Core;
 
