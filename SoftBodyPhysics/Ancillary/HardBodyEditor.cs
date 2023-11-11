@@ -5,7 +5,6 @@ using SoftBodyPhysics.Calculations;
 using SoftBodyPhysics.Core;
 using SoftBodyPhysics.Factories;
 using SoftBodyPhysics.Model;
-using SoftBodyPhysics.Utils;
 
 namespace SoftBodyPhysics.Ancillary;
 
@@ -20,12 +19,12 @@ public interface IHardBodyEditor
 
 internal class HardBodyEditor : IHardBodyEditor
 {
-    private readonly List<Action> _completeActions;
     private readonly IHardBodyFactory _hardBodyFactory;
     private readonly IEdgeFactory _edgeFactory;
     private readonly IHardBodiesCollection _hardBodiesCollection;
     private readonly IBodyBordersUpdater _bodyBordersUpdater;
-    private readonly Dictionary<IHardBody, HardBody> _newHardBodies;
+    private readonly List<HardBody> _newHardBodies;
+    private readonly List<(HardBody, Edge)> _newEdges;
 
     public HardBodyEditor(
         IHardBodyFactory hardBodyFactory,
@@ -33,40 +32,42 @@ internal class HardBodyEditor : IHardBodyEditor
         IHardBodiesCollection hardBodiesCollection,
         IBodyBordersUpdater bodyBordersUpdater)
     {
-        _completeActions = new List<Action>();
         _hardBodyFactory = hardBodyFactory;
         _edgeFactory = edgeFactory;
         _hardBodiesCollection = hardBodiesCollection;
         _bodyBordersUpdater = bodyBordersUpdater;
-        _newHardBodies = new Dictionary<IHardBody, HardBody>();
+        _newHardBodies = new List<HardBody>();
+        _newEdges = new List<(HardBody, Edge)>();
     }
 
     public IHardBody AddHardBody()
     {
         var hardBody = _hardBodyFactory.Make();
-        _newHardBodies.Add(hardBody, hardBody);
+        _newHardBodies.Add(hardBody);
 
         return hardBody;
     }
 
     public IEdge AddEdge(IHardBody hardBody, Vector from, Vector to)
     {
-        var edge = _edgeFactory.Make(from, to);
-        Action action = () =>
+        if (hardBody is HardBody hb)
         {
-            var h = _newHardBodies[hardBody];
-            h.Edges = h.Edges.Union(new[] { edge }).ToArray();
-        };
+            var edge = _edgeFactory.Make(from, to);
+            _newEdges.Add((hb, edge));
 
-        _completeActions.Add(action);
-
-        return edge;
+            return edge;
+        }
+        else throw new ArgumentException();
     }
 
     public void Complete()
     {
-        _completeActions.Each(x => x.Invoke());
-        _hardBodiesCollection.AddHardBodies(_newHardBodies.Values);
-        _bodyBordersUpdater.UpdateBorders(_newHardBodies.Values);
+        foreach (var group in _newEdges.GroupBy(x => x.Item1, x => x.Item2))
+        {
+            var hb = group.Key;
+            hb.Edges = hb.Edges.Union(group).ToArray();
+        }
+        _hardBodiesCollection.AddHardBodies(_newHardBodies);
+        _bodyBordersUpdater.UpdateBorders(_newHardBodies);
     }
 }

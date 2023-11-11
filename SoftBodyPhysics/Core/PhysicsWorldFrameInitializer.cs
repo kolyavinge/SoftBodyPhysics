@@ -20,7 +20,7 @@ internal class PhysicsWorldFrameInitializer : IPhysicsWorldFrameInitializer
 
     public void Init()
     {
-        var allMassPoints = _softBodiesCollection.AllMassPoints;
+        var allMassPoints = _softBodiesCollection.MassPoints;
         for (var i = 0; i < allMassPoints.Length; i++)
         {
             var massPoint = allMassPoints[i];

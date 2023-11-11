@@ -1,35 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using SoftBodyPhysics.Ancillary;
 using SoftBodyPhysics.Model;
 
 namespace SoftBodyPhysics.Core;
 
-internal class SoftBodyPair
-{
-    public readonly SoftBody Body1;
-    public readonly SoftBody Body2;
-
-    public SoftBodyPair(SoftBody body1, SoftBody body2)
-    {
-        Body1 = body1;
-        Body2 = body2;
-    }
-}
-
 internal interface ISoftBodiesCollection
 {
+    MassPoint[] MassPoints { get; set; }
+
+    Spring[] Springs { get; set; }
+
     SoftBody[] SoftBodies { get; }
 
     SoftBody[] ActivatedSoftBodies { get; }
 
     int ActivatedSoftBodiesCount { get; }
 
-    MassPoint[] AllMassPoints { get; }
-
-    Spring[] AllSprings { get; }
-
-    void AddSoftBodies(IEnumerable<SoftBody> softBodies);
+    void UpdateSoftBodies();
 
     void UpdateActivatedSoftBodies();
 }
@@ -37,7 +25,12 @@ internal interface ISoftBodiesCollection
 internal class SoftBodiesCollection : ISoftBodiesCollection
 {
     private readonly IBodyCollisionCollection _bodyCollisionCollection;
-    private readonly List<SoftBody> _softBodies;
+    private readonly ISoftBodyBuilder _softBodyBuilder;
+    private readonly ISoftBodySpringEdgeDetector _softBodySpringEdgeDetector;
+
+    public MassPoint[] MassPoints { get; set; }
+
+    public Spring[] Springs { get; set; }
 
     public SoftBody[] SoftBodies { get; private set; }
 
@@ -45,30 +38,27 @@ internal class SoftBodiesCollection : ISoftBodiesCollection
 
     public int ActivatedSoftBodiesCount { get; private set; }
 
-    public MassPoint[] AllMassPoints { get; private set; }
-
-    public Spring[] AllSprings { get; private set; }
-
     public SoftBodiesCollection(
-        IBodyCollisionCollection bodyCollisionCollection)
+        IBodyCollisionCollection bodyCollisionCollection,
+        ISoftBodyBuilder softBodyBuilder,
+        ISoftBodySpringEdgeDetector softBodySpringEdgeDetector)
     {
         _bodyCollisionCollection = bodyCollisionCollection;
-        _softBodies = new List<SoftBody>();
+        _softBodyBuilder = softBodyBuilder;
+        _softBodySpringEdgeDetector = softBodySpringEdgeDetector;
+        MassPoints = Array.Empty<MassPoint>();
+        Springs = Array.Empty<Spring>();
         SoftBodies = Array.Empty<SoftBody>();
         ActivatedSoftBodies = Array.Empty<SoftBody>();
-        AllMassPoints = Array.Empty<MassPoint>();
-        AllSprings = Array.Empty<Spring>();
     }
 
-    public void AddSoftBodies(IEnumerable<SoftBody> softBodies)
+    public void UpdateSoftBodies()
     {
-        _softBodies.AddRange(softBodies);
         var oldSoftBodies = SoftBodies;
-        SoftBodies = _softBodies.ToArray();
+        SoftBodies = _softBodyBuilder.MakeNewSoftBodies(MassPoints, Springs).ToArray();
+        _softBodySpringEdgeDetector.DetectEdges(SoftBodies);
         for (int i = 0; i < SoftBodies.Length; i++) SoftBodies[i].Index = i;
-        AllMassPoints = _softBodies.SelectMany(x => x.MassPoints).ToArray();
-        AllSprings = _softBodies.SelectMany(x => x.Springs).ToArray();
-        ActivatedSoftBodies = new SoftBody[_softBodies.Count];
+        ActivatedSoftBodies = new SoftBody[SoftBodies.Length];
         UpdateActivatedSoftBodies();
         _bodyCollisionCollection.UpdateForSoftBodies(oldSoftBodies, SoftBodies);
     }
@@ -76,13 +66,10 @@ internal class SoftBodiesCollection : ISoftBodiesCollection
     public void UpdateActivatedSoftBodies()
     {
         int count = 0;
-        for (int i = 0; i < _softBodies.Count; i++)
+        for (int i = 0; i < SoftBodies.Length; i++)
         {
-            var softBody = _softBodies[i];
-            if (softBody.IsActive)
-            {
-                ActivatedSoftBodies[count++] = _softBodies[i];
-            }
+            var softBody = SoftBodies[i];
+            if (softBody.IsActive) ActivatedSoftBodies[count++] = SoftBodies[i];
         }
         ActivatedSoftBodiesCount = count;
     }

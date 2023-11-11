@@ -11,92 +11,99 @@ namespace SoftBodyPhysics.Ancillary;
 
 public interface ISoftBodyEditor
 {
-    ISoftBody MakeSoftBody();
+    IReadOnlyCollection<ISoftBody> NewSoftBodies { get; }
 
-    IMassPoint AddMassPoint(ISoftBody softBody, Vector position);
+    IMassPoint AddMassPoint(Vector position);
 
-    ISpring AddSpring(ISoftBody softBody, IMassPoint a, IMassPoint b);
+    void DeleteMassPoints(IEnumerable<IMassPoint> massPoints);
+
+    ISpring AddSpring(IMassPoint a, IMassPoint b);
+
+    void DeleteSprings(IEnumerable<ISpring> springs);
 
     void Complete();
 }
 
 internal class SoftBodyEditor : ISoftBodyEditor
 {
-    private readonly List<Action> _completeActions;
-    private readonly ISoftBodyFactory _softBodyFactory;
     private readonly IMassPointFactory _massPointFactory;
     private readonly ISpringFactory _springFactory;
     private readonly ISoftBodiesCollection _softBodiesCollection;
-    private readonly IBodyBordersUpdater _bodyBordersUpdater;
-    private readonly ISoftBodySpringEdgeDetector _softBodySpringEdgeDetector;
-    private readonly Dictionary<ISoftBody, SoftBody> _newSoftBodies;
-    private readonly Dictionary<IMassPoint, MassPoint> _newMassPoints;
+    private readonly List<MassPoint> _newMassPoints;
+    private readonly HashSet<MassPoint> _deletedMassPoints;
+    private readonly List<Spring> _newSprings;
+    private readonly HashSet<Spring> _deletedSprings;
+
+    public IReadOnlyCollection<ISoftBody> NewSoftBodies { get; private set; }
 
     public SoftBodyEditor(
-        ISoftBodyFactory softBodyFactory,
         IMassPointFactory massPointFactory,
         ISpringFactory springFactory,
-        ISoftBodiesCollection softBodiesCollection,
-        IBodyBordersUpdater bodyBordersUpdater,
-        ISoftBodySpringEdgeDetector softBodySpringEdgeDetector)
+        ISoftBodiesCollection softBodiesCollection)
     {
-        _completeActions = new List<Action>();
-        _softBodyFactory = softBodyFactory;
         _massPointFactory = massPointFactory;
         _springFactory = springFactory;
         _softBodiesCollection = softBodiesCollection;
-        _bodyBordersUpdater = bodyBordersUpdater;
-        _softBodySpringEdgeDetector = softBodySpringEdgeDetector;
-        _newSoftBodies = new Dictionary<ISoftBody, SoftBody>();
-        _newMassPoints = new Dictionary<IMassPoint, MassPoint>();
+        _newMassPoints = new List<MassPoint>();
+        _deletedMassPoints = new HashSet<MassPoint>();
+        _newSprings = new List<Spring>();
+        _deletedSprings = new HashSet<Spring>();
+        NewSoftBodies = Array.Empty<ISoftBody>();
     }
 
-    public ISoftBody MakeSoftBody()
-    {
-        var softBody = _softBodyFactory.Make();
-        _newSoftBodies.Add(softBody, softBody);
-
-        return softBody;
-    }
-
-    public IMassPoint AddMassPoint(ISoftBody softBody, Vector position)
+    public IMassPoint AddMassPoint(Vector position)
     {
         var massPoint = _massPointFactory.Make(position);
-        _newMassPoints.Add(massPoint, massPoint);
-
-        Action action = () =>
-        {
-            var s = _newSoftBodies[softBody];
-            s.MassPoints = s.MassPoints.Union(new[] { massPoint }).ToArray();
-        };
-
-        _completeActions.Add(action);
+        _newMassPoints.Add(massPoint);
 
         return massPoint;
     }
 
-    public ISpring AddSpring(ISoftBody softBody, IMassPoint a, IMassPoint b)
+    public void DeleteMassPoints(IEnumerable<IMassPoint> massPoints)
     {
-        var ma = _newMassPoints[a];
-        var mb = _newMassPoints[b];
-        var spring = _springFactory.Make(ma, mb);
-
-        Action action = () =>
+        if (massPoints.All(x => x is MassPoint))
         {
-            var s = _newSoftBodies[softBody];
-            s.Springs = s.Springs.Union(new[] { spring }).ToArray();
-        };
+            foreach (var mp in massPoints)
+            {
+                _deletedMassPoints.Add((MassPoint)mp);
+            }
+        }
+        else throw new ArgumentException();
+    }
 
-        _completeActions.Add(action);
+    public ISpring AddSpring(IMassPoint a, IMassPoint b)
+    {
+        if (a is MassPoint mpa && b is MassPoint mpb)
+        {
+            var spring = _springFactory.Make(mpa, mpb);
+            _newSprings.Add(spring);
 
-        return spring;
+            return spring;
+        }
+        else throw new ArgumentException();
+    }
+
+    public void DeleteSprings(IEnumerable<ISpring> springs)
+    {
+        if (springs.All(x => x is Spring))
+        {
+            foreach (var s in springs)
+            {
+                _deletedSprings.Add((Spring)s);
+            }
+        }
+        else throw new ArgumentException();
     }
 
     public void Complete()
     {
-        _completeActions.Each(x => x.Invoke());
-        _softBodiesCollection.AddSoftBodies(_newSoftBodies.Values);
-        _softBodySpringEdgeDetector.DetectEdges(_newSoftBodies.Values);
-        _bodyBordersUpdater.UpdateBorders(_newSoftBodies.Values);
+        _deletedSprings.AddRange(_softBodiesCollection.Springs.Where(x => _deletedMassPoints.Contains(x.PointA) || _deletedMassPoints.Contains(x.PointB)));
+
+        _softBodiesCollection.MassPoints = _softBodiesCollection.MassPoints.Union(_newMassPoints).Except(_deletedMassPoints).ToArray();
+        _softBodiesCollection.Springs = _softBodiesCollection.Springs.Union(_newSprings).Except(_deletedSprings).ToArray();
+
+        _softBodiesCollection.UpdateSoftBodies();
+
+        NewSoftBodies = _softBodiesCollection.SoftBodies;
     }
 }

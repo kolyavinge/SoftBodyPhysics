@@ -11,7 +11,6 @@ internal interface IBodyEditorFactory
 
 internal class BodyEditorFactory : IBodyEditorFactory
 {
-    private readonly ISoftBodyFactory _softBodyFactory;
     private readonly IHardBodyFactory _hardBodyFactory;
     private readonly IMassPointFactory _massPointFactory;
     private readonly ISpringFactory _springFactory;
@@ -22,7 +21,6 @@ internal class BodyEditorFactory : IBodyEditorFactory
     private readonly ISoftBodySpringEdgeDetector _softBodySpringEdgeDetector;
 
     public BodyEditorFactory(
-        ISoftBodyFactory softBodyFactory,
         IHardBodyFactory hardBodyFactory,
         IMassPointFactory massPointFactory,
         ISpringFactory springFactory,
@@ -32,7 +30,6 @@ internal class BodyEditorFactory : IBodyEditorFactory
         IBodyBordersUpdater bodyBordersUpdater,
         ISoftBodySpringEdgeDetector softBodySpringEdgeDetector)
     {
-        _softBodyFactory = softBodyFactory;
         _hardBodyFactory = hardBodyFactory;
         _massPointFactory = massPointFactory;
         _springFactory = springFactory;
@@ -46,12 +43,9 @@ internal class BodyEditorFactory : IBodyEditorFactory
     public ISoftBodyEditor MakeSoftBodyEditor()
     {
         return new SoftBodyEditor(
-            _softBodyFactory,
             _massPointFactory,
             _springFactory,
-            _softBodiesCollection,
-            _bodyBordersUpdater,
-            _softBodySpringEdgeDetector);
+            _softBodiesCollection);
     }
 
     public IHardBodyEditor MakeHardBodyEditor()

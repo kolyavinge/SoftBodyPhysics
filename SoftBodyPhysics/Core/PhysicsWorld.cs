@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using SoftBodyPhysics.Ancillary;
 using SoftBodyPhysics.Calculations;
 using SoftBodyPhysics.Factories;
@@ -20,6 +21,8 @@ public interface IPhysicsWorld
     IHardBodyEditor MakeHardBodyEditor();
 
     void Update();
+
+    ISoftBody? GetSoftBodyByMassPoint(IMassPoint massPoint);
 
     IEnumerable<ISoftBody> GetCollidedSoftBodies(IBody body);
 
@@ -78,6 +81,11 @@ internal class PhysicsWorld : IPhysicsWorld
     public void Update()
     {
         _updater.UpdateFrame();
+    }
+
+    public ISoftBody? GetSoftBodyByMassPoint(IMassPoint massPoint)
+    {
+        return _softBodiesCollection.SoftBodies.FirstOrDefault(x => x.MassPoints.Contains(massPoint));
     }
 
     public IEnumerable<ISoftBody> GetCollidedSoftBodies(IBody body)
