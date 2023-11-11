@@ -6,7 +6,7 @@ namespace SoftBodyPhysics.Intersections;
 
 internal interface IPolygonIntersector
 {
-    bool IsPointInPolygon(IEnumerable<ISegment> polygonPoints, Borders borders, Vector point);
+    bool IsPointInPolygon(IEnumerable<ISegment> segments, Borders borders, Vector point);
 }
 
 internal class PolygonIntersector : IPolygonIntersector
@@ -20,20 +20,20 @@ internal class PolygonIntersector : IPolygonIntersector
         _dummy = new(0, 0);
     }
 
-    public bool IsPointInPolygon(IEnumerable<ISegment> polygonPoints, Borders borders, Vector point)
+    public bool IsPointInPolygon(IEnumerable<ISegment> segments, Borders borders, Vector point)
     {
         if (!IsPointIn(borders, point, 1.0f)) return false;
         var pointTo = new Vector(point.x, 2.0f * borders.MaxY);
         int intersections = 0;
-        foreach (var polygonPoint in polygonPoints)
+        foreach (var segment in segments)
         {
-            if (_segmentIntersector.GetIntersectPoint(polygonPoint.FromPosition, polygonPoint.ToPosition, point, pointTo, _dummy))
+            if (_segmentIntersector.GetIntersectPoint(segment.FromPosition, segment.ToPosition, point, pointTo, _dummy))
             {
                 intersections++;
             }
         }
 
-        return intersections % 2 != 0;
+        return (intersections % 2) != 0;
     }
 
     private bool IsPointIn(Borders borders, Vector point, float delta)

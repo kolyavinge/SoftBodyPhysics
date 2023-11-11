@@ -5,7 +5,8 @@ namespace SoftBodyPhysics.Factories;
 
 internal interface IBodyEditorFactory
 {
-    IBodyEditor Make();
+    ISoftBodyEditor MakeSoftBodyEditor();
+    IHardBodyEditor MakeHardBodyEditor();
 }
 
 internal class BodyEditorFactory : IBodyEditorFactory
@@ -42,17 +43,23 @@ internal class BodyEditorFactory : IBodyEditorFactory
         _softBodySpringEdgeDetector = softBodySpringEdgeDetector;
     }
 
-    public IBodyEditor Make()
+    public ISoftBodyEditor MakeSoftBodyEditor()
     {
-        return new BodyEditor(
+        return new SoftBodyEditor(
             _softBodyFactory,
-            _hardBodyFactory,
             _massPointFactory,
             _springFactory,
-            _edgeFactory,
             _softBodiesCollection,
-            _hardBodiesCollection,
             _bodyBordersUpdater,
             _softBodySpringEdgeDetector);
+    }
+
+    public IHardBodyEditor MakeHardBodyEditor()
+    {
+        return new HardBodyEditor(
+            _hardBodyFactory,
+            _edgeFactory,
+            _hardBodiesCollection,
+            _bodyBordersUpdater);
     }
 }

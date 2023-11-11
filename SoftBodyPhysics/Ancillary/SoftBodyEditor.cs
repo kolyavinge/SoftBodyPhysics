@@ -9,7 +9,7 @@ using SoftBodyPhysics.Utils;
 
 namespace SoftBodyPhysics.Ancillary;
 
-public interface IBodyEditor
+public interface ISoftBodyEditor
 {
     ISoftBody MakeSoftBody();
 
@@ -17,53 +17,38 @@ public interface IBodyEditor
 
     ISpring AddSpring(ISoftBody softBody, IMassPoint a, IMassPoint b);
 
-    IHardBody AddHardBody();
-
-    IEdge AddEdge(IHardBody hardBody, Vector from, Vector to);
-
     void Complete();
 }
 
-internal class BodyEditor : IBodyEditor
+internal class SoftBodyEditor : ISoftBodyEditor
 {
     private readonly List<Action> _completeActions;
     private readonly ISoftBodyFactory _softBodyFactory;
-    private readonly IHardBodyFactory _hardBodyFactory;
     private readonly IMassPointFactory _massPointFactory;
     private readonly ISpringFactory _springFactory;
-    private readonly IEdgeFactory _edgeFactory;
     private readonly ISoftBodiesCollection _softBodiesCollection;
-    private readonly IHardBodiesCollection _hardBodiesCollection;
     private readonly IBodyBordersUpdater _bodyBordersUpdater;
     private readonly ISoftBodySpringEdgeDetector _softBodySpringEdgeDetector;
     private readonly Dictionary<ISoftBody, SoftBody> _newSoftBodies;
     private readonly Dictionary<IMassPoint, MassPoint> _newMassPoints;
-    private readonly Dictionary<IHardBody, HardBody> _newHardBodies;
 
-    public BodyEditor(
+    public SoftBodyEditor(
         ISoftBodyFactory softBodyFactory,
-        IHardBodyFactory hardBodyFactory,
         IMassPointFactory massPointFactory,
         ISpringFactory springFactory,
-        IEdgeFactory edgeFactory,
         ISoftBodiesCollection softBodiesCollection,
-        IHardBodiesCollection hardBodiesCollection,
         IBodyBordersUpdater bodyBordersUpdater,
         ISoftBodySpringEdgeDetector softBodySpringEdgeDetector)
     {
         _completeActions = new List<Action>();
         _softBodyFactory = softBodyFactory;
-        _hardBodyFactory = hardBodyFactory;
         _massPointFactory = massPointFactory;
         _springFactory = springFactory;
-        _edgeFactory = edgeFactory;
         _softBodiesCollection = softBodiesCollection;
-        _hardBodiesCollection = hardBodiesCollection;
         _bodyBordersUpdater = bodyBordersUpdater;
         _softBodySpringEdgeDetector = softBodySpringEdgeDetector;
         _newSoftBodies = new Dictionary<ISoftBody, SoftBody>();
         _newMassPoints = new Dictionary<IMassPoint, MassPoint>();
-        _newHardBodies = new Dictionary<IHardBody, HardBody>();
     }
 
     public ISoftBody MakeSoftBody()
@@ -107,35 +92,11 @@ internal class BodyEditor : IBodyEditor
         return spring;
     }
 
-    public IHardBody AddHardBody()
-    {
-        var hardBody = _hardBodyFactory.Make();
-        _newHardBodies.Add(hardBody, hardBody);
-
-        return hardBody;
-    }
-
-    public IEdge AddEdge(IHardBody hardBody, Vector from, Vector to)
-    {
-        var edge = _edgeFactory.Make(from, to);
-        Action action = () =>
-        {
-            var h = _newHardBodies[hardBody];
-            h.Edges = h.Edges.Union(new[] { edge }).ToArray();
-        };
-
-        _completeActions.Add(action);
-
-        return edge;
-    }
-
     public void Complete()
     {
         _completeActions.Each(x => x.Invoke());
         _softBodiesCollection.AddSoftBodies(_newSoftBodies.Values);
-        _hardBodiesCollection.AddHardBodies(_newHardBodies.Values);
         _softBodySpringEdgeDetector.DetectEdges(_newSoftBodies.Values);
         _bodyBordersUpdater.UpdateBorders(_newSoftBodies.Values);
-        _bodyBordersUpdater.UpdateBorders(_newHardBodies.Values);
     }
 }

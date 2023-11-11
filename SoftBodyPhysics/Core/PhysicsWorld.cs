@@ -15,7 +15,9 @@ public interface IPhysicsWorld
 
     IPhysicsUnits Units { get; }
 
-    IBodyEditor MakEditor();
+    ISoftBodyEditor MakeSoftBodyEditor();
+
+    IHardBodyEditor MakeHardBodyEditor();
 
     void Update();
 
@@ -63,9 +65,14 @@ internal class PhysicsWorld : IPhysicsWorld
         Units = physicsUnits;
     }
 
-    public IBodyEditor MakEditor()
+    public ISoftBodyEditor MakeSoftBodyEditor()
     {
-        return _bodyEditorFactory.Make();
+        return _bodyEditorFactory.MakeSoftBodyEditor();
+    }
+
+    public IHardBodyEditor MakeHardBodyEditor()
+    {
+        return _bodyEditorFactory.MakeHardBodyEditor();
     }
 
     public void Update()
