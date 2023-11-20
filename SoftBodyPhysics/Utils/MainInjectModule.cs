@@ -22,6 +22,7 @@ internal class MainInjectModule : InjectModule
         bindingProvider.Bind<IMassPointFactory, MassPointFactory>().ToSingleton();
         bindingProvider.Bind<ISpringFactory, SpringFactory>().ToSingleton();
         bindingProvider.Bind<IEdgeFactory, EdgeFactory>().ToSingleton();
+        bindingProvider.Bind<ISoftBodyFinder, SoftBodyFinder>().ToSingleton();
         bindingProvider.Bind<ISoftBodyFactory, SoftBodyFactory>().ToSingleton();
         bindingProvider.Bind<IHardBodyFactory, HardBodyFactory>().ToSingleton();
         bindingProvider.Bind<ISoftBodyBuilder, SoftBodyBuilder>().ToSingleton();

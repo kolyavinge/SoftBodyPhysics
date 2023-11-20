@@ -11,7 +11,7 @@ internal interface ISoftBodyActivator
 internal class SoftBodyActivator : ISoftBodyActivator
 {
     private const float _positionDelta = 0.1f;
-    private const float _velocityDelta = 0.2f;
+    private const float _velocityDelta = 0.1f;
     private readonly ISoftBodiesCollection _softBodiesCollection;
 
     public SoftBodyActivator(

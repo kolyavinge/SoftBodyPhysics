@@ -12,7 +12,6 @@ internal interface ISegmentIntersector
 
 internal class SegmentIntersector : ISegmentIntersector
 {
-    private const float _delta = 0.00001f;
     private const float _r2 = Constants.MassPointRadius * Constants.MassPointRadius;
     private readonly ILineIntersector _lineIntersector;
 
@@ -24,12 +23,17 @@ internal class SegmentIntersector : ISegmentIntersector
     public bool GetIntersectPoint(Vector segment1From, Vector segment1To, Vector segment2From, Vector segment2To, Vector outputResult)
     {
         if (!_lineIntersector.GetIntersectPoint(segment1From, segment1To, segment2From, segment2To, outputResult)) return false;
-        return IsPointInSegment(segment1From, segment1To, outputResult.x, outputResult.y) && IsPointInSegment(segment2From, segment2To, outputResult.x, outputResult.y);
+
+        return
+            IsPointInSegment(segment1From, segment1To, outputResult.x, outputResult.y, 0.0001f) &&
+            IsPointInSegment(segment2From, segment2To, outputResult.x, outputResult.y, 0.0001f);
     }
 
     public bool IsIntersected(Vector segmentFrom, Vector segmentTo, Vector point)
     {
         // https://e-maxx.ru/algo/circle_line_intersection
+
+        const float delta = 0.00001f;
 
         // двигаем точку в начало координат
         var lineFromX = segmentFrom.x - point.x;
@@ -44,7 +48,7 @@ internal class SegmentIntersector : ISegmentIntersector
 
         var m = a * a + b * b;
         var c2 = c * c;
-        if (c2 > _r2 * m + _delta) return false;
+        if (c2 > _r2 * m + delta) return false;
 
         var x0 = -a * c / m;
         var y0 = -b * c / m;
@@ -53,10 +57,10 @@ internal class SegmentIntersector : ISegmentIntersector
         var ax = x0 + b * mult;
         var ay = y0 - a * mult;
 
-        return IsPointInSegment(segmentFrom, segmentTo, ax + point.x, ay + point.y);
+        return IsPointInSegment(segmentFrom, segmentTo, ax + point.x, ay + point.y, delta);
     }
 
-    private bool IsPointInSegment(Vector segmentFrom, Vector segmentTo, float pointX, float pointY)
+    private bool IsPointInSegment(Vector segmentFrom, Vector segmentTo, float pointX, float pointY, float delta)
     {
         float minX, maxX, minY, maxY;
 
@@ -83,7 +87,7 @@ internal class SegmentIntersector : ISegmentIntersector
         }
 
         return
-            minX - _delta <= pointX && pointX <= maxX + _delta &&
-            minY - _delta <= pointY && pointY <= maxY + _delta;
+            minX - delta <= pointX && pointX <= maxX + delta &&
+            minY - delta <= pointY && pointY <= maxY + delta;
     }
 }

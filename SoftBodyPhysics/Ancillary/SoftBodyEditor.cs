@@ -11,8 +11,6 @@ namespace SoftBodyPhysics.Ancillary;
 
 public interface ISoftBodyEditor
 {
-    IReadOnlyCollection<ISoftBody> NewSoftBodies { get; }
-
     IMassPoint AddMassPoint(Vector position);
 
     void DeleteMassPoints(IEnumerable<IMassPoint> massPoints);
@@ -34,8 +32,6 @@ internal class SoftBodyEditor : ISoftBodyEditor
     private readonly List<Spring> _newSprings;
     private readonly HashSet<Spring> _deletedSprings;
 
-    public IReadOnlyCollection<ISoftBody> NewSoftBodies { get; private set; }
-
     public SoftBodyEditor(
         IMassPointFactory massPointFactory,
         ISpringFactory springFactory,
@@ -48,7 +44,6 @@ internal class SoftBodyEditor : ISoftBodyEditor
         _deletedMassPoints = new HashSet<MassPoint>();
         _newSprings = new List<Spring>();
         _deletedSprings = new HashSet<Spring>();
-        NewSoftBodies = Array.Empty<ISoftBody>();
     }
 
     public IMassPoint AddMassPoint(Vector position)
@@ -103,7 +98,5 @@ internal class SoftBodyEditor : ISoftBodyEditor
         _softBodiesCollection.Springs = _softBodiesCollection.Springs.Union(_newSprings).Except(_deletedSprings).ToArray();
 
         _softBodiesCollection.UpdateSoftBodies();
-
-        NewSoftBodies = _softBodiesCollection.SoftBodies;
     }
 }

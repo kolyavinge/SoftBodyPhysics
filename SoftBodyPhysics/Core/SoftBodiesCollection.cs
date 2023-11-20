@@ -55,9 +55,14 @@ internal class SoftBodiesCollection : ISoftBodiesCollection
     public void UpdateSoftBodies()
     {
         var oldSoftBodies = SoftBodies;
-        SoftBodies = _softBodyBuilder.MakeNewSoftBodies(MassPoints, Springs).ToArray();
-        _softBodySpringEdgeDetector.DetectEdges(SoftBodies);
-        for (int i = 0; i < SoftBodies.Length; i++) SoftBodies[i].Index = i;
+        var makeSoftBodiesResult = _softBodyBuilder.MakeSoftBodies(SoftBodies, MassPoints, Springs);
+        SoftBodies = makeSoftBodiesResult.NewSoftBodies.Union(makeSoftBodiesResult.ExistSoftBodies).ToArray();
+        _softBodySpringEdgeDetector.DetectEdges(makeSoftBodiesResult.NewSoftBodies);
+        for (int i = 0; i < SoftBodies.Length; i++)
+        {
+            SoftBodies[i].Index = i;
+            SoftBodies[i].IsActive = true;
+        }
         ActivatedSoftBodies = new SoftBody[SoftBodies.Length];
         UpdateActivatedSoftBodies();
         _bodyCollisionCollection.UpdateForSoftBodies(oldSoftBodies, SoftBodies);
